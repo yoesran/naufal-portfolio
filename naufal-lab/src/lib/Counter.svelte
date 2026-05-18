@@ -1,10 +1,8 @@
 <script lang="ts">
-  let count: number = $state(0)
-  const increment = () => {
-    count += 1
-  }
+  let count = 0;
 </script>
 
-<button type="button" class="counter" onclick={increment}>
-  Count is {count}
-</button>
+<div style="padding: 16px; border: 2px dashed #888; border-radius: 8px;">
+  <p>I'm a Svelte component loaded over Module Federation.</p>
+  <button on:click={() => count++}>Count is {count}</button>
+</div>
