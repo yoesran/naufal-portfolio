@@ -10,21 +10,21 @@ This document explains the Module Federation architecture introduced to connect 
 
 ### `naufal-host` — React Host
 
-| File | Change |
-|---|---|
-| `package.json` | Added `@module-federation/vite` dependency |
-| `vite.config.ts` | Configured as a **host**, consuming the `lab` remote |
-| `src/App.tsx` | Added a toggle button that lazily loads `LabRemote` |
-| `src/components/LabRemote.tsx` | New — React wrapper that mounts the Svelte Counter |
-| `src/types/remotes.d.ts` | New — TypeScript module declaration for `lab/Counter` |
+| File                           | Change                                                |
+| ------------------------------ | ----------------------------------------------------- |
+| `package.json`                 | Added `@module-federation/vite` dependency            |
+| `vite.config.ts`               | Configured as a **host**, consuming the `lab` remote  |
+| `src/App.tsx`                  | Added a toggle button that lazily loads `LabRemote`   |
+| `src/components/LabRemote.tsx` | New — React wrapper that mounts the Svelte Counter    |
+| `src/types/remotes.d.ts`       | New — TypeScript module declaration for `lab/Counter` |
 
 ### `naufal-lab` — Svelte Remote
 
-| File | Change |
-|---|---|
-| `package.json` | Added `@module-federation/vite` dependency |
-| `vite.config.ts` | Configured as a **remote**, exposing `./Counter` |
-| `src/lib/Counter.svelte` | Updated — the component being exposed |
+| File                      | Change                                                            |
+| ------------------------- | ----------------------------------------------------------------- |
+| `package.json`            | Added `@module-federation/vite` dependency                        |
+| `vite.config.ts`          | Configured as a **remote**, exposing `./Counter`                  |
+| `src/lib/Counter.svelte`  | Updated — the component being exposed                             |
 | `src/lib/mountCounter.ts` | New — imperative mount adapter for framework-agnostic consumption |
 
 ---
@@ -54,8 +54,8 @@ Because the host is React and the remote is Svelte, they cannot directly import 
 
 ```ts
 // naufal-lab/src/lib/mountCounter.ts
-import { mount, unmount } from "svelte";
-import Counter from "./Counter.svelte";
+import { mount, unmount } from 'svelte';
+import Counter from './Counter.svelte';
 
 export default function mountCounter(target: HTMLElement) {
   const instance = mount(Counter, { target });
@@ -77,10 +77,12 @@ export function LabRemote() {
   useEffect(() => {
     let cleanup: (() => void) | undefined;
     (async () => {
-      const mountCounter = (await import("lab/Counter")).default;
+      const mountCounter = (await import('lab/Counter')).default;
       if (ref.current) cleanup = mountCounter(ref.current);
     })();
-    return () => { cleanup?.(); };
+    return () => {
+      cleanup?.();
+    };
   }, []);
 
   return <div ref={ref} />;
@@ -92,6 +94,7 @@ The cleanup function returned by `mountCounter` is called on unmount, so the Sve
 ### 3. Vite Module Federation config
 
 **Host** (`naufal-host/vite.config.ts`) — declares the remote endpoint:
+
 ```ts
 federation({
   name: 'host',
@@ -103,10 +106,11 @@ federation({
     },
   },
   shared: ['react', 'react-dom'],
-})
+});
 ```
 
 **Remote** (`naufal-lab/vite.config.ts`) — declares what it exposes:
+
 ```ts
 federation({
   name: 'lab',
@@ -115,7 +119,7 @@ federation({
     './Counter': './src/lib/mountCounter.ts',
   },
   shared: [],
-})
+});
 ```
 
 ### 4. TypeScript declaration
@@ -132,7 +136,7 @@ declare module 'lab/Counter';
 
 ```tsx
 const LabRemote = lazy(() =>
-  import("./components/LabRemote").then((m) => ({ default: m.LabRemote }))
+  import('./components/LabRemote').then((m) => ({ default: m.LabRemote })),
 );
 ```
 

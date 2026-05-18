@@ -19,7 +19,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "paths": {
+      "lab/*": ["./@mf-types/lab/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src", "@mf-types"]
 }
