@@ -22,7 +22,8 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "lab/*": ["./@mf-types/lab/*"]
+      "lab/*": ["./@mf-types/lab/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src", "@mf-types"]

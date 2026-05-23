@@ -16,12 +16,12 @@ Stack experience: React, Next.js, Angular, JavaScript, TypeScript, Tailwind, Boo
 
 ## Project goal
 
-Build a portfolio site that _is itself_ a microfrontend, demonstrating cross-framework Module Federation. Two equally weighted goals:
+Build a portfolio where the _architecture is the portfolio_ — a microfrontend system that demonstrates cross-framework Module Federation, paired with a content site that tells the professional story. Two equally weighted goals:
 
 1. Portfolio piece for job hunting
 2. Learning/deepening MF skills
 
-Stance on MF strictness: **pragmatic** — MF where it fits, alternative approaches (like sibling sites) where MF doesn't fit. Not dogmatic about federating everything.
+Stance on MF strictness: **pragmatic** — MF where it fits, alternative approaches (like sibling sites) where MF doesn't fit. Not dogmatic about federating everything. Knowing when NOT to use MF is itself part of the skill being demonstrated.
 
 ---
 
@@ -29,10 +29,10 @@ Stance on MF strictness: **pragmatic** — MF where it fits, alternative approac
 
 ### Two-site architecture, not one
 
-- **Portfolio site at `naufal.dev`** — React Vite host, federated remotes for non-SEO content
-- **Blog site at `blog.naufal.dev`** — Standalone Next.js, SSR/SSG for SEO. NOT a federated remote. Reason: federating into a host makes the blog content invisible to crawlers; SSR + MF is technically possible but defeats the SEO purpose.
+- **Portfolio site at `naufal.dev`** — React Vite host, federated remotes. Home page is a "curated playground" (see below). Job: _show_ building ability, be living proof of the MF architecture.
+- **Blog site at `blog.naufal.dev`** — Standalone Next.js, SSR/SSG for SEO. NOT a federated remote. Holds content: technical articles, the CV (as a styled exportable page), and the deeper "stories" behind each job. Job: _tell_ the story, be findable on Google.
 
-The two sites share design tokens via a small package. To users they look unified; technically they're independent deployments.
+Reason for the split: Module Federation is client-rendered, bad for SEO. Content that needs to be crawlable lives in the SSR blog. Interactive things that don't need SEO live in the federated portfolio. Each tool used for what it's actually good at. The two sites share a visual identity so they feel unified, but they're independent deployments. Portfolio links to blog for substance; blog links to portfolio for live demos.
 
 ### Why not Next.js for the federated remote
 
@@ -44,38 +44,84 @@ Verified via web search at planning time:
 - SvelteKit + MF has SSR conflicts (`setContext` reexport issues) — use **plain Svelte + Vite**, not SvelteKit, for federated remotes
 - Plain Svelte + Vite + MF works well (Giorgio Boa demos, Trendyol production case study)
 
-### v0.1 stack (locked in)
+### Project stack
 
-| Project         | Stack                                             | Port | Status      |
-| --------------- | ------------------------------------------------- | ---- | ----------- |
-| `naufal-host`   | React 19 + Vite + `@module-federation/vite`       | 5173 | ✅ Working  |
-| `naufal-lab`    | Plain Svelte 5 + Vite + `@module-federation/vite` | 5174 | ✅ Working  |
-| `naufal-blog`   | Next.js 15 App Router (standalone, NOT federated) | —    | Not started |
-| `naufal-tokens` | CSS variables + Tailwind preset (no components)   | —    | Not started |
+| Project       | Stack                                             | Port | Status      |
+| ------------- | ------------------------------------------------- | ---- | ----------- |
+| `naufal-host` | React 19 + Vite + `@module-federation/vite`       | 5173 | Working     |
+| `naufal-lab`  | Plain Svelte 5 + Vite + `@module-federation/vite` | 5174 | Working     |
+| `naufal-blog` | Next.js 15 App Router (standalone, NOT federated) | —    | Not started |
 
-### Roadmap beyond v0.1
+(There is no separate `naufal-tokens` package — see Design approach below. The earlier idea of a published tokens package was dropped as over-engineered.)
 
-- **v0.2**: shadcn-based design tokens + visual polish + deploy to Vercel
-- **v0.3+**: Add Angular dashboard remote (uses spartan/ui), vanilla JS animation remote (BCA-style), maybe Vue or Solid
-- Eventually: architecture inspector page in host showing live network waterfall, shared deps, loaded chunks — turns the architecture into the content
+### Roadmap
 
-### Design system strategy
+- **v0.1 — DONE.** Cross-framework federation works end-to-end (React host loads a Svelte remote at runtime), dev-time auto-reload works, TypeScript types flow remote→host.
+- **v0.2 — CURRENT.** shadcn in the host, a dark theme, the home-page playground (frame + first 3 blocks), deploy to Vercel. See "v0.2 scope" below.
+- **v0.3 — content.** Scaffold the Next.js blog. First technical post (the MF build itself). The CV page. Begin the experience "stories."
+- **v0.4+ — grow.** More playground blocks. More remotes (Angular via spartan/ui, vanilla JS). Eventually a 3D block once Three.js is properly learned (deliberately deferred — see below). Possibly an "architecture inspector" page showing live network waterfall / loaded chunks / shared deps.
 
-Three layers, only the first two are framework-agnostic:
+---
 
-1. **CSS variables** (`--primary`, `--background`, `--radius`, etc.) — works everywhere, this is the actual "design tokens"
-2. **Tailwind preset** that maps those CSS vars to utilities — works in any Tailwind project
-3. **Components** — framework-specific: `shadcn/ui` for React, `shadcn-svelte` for Svelte, `spartan/ui` for Angular, `shadcn-vue` for Vue. Each port consumes the same CSS vars, so visual parity is automatic across frameworks.
+## The home page concept — "curated playground"
 
-This means cross-framework component sharing happens at the **CSS layer**, not the JS layer. The same `<Button>` in React-shadcn and Svelte-shadcn-svelte will look identical because both read `--primary`.
+The home page is NOT a coherently-designed site with one consistent visual language. It is a **vertically-scrolling gallery of independent interactive blocks**. Each block is its own self-contained "wow" moment. The blocks intentionally do NOT match each other — the inconsistency is the aesthetic, and it mirrors the microfrontend architecture (independent pieces, composed).
 
-Flutter and Unity are excluded from v0.1 (they render to canvas, can't consume CSS vars — would need manual matching in their own theming systems).
+**The one consistency rule — the "frame":** the page shell and the cell containers each block sits in stay consistent. This frame is what makes the page read as a deliberate collection rather than a junk drawer. The frame is non-negotiable; the block contents are free to be wild.
+
+This direction was chosen deliberately because: (a) it removes the design-coherence burden — the user is not a designer and does not want to make design-system decisions; (b) it's the visual expression of the MF architecture; (c) it's an ever-growing container for future small projects — it never needs a redesign because there's no unified design to break.
+
+Some blocks will be plain host code; some will be genuine federated remotes in different frameworks. Quality over quantity — a gallery is judged block-by-block, so a few genuinely good blocks beat many filler ones.
+
+---
+
+## Design approach (important — the user is not a designer)
+
+The user has explicitly said they don't know design and don't want to make design decisions. The approach accommodates this:
+
+- **Components**: shadcn/ui (React, in the host). shadcn-svelte for Svelte remotes, spartan/ui for a future Angular remote, shadcn-vue for a future Vue remote. All shadcn ports share the same CSS-variable conventions, so visual parity across frameworks is automatic at the CSS layer.
+- **Theme (colors/fonts)**: use a pre-made theme rather than hand-designing. tweakcn (tweakcn.com) is the recommended tool — pick/generate a palette, export CSS variables. This removes the color-decision burden.
+- **Layout & fine visual calls**: Claude Code makes these; the user reacts in plain language ("too bright", "bigger headings", "more space"). Reacting to concrete output is the user's design workflow — not originating from scratch.
+- **Reference material**: Figma shadcn kits (Obra shadcn/ui kit, RAVN's kit) and the Magic UI portfolio (github.com/dillionverma/portfolio) are reference points the user can _point at_ to make abstract preferences concrete. Not for wholesale cloning of the host (would fight the MF architecture), but fine as reference and fine to clone for the blog later.
+
+Cross-framework component sharing happens at the **CSS layer** (shared CSS variables), not the JS layer. The same button in React-shadcn and Svelte-shadcn-svelte looks identical because both read `--primary`.
+
+### Three.js / 3D — deliberately deferred
+
+A 3D animated home page was considered and **paused**. The user wants to _learn_ Three.js properly first rather than copy-paste it. When built later, the 3D piece becomes just ONE block in the playground (not the whole page's burden), and the current non-3D home page becomes its `prefers-reduced-motion` / low-capability fallback. Nothing built now is throwaway. R3F (React Three Fiber) + drei is the recommended approach when the time comes.
+
+---
+
+## v0.2 scope (current work)
+
+Build the home page of the React Vite host.
+
+**Setup:**
+
+- Install + init shadcn/ui in `naufal-host` (React + Vite path, not Next.js).
+- Tailwind, Framer Motion (`motion`).
+- Dark theme only for v0.2 — no light/dark toggle yet. Near-black background with a slight cool tint (NOT pure `#000`), off-white headings, muted-gray body, one sparingly-used accent color (green/cyan family reads "technical").
+
+**The frame:**
+
+- Slim header: name left (monospace, small), nav links right (Work, Blog, CV — placeholders OK).
+- One intro line near the top, larger text, e.g. "A playground of interactive things I build."
+- A reusable `<Cell>` component (label prop + children): consistent faint 1px border, rounded corners, slightly raised surface vs background, small monospace corner label saying what the block is + what tech powers it. Every block drops into a `<Cell>`. This is the key reusable primitive.
+- Footer: GitHub, LinkedIn, email, blog links.
+
+**The three v0.2 blocks (each inside a `<Cell>`):**
+
+1. **Hero / interactive name** — first and largest cell. Large display-type "Naufal Yusran"; letters subtly react to cursor (gentle repel/shift/glow, tasteful). One-line positioning below: "Frontend engineer working at the seams of frameworks."
+2. **Tech stack** — framework nodes (React, Angular, Svelte, Vue, Next.js, Flutter, JavaScript, TypeScript) as labeled pills/nodes; hover highlights + shows a short note. Static layout, light animation. Animated-SVG version comes later.
+3. **Microfrontend meta** — the signature block. Visualization communicating the page is itself a microfrontend ("This page's host is React. The block below loads live from a Svelte remote."). Embed the actual lab remote counter via `<RemoteMount>` if straightforward; must fail gracefully with a placeholder if the remote isn't running.
+
+**Behavior:** cells fade-and-rise on scroll (Framer Motion, subtle); fully responsive (cells stack full-width on mobile); respect `prefers-reduced-motion`; don't break the existing MF setup.
 
 ---
 
 ## Cross-framework MF pattern (important)
 
-The remote does NOT expose framework-specific components. It exposes **a mount function** with a framework-agnostic signature:
+The remote does NOT expose framework-specific components. It exposes **a mount function** with a framework-agnostic signature. Recommended signature is `(target: HTMLElement, opts?: { locale?: string }) => () => void` — the optional opts object is future-proofing for i18n so the remote API doesn't have to change later.
 
 ```ts
 // In naufal-lab/src/lib/mountCounter.ts
@@ -88,7 +134,7 @@ export default function mountCounter(target: HTMLElement) {
 }
 ```
 
-`exposes` points at `mountCounter.ts`, not `Counter.svelte`. The host renders the remote via a generic `<RemoteMount>` wrapper (see code section below) that handles the ref + useEffect + mount lifecycle once. Calls become:
+`exposes` points at `mountCounter.ts`, not `Counter.svelte`. The host renders the remote via a generic `<RemoteMount>` wrapper that handles the ref + useEffect + mount lifecycle once:
 
 ```tsx
 <RemoteMount load={() => import('lab/Counter')} />
@@ -99,6 +145,15 @@ This pattern works identically for Angular, Vue, vanilla JS. The host stays fram
 ### Svelte 5 gotcha (already hit and solved)
 
 Svelte 5 components are functions, not classes. The Svelte 4 API `new Counter({ target })` produces misleading errors like `Cannot read properties of null (reading 'nodes')` — looks like a DOM issue but is actually wrong component instantiation. The fix is `mount()` from `svelte`, wrapped in a mount function as above.
+
+---
+
+## Resolved cross-cutting decisions
+
+- **i18n**: each remote owns its own translations (its own i18n library, its own translation files). Only the locale STRING crosses the boundary, propagated via the `<html lang>` attribute (host owns it). Conventions shared, implementations independent. Not implemented yet — v0.3+ work. The `opts` object in the mount signature is the forward-compatible hook.
+- **Dark mode**: pure CSS variables. Host toggles a class on `<html>`; every remote inherits it through the CSS cascade automatically, because remotes render into the host's DOM. Zero coordination code, no events, no shared store. (v0.2 is dark-only; the toggle itself is later.)
+- **SSR for remotes**: don't. Federated remotes stay client-rendered. Content needing SSR/SEO goes in the standalone Next.js blog. For perceived performance use loading skeletons + preloading, not SSR-over-federation.
+- **Monorepo vs split**: currently sibling folders (`naufal-host/`, `naufal-lab/`) with NO workspace tooling (no npm/pnpm workspaces, no Nx, no Turborepo). This is deliberate — keeps a future split into separate repos nearly free (just move the folder, update the watcher path). Split when there's a real reason (third remote, collaborators), not before. Do NOT add a parent-level `package.json`.
 
 ---
 
@@ -155,13 +210,13 @@ export default defineConfig({
 });
 ```
 
-**Note on `127.0.0.1` vs `localhost`**: On Windows, `localhost` resolves to IPv6 (`::1`) by default, but the dts-plugin enforces IPv4 for HTTP fetches. The mismatch causes the types download to silently fail with "Failed to download types archive". Using `127.0.0.1` explicitly bypasses the DNS resolution and works on all platforms. Don't switch back to `localhost` even if other examples use it.
+**Note on `127.0.0.1` vs `localhost`**: On Windows, `localhost` resolves to IPv6 (`::1`) by default, but the dts-plugin enforces IPv4 for HTTP fetches. The mismatch causes the types download to silently fail with "Failed to download types archive". Using `127.0.0.1` explicitly bypasses DNS resolution and works on all platforms. Don't switch back to `localhost`.
 
-**Status**: ✅ Working. Edits to the Svelte component trigger a remote rebuild (via `vite build --watch`), which the host detects and full-page reloads. Not true HMR, but close enough — feels like normal dev.
+**Status**: Working. Edits to the Svelte component trigger a remote rebuild (via `vite build --watch`), which the host detects and full-page reloads. Not true HMR, but close enough.
 
 ### Host: TypeScript types for federated modules
 
-Generated types are working. No manual `remotes.d.ts` file is used (deleted). The plugin downloads `.d.ts` files from the remote at host startup and places them in `naufal-host/@mf-types/`.
+Generated types work. No manual `remotes.d.ts` file (deleted). The plugin downloads `.d.ts` files from the remote at host startup into `naufal-host/@mf-types/`.
 
 **`naufal-host/tsconfig.app.json`** (relevant fragments):
 
@@ -177,78 +232,11 @@ Generated types are working. No manual `remotes.d.ts` file is used (deleted). Th
 }
 ```
 
-The catch-all `"*": ["./@mf-types/*"]` means any new remote works without further tsconfig edits — `import 'dashboard/Widget'` resolves to `@mf-types/dashboard/Widget` automatically. Tradeoff: typo'd imports may resolve to `any` instead of erroring. Acceptable for this project's scale.
+The catch-all `"*": ["./@mf-types/*"]` means new remotes work without further tsconfig edits. Tradeoff: typo'd imports may resolve to `any` instead of erroring. Acceptable at this scale.
 
-**`naufal-host/.gitignore`** must include:
+**`naufal-host/.gitignore`** includes `@mf-types` — it's a regenerated artifact like `node_modules`/`dist`, not committed.
 
-```
-@mf-types
-```
-
-The folder is regenerated on every dev/build startup, so it's a derived artifact like `node_modules` or `dist`. Don't commit it.
-
-**Fresh-clone workflow** (since the folder is gitignored): when cloning to a new machine, the host's TS will show "cannot find module" errors until the remote has built and been served at least once, and the host has fetched from it. Workflow:
-
-1. `cd naufal-lab && pnpm install && pnpm vite build`
-2. `pnpm vite preview --port 5174` (keep running)
-3. In another terminal: `cd naufal-host && pnpm install && pnpm dev`
-4. `@mf-types/` populates, TS errors clear
-
-After step 3 the dev loop is normal.
-
-### Remote: TypeScript types config
-
-`naufal-lab/vite.config.ts` has matching `dts` settings:
-
-```ts
-dts: {
-  generateTypes: true,
-  consumeTypes: false,
-  displayErrorInTerminal: true,
-},
-```
-
-Types are emitted as part of `pnpm vite build` into `dist/@mf-types/` and packaged as `dist/@mf-types.zip` for the host to download over HTTP.
-
-### Host: `naufal-host/src/components/RemoteMount.tsx`
-
-Generic wrapper to hide the ref + useEffect + mount boilerplate. Every remote slots into this — Svelte, Vue, Angular, vanilla, all expose `(target) => cleanup` and use the same component.
-
-```tsx
-import { useEffect, useRef } from 'react';
-
-type MountFn = (target: HTMLElement) => () => void;
-
-export function RemoteMount({
-  load,
-}: {
-  load: () => Promise<{ default: MountFn }>;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let cleanup: (() => void) | undefined;
-    load().then((m) => {
-      if (ref.current) cleanup = m.default(ref.current);
-    });
-    return () => cleanup?.();
-  }, [load]);
-
-  return <div ref={ref} />;
-}
-```
-
-Usage in `App.tsx`:
-
-```tsx
-<RemoteMount load={() => import('lab/Counter')} />
-```
-
-Per-remote `LabRemote.tsx` components are no longer needed — calls go directly through `<RemoteMount>`.
-
-### Host: `naufal-host/src/App.tsx`
-
-Currently a minimal toggle button + `<RemoteMount load={() => import('lab/Counter')} />` lazy-loaded behind Suspense. No styling yet, no router yet. Strict Mode on (intentional — was confusing the user with double-render at first, but it's correctly catching that the mount/unmount cleanup works).
+**Fresh-clone workflow** (folder is gitignored): host TS shows "cannot find module" until the remote has built + been served once and the host has fetched. Order: (1) `cd naufal-lab && npm install && npx vite build`, (2) `npx vite preview --port 5174` (keep running), (3) `cd naufal-host && npm install && npm run dev`, (4) `@mf-types/` populates, errors clear.
 
 ### Remote: `naufal-lab/vite.config.ts`
 
@@ -285,58 +273,92 @@ export default defineConfig({
 });
 ```
 
+### Host: `naufal-host/src/components/RemoteMount.tsx`
+
+Generic wrapper hiding the ref + useEffect + mount boilerplate. Every remote slots in.
+
+```tsx
+import { useEffect, useRef } from 'react';
+
+type MountFn = (target: HTMLElement) => () => void;
+
+export function RemoteMount({
+  load,
+}: {
+  load: () => Promise<{ default: MountFn }>;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let cleanup: (() => void) | undefined;
+    load().then((m) => {
+      if (ref.current) cleanup = m.default(ref.current);
+    });
+    return () => cleanup?.();
+  }, [load]);
+
+  return <div ref={ref} />;
+}
+```
+
+### Host: `naufal-host/src/App.tsx`
+
+Currently a minimal toggle button + `<RemoteMount load={() => import('lab/Counter')} />` behind Suspense. No styling, no router yet. **v0.2 replaces this with the home-page playground.** Strict Mode is on and stays on (intentional — see gotcha 5).
+
 ### Remote: `naufal-lab/src/lib/Counter.svelte`
 
-Minimal counter with intentionally ugly dashed border so the user can visually see it's a remote, not a host component. Will be replaced with proper styling in v0.2.
+Minimal counter with an intentionally ugly dashed border (so it's visibly a remote). May be restyled in v0.2 when it's embedded in the microfrontend-meta block.
 
 ### Dev workflow
 
-- Host: `pnpm dev` (port 5173)
-- Remote: `pnpm vite build --watch` + `pnpm vite preview --port 5174` in two terminals (or combine via `concurrently`)
-- HMR isn't possible with `@module-federation/vite` — fast rebuild + watcher-triggered host reload is the substitute. Rebuilds are typically 200-500ms.
+- Host: `npm run dev` (port 5173)
+- Remote: `npx vite build --watch` + `npx vite preview --port 5174` in two terminals (or combine via `concurrently`)
+- HMR isn't possible with `@module-federation/vite` — fast rebuild + watcher-triggered host reload is the substitute (rebuilds 200-500ms).
 
 ---
 
 ## Known gotchas already solved (don't re-discover)
 
-Worth recording these so they're not relearned. Also material for the first blog post.
+Also raw material for the first blog post.
 
-1. **Svelte 5 `new Component()` is gone.** Svelte 5 components are functions, not classes. The Svelte 4 API produces misleading "Cannot read properties of null (reading 'nodes')" errors. Use `mount()` from `svelte`, wrapped in a `mountFn` exported by the remote.
+1. **Svelte 5 `new Component()` is gone.** Components are functions, not classes. Svelte 4 API produces misleading "Cannot read properties of null (reading 'nodes')" errors. Use `mount()` from `svelte`, wrapped in a `mountFn` exported by the remote.
 
-2. **Windows + dts + `localhost` = silent failure.** The dts-plugin forces IPv4 over HTTP, Windows resolves `localhost` to IPv6 by default → connection refused, "Failed to download types archive". Fix: use `127.0.0.1` everywhere instead of `localhost` in the federation `entry` and the remote's `server.host` / `preview.host`. Works cross-platform.
+2. **Windows + dts + `localhost` = silent failure.** The dts-plugin forces IPv4; Windows resolves `localhost` to IPv6 → "Failed to download types archive". Fix: `127.0.0.1` everywhere in the federation `entry` and the remote's `server.host` / `preview.host`.
 
-3. **The remote must run with `vite build --watch` + `vite preview`, not `vite dev`.** `@module-federation/vite` generates `remoteEntry.js` at build time. There's no remoteEntry in dev mode. Rebuilds are 200-500ms so the workflow feels close to HMR.
+3. **The remote must run with `vite build --watch` + `vite preview`, not `vite dev`.** `@module-federation/vite` generates `remoteEntry.js` at build time; there's no remoteEntry in dev mode.
 
-4. **HMR isn't possible across the MF boundary, but full-page reload on remote rebuild is.** A small custom plugin in the host's vite.config watches `../naufal-lab/dist/` and sends `{ type: 'full-reload' }` over the existing Vite WebSocket when files change. Also requires `server.fs.allow` to permit watching a sibling folder outside the host's root.
+4. **HMR isn't possible across the MF boundary, but full-page reload on remote rebuild is.** Custom host plugin watches `../naufal-lab/dist/` and sends `{ type: 'full-reload' }` over Vite's WebSocket. Requires `server.fs.allow` to permit watching a sibling folder.
 
-5. **React Strict Mode causes the Svelte component to appear to render twice.** It actually mounts → unmounts → remounts to verify the cleanup function works. The single counter you see is the second mount; the first was correctly torn down. Don't disable Strict Mode.
+5. **React Strict Mode causes the Svelte component to appear to render twice.** It mounts → unmounts → remounts to verify cleanup works. The single counter seen is the second mount. Don't disable Strict Mode.
 
-6. **`@mf-types/` is gitignored, not committed.** It's regenerated on every dev/build. Committing creates stale-source confusion and noisy diffs. Tradeoff: first run on a fresh clone shows "cannot find module" errors until the host has fetched once.
+6. **`@mf-types/` is gitignored, not committed.** Regenerated every dev/build. Tradeoff: first run on a fresh clone shows "cannot find module" until the host has fetched once.
+
+---
 
 ## Open issues / next concrete tasks
 
-1. **Decided next move sequence:**
-   - **Move B first**: Set up shadcn + design tokens in the host. Replace inline styles with a proper sidebar+content layout. Make it look like a real site, not a toggle button.
-   - **Move A second**: Add a second remote (likely Vue or another React app) to validate the wildcard typing and architectural pattern scales.
-   - **Move C third**: Wire up React Router so each remote has its own URL (`/lab`, `/blog`).
-
-2. **LEARNINGS.md** — recommended to keep a running file of gotchas hit during development. Will become raw material for the first blog post in v0.2. Already has one entry: the Svelte 5 mount API gotcha.
+1. **v0.2 — build the home page playground** (full spec above). Do setup → frame + `<Cell>` → one block at a time, showing the plan and color/font choices for approval before building.
+2. **After v0.2 home page**: deploy host + remote to Vercel as separate projects.
+3. **Add a second remote** later (Vue or another React app) to validate the wildcard typing + `<RemoteMount>` pattern scales.
+4. **React Router** later — each remote/section gets its own URL.
+5. **LEARNINGS.md** — keep a running file of gotchas (the six above are the start). Raw material for the first blog post.
 
 ---
 
 ## Working preferences for our collaboration
 
-- Minimum-viable-first approach. Don't add complexity until the minimum is verified. Example: React Compiler / babel plugin was in the scaffold; we removed it for v0.1 to simplify debugging surface, will add back in v0.2.
+- Minimum-viable-first. Don't add complexity until the minimum is verified. (E.g. the React Compiler / babel plugin was removed in v0.1 to simplify debugging; can be added back now in v0.2 if desired, verifying federation still works afterward.)
 - Search the web before committing to a stack choice when versions might matter. Don't trust stale training data on package compatibility.
-- Be honest about tradeoffs. Don't sell the easy answer — flag the hard truths (e.g. SSR + MF doesn't give the SEO benefit; Next.js MF plugin is sunsetting; SvelteKit has rougher MF support than plain Svelte).
-- Keep responses prose-first. Use formatting (lists, tables, diagrams) only where it genuinely helps comprehension. No filler.
-- When introducing a new pattern, explain _why_ it's the right pattern, not just how to apply it.
-- Reference existing CV/work experience when relevant — the goal is a portfolio, so connecting work decisions to demonstrable past experience is valuable.
+- Be honest about tradeoffs. Flag hard truths, don't sell the easy answer.
+- Keep responses prose-first. Formatting only where it genuinely helps. No filler.
+- When introducing a new pattern, explain _why_ it's right, not just how to apply it.
+- Reference CV/work experience when relevant — it's a portfolio; connecting decisions to demonstrable experience is valuable.
+- The user is not a designer. Make fine visual calls yourself; let the user react in plain language. Show plans before building so the user can react early.
 
 ---
 
 ## What I want from you now
 
-Pick up where the conversation left off. v0.1 federation infrastructure is working end-to-end, including dev-time auto-reload. Next concrete step is Move B: shadcn + design tokens + a proper layout in the host.
+Build v0.2: the home-page playground for `naufal-host` (full spec in "v0.2 scope" above). Start by showing the plan — files to create, the `<Cell>` component API, proposed color/font choices — and wait for approval before building. Then build incrementally: frame + `<Cell>` first, then one block at a time.
 
-Ask clarifying questions only if necessary — most of the architecture is settled. Don't relitigate decisions; if you disagree with one, flag it briefly and let me decide whether to revisit.
+Don't relitigate settled decisions; if you disagree with one, flag it briefly and let me decide.
