@@ -1,16 +1,17 @@
 import { mount, unmount } from 'svelte'
 
 import '../app.css'
-import Counter from './Counter.svelte'
+import Presence from './Presence.svelte'
 
-export default function mountCounter(
+export default function mountPresence(
   target: HTMLElement,
   opts: Record<string, unknown> = {}
 ) {
+  const host = typeof opts.host === 'string' ? opts.host : undefined
   const context = opts.context === 'standalone' ? 'standalone' : 'host'
-  const instance = mount(Counter, {
+  const instance = mount(Presence, {
     target,
-    props: { context },
+    props: { host, context },
   })
   return () => unmount(instance)
 }

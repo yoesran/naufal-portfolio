@@ -1,0 +1,14 @@
+{
+  "name": "naufal-party",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "partykit dev",
+    "deploy": "partykit deploy"
+  },
+  "devDependencies": {
+    "partykit": "^0.0.115",
+    "typescript": "^6.0.3"
+  }
+}

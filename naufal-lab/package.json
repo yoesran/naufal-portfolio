@@ -34,6 +34,7 @@
   "dependencies": {
     "@module-federation/vite": "^1.15.5",
     "@tailwindcss/vite": "^4.3.0",
+    "partysocket": "^1.1.19",
     "tailwindcss": "^4.3.0"
   }
 }

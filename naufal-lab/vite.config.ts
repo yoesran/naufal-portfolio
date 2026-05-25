@@ -13,6 +13,7 @@ export default defineConfig({
       filename: 'remoteEntry.js',
       exposes: {
         './Counter': './src/lib/mountCounter.ts',
+        './Presence': './src/lib/mountPresence.ts',
       },
       dts: {
         generateTypes: true,

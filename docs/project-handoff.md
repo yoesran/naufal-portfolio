@@ -46,20 +46,23 @@ Verified via web search at planning time:
 
 ### Project stack
 
-| Project       | Stack                                             | Port | Status      |
-| ------------- | ------------------------------------------------- | ---- | ----------- |
-| `naufal-host` | React 19 + Vite + `@module-federation/vite`       | 5173 | Working     |
-| `naufal-lab`  | Plain Svelte 5 + Vite + `@module-federation/vite` | 5174 | Working     |
-| `naufal-blog` | Next.js 15 App Router (standalone, NOT federated) | —    | Not started |
+| Project        | Stack                                             | Port | Status      |
+| -------------- | ------------------------------------------------- | ---- | ----------- |
+| `naufal-host`  | React 19 + Vite + `@module-federation/vite`       | 5173 | Working     |
+| `naufal-lab`   | Plain Svelte 5 + Vite + `@module-federation/vite` | 5174 | Working     |
+| `naufal-party` | PartyKit (WebSocket) — multiplayer presence       | 1999 | Working     |
+| `naufal-blog`  | Next.js 15 App Router (standalone, NOT federated) | —    | Not started |
 
 (There is no separate `naufal-tokens` package — see Design approach below. The earlier idea of a published tokens package was dropped as over-engineered.)
+
+`naufal-party` is a sibling project added when the multiplayer-cursor block was built. It's a stateful WebSocket server (Vercel can't host one, which is part of why a VPS is on the table for deployment). The federated `Presence` component opens its own socket to it — see the MF setup doc for the realtime architecture.
 
 ### Roadmap
 
 - **v0.1 — DONE.** Cross-framework federation works end-to-end (React host loads a Svelte remote at runtime), dev-time auto-reload works, TypeScript types flow remote→host.
-- **v0.2 — CURRENT.** shadcn in the host, a dark theme, the home-page playground (frame + first 3 blocks), deploy to Vercel. See "v0.2 scope" below.
-- **v0.3 — content.** Scaffold the Next.js blog. First technical post (the MF build itself). The CV page. Begin the experience "stories."
-- **v0.4+ — grow.** More playground blocks. More remotes (Angular via spartan/ui, vanilla JS). Eventually a 3D block once Three.js is properly learned (deliberately deferred — see below). Possibly an "architecture inspector" page showing live network waterfall / loaded chunks / shared deps.
+- **v0.2 — IN PROGRESS.** shadcn + dark theme done. The `<Cell>` frame primitive exists. Two playground blocks built: **microfrontend-meta** (live Counter, host⇄remote diagram, load status, simulate-offline) and **presence-room** (multiplayer cursors via a federated `Presence` remote + PartyKit). The remote now exposes **two** components (`./Counter`, `./Presence`). Still to do: the hero/interactive-name block, the tech-stack block, the header/footer frame, and deploy.
+- **v0.3 — content.** Scaffold the Next.js blog. First technical post (the MF build itself — the gotchas list is the raw material). The CV page. Begin the experience "stories."
+- **v0.4+ — grow.** More playground blocks. More remotes (Angular via spartan/ui, vanilla JS). Harden presence (ghost-replay for the empty-room problem). Eventually a 3D block once Three.js is properly learned (deliberately deferred — see below). Possibly an "architecture inspector" page showing live network waterfall / loaded chunks / shared deps.
 
 ---
 
@@ -125,8 +128,8 @@ The remote does NOT expose framework-specific components. It exposes **a mount f
 
 ```ts
 // In naufal-lab/src/lib/mountCounter.ts
-import { mount, unmount } from 'svelte';
-import Counter from './Counter.svelte';
+import { mount, unmount } from "svelte";
+import Counter from "./Counter.svelte";
 
 export default function mountCounter(target: HTMLElement) {
   const instance = mount(Counter, { target });
@@ -137,7 +140,7 @@ export default function mountCounter(target: HTMLElement) {
 `exposes` points at `mountCounter.ts`, not `Counter.svelte`. The host renders the remote via a generic `<RemoteMount>` wrapper that handles the ref + useEffect + mount lifecycle once:
 
 ```tsx
-<RemoteMount load={() => import('lab/Counter')} />
+<RemoteMount load={() => import("lab/Counter")} />
 ```
 
 This pattern works identically for Angular, Vue, vanilla JS. The host stays framework-agnostic. The remote owns its own framework lifecycle. This is also how Single-SPA does it.
@@ -159,28 +162,30 @@ Svelte 5 components are functions, not classes. The Svelte 4 API `new Counter({ 
 
 ## Current working state
 
+> **Note:** the code snippets below are the v0.1 baseline as of the original handoff. They've since evolved (two exposes, `opts` contract, `RemoteMount` with status/fallback, the mouse-tracker Counter, the `Presence` remote, CSS shipped over the boundary). For the **current** code and architecture, see [`module-federation-setup.md`](./module-federation-setup.md) — it's the source of truth. The snippets here are kept for historical context.
+
 ### Host: `naufal-host/vite.config.ts`
 
 ```ts
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { federation } from '@module-federation/vite';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { federation } from "@module-federation/vite";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const remoteDist = path.resolve(__dirname, '../naufal-lab/dist');
+const remoteDist = path.resolve(__dirname, "../naufal-lab/dist");
 
 export default defineConfig({
   plugins: [
     react(),
     federation({
-      name: 'host',
+      name: "host",
       remotes: {
         lab: {
-          type: 'module',
-          name: 'lab',
-          entry: 'http://127.0.0.1:5174/remoteEntry.js',
+          type: "module",
+          name: "lab",
+          entry: "http://127.0.0.1:5174/remoteEntry.js",
         },
       },
       dts: {
@@ -188,15 +193,15 @@ export default defineConfig({
         consumeTypes: true,
         displayErrorInTerminal: true,
       },
-      shared: ['react', 'react-dom'],
+      shared: ["react", "react-dom"],
     }),
     {
-      name: 'watch-remote-dist',
+      name: "watch-remote-dist",
       configureServer(server) {
         server.watcher.add(remoteDist);
-        server.watcher.on('change', (file) => {
+        server.watcher.on("change", (file) => {
           if (file.startsWith(remoteDist)) {
-            server.ws.send({ type: 'full-reload' });
+            server.ws.send({ type: "full-reload" });
           }
         });
       },
@@ -204,9 +209,9 @@ export default defineConfig({
   ],
   server: {
     port: 5173,
-    fs: { allow: [path.resolve(__dirname, '..')] },
+    fs: { allow: [path.resolve(__dirname, "..")] },
   },
-  build: { target: 'chrome89' },
+  build: { target: "chrome89" },
 });
 ```
 
@@ -241,17 +246,17 @@ The catch-all `"*": ["./@mf-types/*"]` means new remotes work without further ts
 ### Remote: `naufal-lab/vite.config.ts`
 
 ```ts
-import { defineConfig } from 'vite';
-import { svelte } from '@sveltejs/vite-plugin-svelte';
-import { federation } from '@module-federation/vite';
+import { defineConfig } from "vite";
+import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { federation } from "@module-federation/vite";
 
 export default defineConfig({
   plugins: [
     svelte(),
     federation({
-      name: 'lab',
-      filename: 'remoteEntry.js',
-      exposes: { './Counter': './src/lib/mountCounter.ts' },
+      name: "lab",
+      filename: "remoteEntry.js",
+      exposes: { "./Counter": "./src/lib/mountCounter.ts" },
       dts: {
         generateTypes: true,
         consumeTypes: false,
@@ -262,14 +267,14 @@ export default defineConfig({
   ],
   server: {
     port: 5174,
-    host: '127.0.0.1',
-    origin: 'http://127.0.0.1:5174',
+    host: "127.0.0.1",
+    origin: "http://127.0.0.1:5174",
   },
   preview: {
     port: 5174,
-    host: '127.0.0.1',
+    host: "127.0.0.1",
   },
-  build: { target: 'chrome89' },
+  build: { target: "chrome89" },
 });
 ```
 
@@ -278,7 +283,7 @@ export default defineConfig({
 Generic wrapper hiding the ref + useEffect + mount boilerplate. Every remote slots in.
 
 ```tsx
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 type MountFn = (target: HTMLElement) => () => void;
 
@@ -333,15 +338,22 @@ Also raw material for the first blog post.
 
 6. **`@mf-types/` is gitignored, not committed.** Regenerated every dev/build. Tradeoff: first run on a fresh clone shows "cannot find module" until the host has fetched once.
 
+7. **TypeScript 6.0 turns deprecated `baseUrl` into a hard error (TS5101).** The MF dts-plugin generates a tsconfig that `extends` the remote's `tsconfig.json`, so a `baseUrl` anywhere in the remote's config chain makes type generation crash silently — the host gets no types, with only a `#TYPE-001` in the build log. shadcn-svelte's init added the `baseUrl`. Fix: `"ignoreDeprecations": "6.0"` (band-aid; `baseUrl` is fully removed in TS 7) or drop `baseUrl` entirely.
+
+8. **`vite build --watch` does NOT reload `vite.config.ts`.** Unlike `vite dev`, it watches source but not the config. After editing `exposes` (e.g. adding `./Presence`), the running build keeps the old config — restart the build process or the new expose never appears in `remoteEntry.js`.
+
+9. **Tailwind utility classes don't cross the MF boundary.** Theme **CSS variables** cascade from host into the embedded remote (shadcn tokens just work), but utility classes (`bg-sky-400`, the shadcn Button classes) live in the remote's entry stylesheet, which the host never loads. Embedded, they only render if the host coincidentally generates the same class. Fix: import the stylesheet (`app.css`) in the exposed mount adapter so Tailwind ships with the federated chunk (cost: duplicate Tailwind + preflight in the host), or style remotes with CSS variables + inline only.
+
 ---
 
 ## Open issues / next concrete tasks
 
-1. **v0.2 — build the home page playground** (full spec above). Do setup → frame + `<Cell>` → one block at a time, showing the plan and color/font choices for approval before building.
-2. **After v0.2 home page**: deploy host + remote to Vercel as separate projects.
-3. **Add a second remote** later (Vue or another React app) to validate the wildcard typing + `<RemoteMount>` pattern scales.
-4. **React Router** later — each remote/section gets its own URL.
-5. **LEARNINGS.md** — keep a running file of gotchas (the six above are the start). Raw material for the first blog post.
+1. **Finish v0.2 playground** — still need the hero/interactive-name block, the tech-stack block, and the header/footer frame. (microfrontend-meta and presence-room blocks + the `<Cell>` primitive are done.)
+2. **Deploy** — host + remote to static hosting; `naufal-party` needs a stateful host (Vercel can't run a WebSocket server → VPS or PartyKit Cloud). Make `VITE_LAB_URL`, the federation `entry`, and `VITE_PARTY_HOST` environment-aware (still hardcoded to `127.0.0.1`).
+3. **Harden presence** — ghost-replay / synthetic cursors for the empty-room problem (a portfolio usually has one visitor).
+4. **Add a third remote** later (Angular spartan/ui, Vue, or vanilla JS) to validate the `<RemoteMount>` + `opts` pattern scales across frameworks.
+5. **React Router** later — each remote/section gets its own URL.
+6. **LEARNINGS.md** — keep a running file of the gotchas above. Raw material for the first blog post (the MF build, the TS6/baseUrl trap, and the Tailwind-across-the-boundary lesson are all strong material).
 
 ---
 
@@ -359,6 +371,6 @@ Also raw material for the first blog post.
 
 ## What I want from you now
 
-Build v0.2: the home-page playground for `naufal-host` (full spec in "v0.2 scope" above). Start by showing the plan — files to create, the `<Cell>` component API, proposed color/font choices — and wait for approval before building. Then build incrementally: frame + `<Cell>` first, then one block at a time.
+v0.2 is partway done — the `<Cell>` primitive and two blocks (microfrontend-meta, presence-room) exist. Remaining v0.2 work: the hero/interactive-name block, the tech-stack block, the header/footer frame, then deploy. Build incrementally, one block at a time, showing the plan and visual choices for approval before building.
 
 Don't relitigate settled decisions; if you disagree with one, flag it briefly and let me decide.

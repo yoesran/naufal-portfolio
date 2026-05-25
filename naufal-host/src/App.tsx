@@ -1,14 +1,13 @@
-import { Suspense } from 'react'
-
-import { RemoteMount } from './components/RemoteMount'
+import { MicrofrontendBlock } from '@/components/blocks/MicrofrontendBlock'
+import { PresenceBlock } from '@/components/blocks/PresenceBlock'
 
 export default function App() {
   return (
-    <div style={{ padding: 24, fontFamily: 'system-ui' }}>
-      <h1>Naufal portfolio — v0.1</h1>
-      <Suspense fallback={<p>Loading remote…</p>}>
-        <RemoteMount load={() => import('lab/Counter')} />
-      </Suspense>
-    </div>
+    <main className="bg-background text-foreground min-h-dvh">
+      <div className="mx-auto max-w-2xl space-y-6 px-6 py-16">
+        <MicrofrontendBlock />
+        <PresenceBlock />
+      </div>
+    </main>
   )
 }
