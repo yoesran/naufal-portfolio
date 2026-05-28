@@ -1,6 +1,5 @@
 import { mount, unmount } from 'svelte'
 
-import '../app.css'
 import Presence from './Presence.svelte'
 
 export default function mountPresence(

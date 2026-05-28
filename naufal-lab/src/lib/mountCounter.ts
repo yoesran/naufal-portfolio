@@ -1,6 +1,5 @@
 import { mount, unmount } from 'svelte'
 
-import '../app.css'
 import Counter from './Counter.svelte'
 
 export default function mountCounter(

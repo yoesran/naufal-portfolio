@@ -13,15 +13,18 @@ export type RemoteStatus =
 export function RemoteMount({
   load,
   fallback,
+  loadingFallback,
   onStatusChange,
   opts,
 }: {
   load: () => Promise<{ default: MountFn }>
   fallback?: React.ReactNode
+  loadingFallback?: React.ReactNode
   onStatusChange?: (status: RemoteStatus) => void
   opts?: Record<string, unknown>
 }) {
   const ref = useRef<HTMLDivElement>(null)
+  const [loaded, setLoaded] = useState(false)
   const [failed, setFailed] = useState(false)
 
   useEffect(() => {
@@ -34,6 +37,7 @@ export function RemoteMount({
       .then((m) => {
         if (cancelled || !ref.current) return
         cleanup = m.default(ref.current, opts)
+        setLoaded(true)
         onStatusChange?.({
           state: 'loaded',
           ms: Math.round(performance.now() - started),
@@ -52,5 +56,13 @@ export function RemoteMount({
   }, [load, onStatusChange, opts])
 
   if (failed && fallback) return <>{fallback}</>
-  return <div ref={ref} />
+  return (
+    <>
+      {!loaded && loadingFallback}
+      <div
+        ref={ref}
+        className={loadingFallback && !loaded ? 'hidden' : undefined}
+      />
+    </>
+  )
 }

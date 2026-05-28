@@ -31,11 +31,15 @@ export default defineConfig({
   preview: {
     port: 5174,
     host: '127.0.0.1',
+    cors: true,
+    allowedHosts: true,
   },
   server: {
     port: 5174,
     host: '127.0.0.1',
     origin: 'http://127.0.0.1:5174',
+    cors: true,
+    allowedHosts: true,
   },
   build: { target: 'chrome89' },
 })

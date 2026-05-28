@@ -60,7 +60,7 @@ Verified via web search at planning time:
 ### Roadmap
 
 - **v0.1 — DONE.** Cross-framework federation works end-to-end (React host loads a Svelte remote at runtime), dev-time auto-reload works, TypeScript types flow remote→host.
-- **v0.2 — IN PROGRESS.** shadcn + dark theme done. The `<Cell>` frame primitive exists. Two playground blocks built: **microfrontend-meta** (live Counter, host⇄remote diagram, load status, simulate-offline) and **presence-room** (multiplayer cursors via a federated `Presence` remote + PartyKit). The remote now exposes **two** components (`./Counter`, `./Presence`). Still to do: the hero/interactive-name block, the tech-stack block, the header/footer frame, and deploy.
+- **v0.2 — FEATURE-COMPLETE; deploy pending.** All four playground blocks built (**hero** with per-letter cursor repel, **tech-stack** with an icon orbit, **microfrontend-meta** with live Counter + diagram + skeleton loader + simulate-offline, **presence-room** with multiplayer cursors via PartyKit). Header + footer frame in place. Resilience added: MF runtime fallback plugin so an unreachable remote no longer blanks the host; top-level `ErrorBoundary` + `unhandledrejection` handler; `loadRemote` instead of `import('lab/X')` so blocks lazy-load _after_ React mounts. Deploy plumbing prepared: federation `entry` and `VITE_PARTY_HOST` env-driven via `loadEnv` + a `dev:tunnel` mode that reads `.env.tunnel.local`; lab `preview` has `cors: true` + `allowedHosts: true` for cross-origin script fetches. Remaining: actual deploy (host + remote to static hosting, party to a stateful host).
 - **v0.3 — content.** Scaffold the Next.js blog. First technical post (the MF build itself — the gotchas list is the raw material). The CV page. Begin the experience "stories."
 - **v0.4+ — grow.** More playground blocks. More remotes (Angular via spartan/ui, vanilla JS). Harden presence (ghost-replay for the empty-room problem). Eventually a 3D block once Three.js is properly learned (deliberately deferred — see below). Possibly an "architecture inspector" page showing live network waterfall / loaded chunks / shared deps.
 
@@ -342,18 +342,29 @@ Also raw material for the first blog post.
 
 8. **`vite build --watch` does NOT reload `vite.config.ts`.** Unlike `vite dev`, it watches source but not the config. After editing `exposes` (e.g. adding `./Presence`), the running build keeps the old config — restart the build process or the new expose never appears in `remoteEntry.js`.
 
-9. **Tailwind utility classes don't cross the MF boundary.** Theme **CSS variables** cascade from host into the embedded remote (shadcn tokens just work), but utility classes (`bg-sky-400`, the shadcn Button classes) live in the remote's entry stylesheet, which the host never loads. Embedded, they only render if the host coincidentally generates the same class. Fix: import the stylesheet (`app.css`) in the exposed mount adapter so Tailwind ships with the federated chunk (cost: duplicate Tailwind + preflight in the host), or style remotes with CSS variables + inline only.
+9. **Tailwind utility classes don't cross the MF boundary.** Theme **CSS variables** cascade from host into the embedded remote (shadcn tokens just work), but utility classes (`bg-sky-400`, the shadcn Button classes) live in the remote's entry stylesheet, which the host never loads. Embedded, they only render if the host coincidentally generates the same class. Fix: import the stylesheet (`app.css`) **inside the `.svelte` component** (not the `.ts` mount adapter — see #10) so Tailwind ships with the federated chunk (cost: duplicate Tailwind + preflight in the host), or style remotes with CSS variables + inline only.
+
+10. **DTS tsconfig only extends root `tsconfig.json`, not `tsconfig.app.json`.** So anything in app-only (e.g. `vite/client` types) is invisible to the dts tsc. A bare `import '../app.css'` in a `.ts` mount adapter fails with `TS2882: side-effect import of '../app.css'`. Put CSS imports in the `.svelte` component instead — Svelte/Vite processes them, the dts tsc never sees them.
+
+11. **The MF plugin eagerly preloads every `import('lab/X')` literal at boot.** It static-analyses your source, finds every federated import, and emits them as `loadRemote(...)` preloads in the bootstrap proxy that wraps `main.tsx` — so React doesn't mount until every detected chunk is fetched. Over a tunnel/throttled connection this is the "blank screen for a second" you'll see. Opt out by using `loadRemote('lab/X')` from `@module-federation/runtime` for block-level loads — the plugin's scanner doesn't pick those up.
+
+12. **`hostInitInjectLocation` defaults to `'html'` already** — setting it explicitly is a no-op. The blank-page-on-load issue isn't about init injection; it's about #11 (eager chunk preload).
+
+13. **MF plugin rewrites `import('...')` literals even inside comments.** Writing `import('lab/Counter')` in a code comment makes Vite's import analysis try to transform it, breaking the file. Refer to federated imports in prose as just `lab/Counter`.
+
+14. **First-paint white flash isn't MF init** — even with everything fully lazy, the browser paints `index.html` before the JS bundle downloads/parses/executes. The window between page load and React mount is _always_ white unless you paint a theme bg inline. Add a `<style>` in `<head>` with `background-color` + `color-scheme: dark`.
+
+15. **Browsers fire `touchcancel` (not `touchend`) when they promote a touch to a scroll/zoom.** Any touch-driven state that doesn't have a `touchcancel` handler can leak — finger-down state stuck `true`, animations stuck paused, etc. Always handle `touchcancel` alongside `touchend` for touch UI.
 
 ---
 
 ## Open issues / next concrete tasks
 
-1. **Finish v0.2 playground** — still need the hero/interactive-name block, the tech-stack block, and the header/footer frame. (microfrontend-meta and presence-room blocks + the `<Cell>` primitive are done.)
-2. **Deploy** — host + remote to static hosting; `naufal-party` needs a stateful host (Vercel can't run a WebSocket server → VPS or PartyKit Cloud). Make `VITE_LAB_URL`, the federation `entry`, and `VITE_PARTY_HOST` environment-aware (still hardcoded to `127.0.0.1`).
-3. **Harden presence** — ghost-replay / synthetic cursors for the empty-room problem (a portfolio usually has one visitor).
-4. **Add a third remote** later (Angular spartan/ui, Vue, or vanilla JS) to validate the `<RemoteMount>` + `opts` pattern scales across frameworks.
-5. **React Router** later — each remote/section gets its own URL.
-6. **LEARNINGS.md** — keep a running file of the gotchas above. Raw material for the first blog post (the MF build, the TS6/baseUrl trap, and the Tailwind-across-the-boundary lesson are all strong material).
+1. **Actual deploy** — env-aware URLs and resilience are in place, but nothing's been shipped yet. Host + remote can go to static hosting (Vercel/Cloudflare Pages); `naufal-party` needs a stateful host (VPS or PartyKit Cloud — Vercel can't run a WebSocket server). VS Code dev tunnels already work as a preview environment via `npm run dev:tunnel`.
+2. **Harden presence** — ghost-replay / synthetic cursors for the empty-room problem (a portfolio usually has one visitor).
+3. **Add a third remote** later (Angular spartan/ui, Vue, or vanilla JS) to validate the `<RemoteMount>` + `opts` pattern scales across frameworks.
+4. **React Router** later — each remote/section gets its own URL.
+5. **LEARNINGS.md** — keep a running file of the gotchas above. Raw material for the first blog post (the MF build, the TS6/baseUrl trap, the Tailwind-across-the-boundary lesson, and the eager-preload / `loadRemote` pattern are all strong material).
 
 ---
 
@@ -371,6 +382,6 @@ Also raw material for the first blog post.
 
 ## What I want from you now
 
-v0.2 is partway done — the `<Cell>` primitive and two blocks (microfrontend-meta, presence-room) exist. Remaining v0.2 work: the hero/interactive-name block, the tech-stack block, the header/footer frame, then deploy. Build incrementally, one block at a time, showing the plan and visual choices for approval before building.
+v0.2 is feature-complete — all four blocks (hero, tech-stack, microfrontend-meta, presence-room) exist, the frame is in place, and deploy resilience + env-driven URLs are wired. Remaining: actually deploy (host + remote to static hosting; party to a stateful host — VPS or PartyKit Cloud). After that, move on to v0.3 (blog scaffold + first technical post drawing on the gotchas list).
 
 Don't relitigate settled decisions; if you disagree with one, flag it briefly and let me decide.

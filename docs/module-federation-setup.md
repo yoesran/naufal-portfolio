@@ -18,29 +18,35 @@ The remote exposes **two** components today: `./Counter` (a context-aware mouse-
 
 ### `naufal-host` — React Host (port 5173)
 
-| File                                           | Role                                                                                 |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `vite.config.ts`                               | Configured as a **host**, consuming the `lab` remote                                 |
-| `src/App.tsx`                                  | The home-page playground — stacks `Cell` blocks                                      |
-| `src/components/Cell.tsx`                      | The frame primitive: bordered card + monospace label, every block sits in one        |
-| `src/components/RemoteMount.tsx`               | Generic wrapper that mounts any framework-agnostic remote (status + fallback + opts) |
-| `src/components/blocks/MicrofrontendBlock.tsx` | Block: live Counter + host⇄remote diagram + load status + simulate-offline toggle    |
-| `src/components/blocks/PresenceBlock.tsx`      | Block: loads `lab/Presence` (multiplayer cursors)                                    |
-| `src/vite-env.d.ts`                            | Types `VITE_LAB_URL` / `VITE_PARTY_HOST` env vars                                    |
-| `tsconfig.app.json`                            | `paths` mapping so federated imports resolve to generated types                      |
-| `@mf-types/`                                   | Auto-generated, gitignored — downloaded remote type declarations                     |
+| File                                           | Role                                                                                                                                       |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `vite.config.ts`                               | Host config; reads `VITE_LAB_URL` via `loadEnv` so the federation `entry` is environment-aware                                              |
+| `index.html`                                   | Inline `<style>` paints the dark background on first frame (avoids white FOUC before JS loads)                                              |
+| `src/main.tsx`                                 | Mounts React inside a top-level `ErrorBoundary` + installs an `unhandledrejection` swallower                                                |
+| `src/App.tsx`                                  | The home-page playground — header, intro, Hero / TechStack / Microfrontend / Presence blocks, footer                                       |
+| `src/components/Header.tsx`, `Footer.tsx`      | Sticky header (name + nav placeholders), footer with social links                                                                          |
+| `src/components/Cell.tsx`                      | The frame primitive: bordered card + monospace label, every block sits in one                                                              |
+| `src/components/RemoteMount.tsx`               | Generic wrapper that mounts any framework-agnostic remote (status + `fallback` + `loadingFallback` + opts)                                 |
+| `src/components/blocks/HeroBlock.tsx`          | Block: host-native interactive wordmark (per-letter cursor repel + emerald glow)                                                            |
+| `src/components/blocks/TechStackBlock.tsx`     | Block: host-native rotating icon orbit; pills active on hover/focus/tap                                                                     |
+| `src/components/blocks/MicrofrontendBlock.tsx` | Block: live Counter + host⇄remote diagram + load status + skeleton loader + simulate-offline toggle                                         |
+| `src/components/blocks/PresenceBlock.tsx`      | Block: loads `lab/Presence` (multiplayer cursors)                                                                                          |
+| `src/lib/mf-fallback-plugin.ts`                | MF runtime plugin — `errorLoadRemote` returns a benign stub on init failure, a throwing stub on block-import failure (see "Resilience")     |
+| `src/vite-env.d.ts`                            | Types `VITE_LAB_URL` / `VITE_PARTY_HOST` env vars                                                                                          |
+| `tsconfig.app.json`                            | `paths` mapping so federated imports resolve to generated types                                                                            |
+| `@mf-types/`                                   | Auto-generated, gitignored — downloaded remote type declarations                                                                           |
 
 ### `naufal-lab` — Svelte Remote (port 5174)
 
 | File                       | Role                                                                                                                              |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `vite.config.ts`           | Configured as a **remote**, exposing `./Counter` and `./Presence`                                                                 |
-| `src/lib/Counter.svelte`   | Context-aware component: a cursor-following glow + counter                                                                        |
+| `src/lib/Counter.svelte`   | Context-aware component: a cursor-following glow + counter; imports `../app.css` so Tailwind ships in the federated chunk         |
 | `src/lib/mountCounter.ts`  | Mount adapter for `./Counter`                                                                                                     |
-| `src/lib/Presence.svelte`  | Multiplayer cursor canvas — opens its own `PartySocket` connection                                                                |
+| `src/lib/Presence.svelte`  | Multiplayer cursor canvas — opens its own `PartySocket` connection; also imports `../app.css`                                     |
 | `src/lib/mountPresence.ts` | Mount adapter for `./Presence`                                                                                                    |
 | `src/App.svelte`           | Standalone page showcasing both exposed components                                                                                |
-| `src/app.css`              | Tailwind + shadcn theme — **imported by the mount adapters** so the CSS ships over federation (see "Styling across the boundary") |
+| `src/app.css`              | Tailwind + shadcn theme — imported by the **Svelte components** (not the mount adapters) so CSS ships over federation             |
 
 ### `naufal-party` — PartyKit Realtime Server (port 1999)
 
@@ -245,12 +251,80 @@ This is subtle and bit us. **CSS variables cross the boundary; Tailwind utility 
 
 - Remotes render into the host's DOM, so anything driven by CSS variables (the shadcn theme tokens: `--background`, `--primary`, `--border`, …) just works via the cascade — the host owns the values, the remote inherits them.
 - But Tailwind **utility classes** (`border-emerald-500/40`, `bg-sky-400`, the shadcn Button classes) are concrete rules that live in the remote's **entry stylesheet**, which is linked only from the remote's standalone `index.html`. The federated chunk ships **no CSS**. Embedded, those classes only render if the host coincidentally generates the same ones (it uses emerald, so emerald worked; it never uses sky, so sky silently didn't).
-- Fix used here: **import `app.css` in the exposed mount adapters** (`mountCounter.ts`, `mountPresence.ts`) so Tailwind ships with the federated chunk and the MF runtime injects it on consumption. Cost: the host loads a second Tailwind bundle + a duplicate preflight — benign because host and remote share the identical theme, but real weight that grows per remote.
+- Fix used here: **import `app.css` inside the `.svelte` components** (`Counter.svelte`, `Presence.svelte`) so Tailwind ships with the federated chunk and the MF runtime injects it on consumption. Cost: the host loads a second Tailwind bundle + a duplicate preflight — benign because host and remote share the identical theme, but real weight that grows per remote.
+- **Why inside the `.svelte` file, not the `.ts` mount adapter:** the dts-plugin's generated tsconfig compiles only the `.ts` mount adapters, extending the root `tsconfig.json` (not `tsconfig.app.json`). Without `vite/client` types in that chain, a bare `import '../app.css'` in `.ts` fails with `TS2882: Cannot find module … side-effect import of '../app.css'`. The `.svelte` file's `<script>` is processed by Svelte/Vite (not the dts tsc), so the import resolves there.
 - Alternative: style federated components with CSS variables + inline styles only (no utilities). Robust and lean, but you give up Tailwind inside remotes.
 
-### 8. Lazy loading
+### 8. Lazy loading via `loadRemote` (not `import('lab/X')`)
 
-Remote chunks load on demand. The dynamic `import('lab/Counter')` inside `RemoteMount` triggers the network fetch — `remoteEntry.js` plus the exposed module's chunk graph (and now its CSS) — so a visitor only pays for a remote when it renders.
+A subtle plugin behaviour: `@module-federation/vite` does **build-time static analysis** of every `import('lab/X')` literal it sees, collects them into a "used remotes" map, and emits them as `loadRemote(...)` preloads inside the host bootstrap proxy that wraps `main.tsx`. The generated proxy is roughly:
+
+```js
+(async () => {
+  const { initHost } = await import(initSrc)
+  const runtime = await initHost()
+  await Promise.all([
+    runtime.loadRemote("lab/Counter"),
+    runtime.loadRemote("lab/Presence"),
+  ])
+})().then(() => import("/src/main.tsx"))
+```
+
+So `main.tsx` doesn't run until every detected federated chunk has been fetched — over a slow link, this is hundreds of ms of blank page before React even mounts.
+
+**Opt out by importing through the runtime instead:**
+
+```ts
+import { loadRemote } from '@module-federation/runtime'
+
+const load = useCallback<() => Promise<typeof import('lab/Counter')>>(
+  () => loadRemote('lab/Counter') as Promise<typeof import('lab/Counter')>,
+  []
+)
+```
+
+The plugin's static scanner only sees `loadRemote('lab/Counter')` as a runtime function call with a string argument — it doesn't add it to the preload list. The `typeof import(...)` type cast is a TypeScript-only construct that gets erased before Vite's plugin runs, so it doesn't leak into the preload either. Result: `main.tsx` only waits on `initHost()` (a single small `remoteEntry.js` fetch), React mounts, blocks render skeletons, and each block's chunk loads lazily in parallel via `RemoteMount`'s `useEffect`.
+
+### 9. Resilience: runtime plugin + error boundary
+
+A failing `remoteEntry.js` fetch used to take down the host bootstrap (blank page) because the auto-init's rejection cascaded. Two layers prevent that now:
+
+- **MF runtime plugin** ([`src/lib/mf-fallback-plugin.ts`](../naufal-host/src/lib/mf-fallback-plugin.ts)) hooks `errorLoadRemote`. For the auto-init failure (id = `"lab"`) it returns a benign stub so the host bootstrap completes and React mounts. For block-level loads (id = `"lab/Counter"`, etc.) it returns a stub whose `default` function **throws when called** — that propagates through `RemoteMount.then` into its `.catch`, flips `failed = true`, and renders the per-block `fallback` UI. Registered via `federation({ runtimePlugins: ['./src/lib/mf-fallback-plugin.ts'] })`.
+- **Top-level `ErrorBoundary`** in [`src/main.tsx`](../naufal-host/src/main.tsx) catches React render errors and shows a small "Something went wrong" message instead of blanking. Plus a global `unhandledrejection` listener swallows any async failure that slips past everything else.
+
+Outcome: a remote being completely offline now leaves the host fully usable, with per-block fallbacks shown where the federated content would have been.
+
+### 10. Environment-aware deployment
+
+The federation `entry` URL in the host's `vite.config.ts` is built from an env var via Vite's `loadEnv`:
+
+```ts
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+  const labUrl = env.VITE_LAB_URL || 'http://127.0.0.1:5174'
+  return {
+    plugins: [
+      // …
+      federation({
+        remotes: {
+          lab: { type: 'module', name: 'lab', entry: `${labUrl}/remoteEntry.js` },
+        },
+      }),
+    ],
+  }
+})
+```
+
+`VITE_PARTY_HOST` flows through `import.meta.env` into the client (used by `PresenceBlock` for the PartyKit URL). Two npm scripts in `naufal-host`:
+
+- `dev` → loads `.env.development.local` (none committed → defaults to `127.0.0.1`)
+- `dev:tunnel` → `vite --mode tunnel`, loads `.env.tunnel.local` with the VS Code dev-tunnel URLs
+
+The lab's `preview` and `server` configs set `cors: true` and `allowedHosts: true` so cross-origin script fetches from the host's tunnel origin work. (For production, tighten `cors` to the actual host origin and enumerate `allowedHosts`.)
+
+### 11. Original lazy-import note
+
+Even without the `loadRemote` opt-out above, remote chunks still load on demand at the call-site level — `RemoteMount`'s `useEffect` only fires the `load()` once it mounts. The `loadRemote` change is purely about getting `main.tsx` to **execute first**, not about whether the chunk loads eagerly vs lazily inside React's lifecycle.
 
 ---
 
@@ -300,4 +374,9 @@ Open `http://localhost:5173`. Open a second tab (or `http://127.0.0.1:5174` stan
 6. **`@mf-types/` is gitignored** — first run on a fresh clone shows "cannot find module" until the host fetches once.
 7. **TS 6.0 `baseUrl` is a hard error (TS5101)** that silently kills DTS generation through the dts-plugin's inherited tsconfig. Add `ignoreDeprecations: "6.0"` or remove `baseUrl`.
 8. **`vite build --watch` does NOT reload `vite.config.ts`** — unlike `vite dev`. After changing `exposes` (or any config), restart the build process or the change never takes effect.
-9. **Tailwind utility classes don't cross the MF boundary** — they live in the remote's entry stylesheet. Import the stylesheet in the exposed entry to ship it with the chunk, or style remotes with CSS variables only.
+9. **Tailwind utility classes don't cross the MF boundary** — they live in the remote's entry stylesheet. Import the stylesheet **inside the `.svelte` component** (not the `.ts` mount adapter) so it ships with the chunk and the dts tsc doesn't choke on the side-effect CSS import.
+10. **The plugin eagerly preloads every `import('lab/X')` literal it finds**, blocking `main.tsx` until all of them are fetched. Use `loadRemote('lab/X')` from `@module-federation/runtime` for block-level loads to opt out — only the small `remoteEntry.js` then blocks bootstrap, chunks load lazily after React mounts.
+11. **`hostInitInjectLocation` already defaults to `'html'`** — setting it explicitly is a no-op. The blank-on-startup problem isn't this option; it's the eager-preload behaviour above.
+12. **MF plugin rewrites `import('...')` literals even inside comments.** If you write `import('lab/Counter')` in a `.ts` source comment, Vite's import analysis tries to transform it and the file breaks with `Failed to parse source for import analysis`. Phrase code in prose as `lab/Counter` (no `import()` wrapper).
+13. **First-paint white flash isn't MF** — even with MF fully lazy, the browser paints `index.html` before the JS bundle downloads/parses. Inline a `<style>` in `<head>` setting `background-color` + `color-scheme: dark` so the first frame is your theme bg, not browser default white.
+14. **DTS-generated tsconfig only extends the root `tsconfig.json`**, not `tsconfig.app.json`. Anything that lives only in the app config (`vite/client` types, svelte types, strict settings) is invisible to type generation — so e.g. side-effect CSS imports in a `.ts` mount adapter fail with `TS2882`. Either put the import in the `.svelte` file, or add the needed types to the root config so the dts tsc sees them.

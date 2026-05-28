@@ -1,4 +1,6 @@
 <script lang="ts">
+  import '../app.css'
+
   import PartySocket from 'partysocket'
 
   let {

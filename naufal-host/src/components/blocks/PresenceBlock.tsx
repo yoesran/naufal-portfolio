@@ -1,7 +1,10 @@
+import { loadRemote } from '@module-federation/runtime'
+
 import { Cell } from '@/components/Cell'
 import { RemoteMount } from '@/components/RemoteMount'
 
-const loadPresence = () => import('lab/Presence')
+const loadPresence = () =>
+  loadRemote('lab/Presence') as Promise<typeof import('lab/Presence')>
 const PRESENCE_OPTS = {
   host: import.meta.env.VITE_PARTY_HOST ?? '127.0.0.1:1999',
   context: 'host',

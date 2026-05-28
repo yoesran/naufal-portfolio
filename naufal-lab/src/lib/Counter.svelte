@@ -1,4 +1,6 @@
 <script lang="ts">
+  import '../app.css'
+
   import { Button } from '$lib/components/ui/button/index.js'
   import { cn } from '$lib/utils'
 

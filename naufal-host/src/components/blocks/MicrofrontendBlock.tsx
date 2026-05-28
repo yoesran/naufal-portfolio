@@ -1,4 +1,6 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+
+import { loadRemote } from '@module-federation/runtime'
 
 import { Cell } from '@/components/Cell'
 import { RemoteMount, type RemoteStatus } from '@/components/RemoteMount'
@@ -11,14 +13,29 @@ const REMOTE_OPTS = { context: 'host' }
 export function MicrofrontendBlock() {
   const [status, setStatus] = useState<RemoteStatus>({ state: 'loading' })
   const [offline, setOffline] = useState(false)
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
 
   const load = useCallback<() => Promise<typeof import('lab/Counter')>>(
     () =>
       offline
         ? Promise.reject(new Error('Simulated offline'))
-        : import('lab/Counter'),
+        : (loadRemote('lab/Counter') as Promise<typeof import('lab/Counter')>),
     [offline]
   )
+
+  useLayoutEffect(() => {
+    const outer = wrapperRef.current
+    const inner = panelRef.current
+    if (!outer || !inner) return
+    const update = () => {
+      outer.style.height = `${inner.offsetHeight}px`
+    }
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(inner)
+    return () => ro.disconnect()
+  }, [])
 
   const connected = status.state === 'loaded'
 
@@ -53,24 +70,35 @@ export function MicrofrontendBlock() {
             open standalone ↗
           </a>
         </div>
-        <RemoteMount
-          key={offline ? 'offline' : 'online'}
-          load={load}
-          opts={REMOTE_OPTS}
-          onStatusChange={setStatus}
-          fallback={<RemoteOffline simulated={offline} />}
-        />
+        <div
+          ref={wrapperRef}
+          className="overflow-hidden transition-[height] duration-200 ease-out"
+        >
+          <div ref={panelRef}>
+            <RemoteMount
+              key={offline ? 'offline' : 'online'}
+              load={load}
+              opts={REMOTE_OPTS}
+              onStatusChange={setStatus}
+              fallback={<RemoteOffline simulated={offline} />}
+              loadingFallback={<CounterSkeleton />}
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-3">
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <StatusStrip status={status} />
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setOffline((v) => !v)}
-        >
-          {offline ? 'Reconnect remote' : 'Simulate offline'}
-        </Button>
+        {(offline || status.state !== 'error') && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="self-start sm:self-auto"
+            onClick={() => setOffline((v) => !v)}
+          >
+            {offline ? 'Reconnect remote' : 'Simulate offline'}
+          </Button>
+        )}
       </div>
     </Cell>
   )
@@ -148,6 +176,26 @@ function StatusStrip({ status }: { status: RemoteStatus }) {
       <span className="text-foreground">{label}</span>
       <span className="text-muted-foreground/50">·</span>
       <span>{detail}</span>
+    </div>
+  )
+}
+
+function Skeleton({ className }: { className?: string }) {
+  return <div className={cn('bg-muted animate-pulse rounded-md', className)} />
+}
+
+function CounterSkeleton() {
+  return (
+    <div className="border-border/40 rounded-lg border-2 border-dashed p-4">
+      <div className="mb-2 flex items-center gap-2">
+        <Skeleton className="size-2 rounded-full" />
+        <Skeleton className="h-3 w-44" />
+      </div>
+      <div className="mb-3 space-y-2">
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-3/4" />
+      </div>
+      <Skeleton className="h-9 w-28 rounded-4xl" />
     </div>
   )
 }
