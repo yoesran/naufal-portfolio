@@ -3,14 +3,10 @@ import { loadRemote } from '@module-federation/runtime'
 import { Cell } from '@/components/Cell'
 import { RemoteMount } from '@/components/RemoteMount'
 
-const loadPresence = () =>
-  loadRemote('lab/Presence') as Promise<typeof import('lab/Presence')>
-const PRESENCE_OPTS = {
-  host: import.meta.env.VITE_PARTY_HOST ?? '127.0.0.1:1999',
-  context: 'host',
-}
-
 export function PresenceBlock() {
+  const load = () =>
+    loadRemote('lab/Presence') as Promise<typeof import('lab/Presence')>
+
   return (
     <Cell label="// presence-room · Svelte remote + live WebSocket">
       <p className="text-muted-foreground text-sm leading-relaxed">
@@ -23,7 +19,13 @@ export function PresenceBlock() {
       </p>
 
       <div className="mt-4">
-        <RemoteMount load={loadPresence} opts={PRESENCE_OPTS} />
+        <RemoteMount
+          load={load}
+          opts={{
+            host: import.meta.env.VITE_PARTY_HOST ?? '127.0.0.1:1999',
+            context: 'host',
+          }}
+        />
       </div>
     </Cell>
   )

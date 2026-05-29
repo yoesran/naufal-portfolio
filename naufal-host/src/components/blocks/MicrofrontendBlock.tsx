@@ -1,14 +1,15 @@
-import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 
 import { loadRemote } from '@module-federation/runtime'
 
 import { Cell } from '@/components/Cell'
 import { RemoteMount, type RemoteStatus } from '@/components/RemoteMount'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 
 const LAB_URL = import.meta.env.VITE_LAB_URL ?? 'http://127.0.0.1:5174'
-const REMOTE_OPTS = { context: 'host' }
 
 export function MicrofrontendBlock() {
   const [status, setStatus] = useState<RemoteStatus>({ state: 'loading' })
@@ -16,13 +17,10 @@ export function MicrofrontendBlock() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
 
-  const load = useCallback<() => Promise<typeof import('lab/Counter')>>(
-    () =>
-      offline
-        ? Promise.reject(new Error('Simulated offline'))
-        : (loadRemote('lab/Counter') as Promise<typeof import('lab/Counter')>),
-    [offline]
-  )
+  const load = (): Promise<typeof import('lab/Counter')> =>
+    offline
+      ? Promise.reject(new Error('Simulated offline'))
+      : (loadRemote('lab/Counter') as Promise<typeof import('lab/Counter')>)
 
   useLayoutEffect(() => {
     const outer = wrapperRef.current
@@ -78,7 +76,7 @@ export function MicrofrontendBlock() {
             <RemoteMount
               key={offline ? 'offline' : 'online'}
               load={load}
-              opts={REMOTE_OPTS}
+              opts={{ context: 'host' }}
               onStatusChange={setStatus}
               fallback={<RemoteOffline simulated={offline} />}
               loadingFallback={<CounterSkeleton />}
@@ -180,10 +178,6 @@ function StatusStrip({ status }: { status: RemoteStatus }) {
   )
 }
 
-function Skeleton({ className }: { className?: string }) {
-  return <div className={cn('bg-muted animate-pulse rounded-md', className)} />
-}
-
 function CounterSkeleton() {
   return (
     <div className="border-border/40 rounded-lg border-2 border-dashed p-4">
@@ -202,11 +196,11 @@ function CounterSkeleton() {
 
 function RemoteOffline({ simulated }: { simulated?: boolean }) {
   return (
-    <div className="text-muted-foreground rounded-md border border-dashed border-red-400/40 bg-red-400/5 px-3 py-4 text-sm">
-      <p className="text-foreground font-mono text-xs">
+    <Alert className="rounded-md border-dashed border-red-400/40 bg-red-400/5">
+      <AlertTitle className="text-foreground font-mono text-xs">
         {simulated ? 'remote offline (simulated)' : 'remote not reachable'}
-      </p>
-      <p className="mt-1 leading-relaxed">
+      </AlertTitle>
+      <AlertDescription className="leading-relaxed">
         {simulated ? (
           'This is the fallback a visitor sees when a remote is unavailable. The host stays fully interactive — only this block degrades.'
         ) : (
@@ -217,7 +211,7 @@ function RemoteOffline({ simulated }: { simulated?: boolean }) {
             <code className="text-foreground font-mono">naufal-lab/</code>.
           </>
         )}
-      </p>
-    </div>
+      </AlertDescription>
+    </Alert>
   )
 }

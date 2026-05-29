@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
+import { useInView } from '@/lib/useInView'
+
 type MountFn = (
   target: HTMLElement,
   opts?: Record<string, unknown>
@@ -23,11 +25,14 @@ export function RemoteMount({
   onStatusChange?: (status: RemoteStatus) => void
   opts?: Record<string, unknown>
 }) {
-  const ref = useRef<HTMLDivElement>(null)
+  const [outerRef, inView] = useInView<HTMLDivElement>()
+  const mountRef = useRef<HTMLDivElement>(null)
   const [loaded, setLoaded] = useState(false)
   const [failed, setFailed] = useState(false)
 
   useEffect(() => {
+    if (!inView) return
+
     let cleanup: (() => void) | undefined
     let cancelled = false
     const started = performance.now()
@@ -35,8 +40,8 @@ export function RemoteMount({
 
     load()
       .then((m) => {
-        if (cancelled || !ref.current) return
-        cleanup = m.default(ref.current, opts)
+        if (cancelled || !mountRef.current) return
+        cleanup = m.default(mountRef.current, opts)
         setLoaded(true)
         onStatusChange?.({
           state: 'loaded',
@@ -53,16 +58,16 @@ export function RemoteMount({
       cancelled = true
       cleanup?.()
     }
-  }, [load, onStatusChange, opts])
+  }, [inView, load, onStatusChange, opts])
 
-  if (failed && fallback) return <>{fallback}</>
+  if (failed && fallback) return <div ref={outerRef}>{fallback}</div>
   return (
-    <>
+    <div ref={outerRef}>
       {!loaded && loadingFallback}
       <div
-        ref={ref}
+        ref={mountRef}
         className={loadingFallback && !loaded ? 'hidden' : undefined}
       />
-    </>
+    </div>
   )
 }

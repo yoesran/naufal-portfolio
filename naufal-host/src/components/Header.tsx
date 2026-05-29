@@ -1,3 +1,5 @@
+import { ThemeToggle } from '@/components/ThemeToggle'
+
 const NAV = [
   { label: 'work', href: '#' },
   { label: 'blog', href: '#' },
@@ -24,6 +26,7 @@ export function Header() {
               {item.label}
             </a>
           ))}
+          <ThemeToggle />
         </nav>
       </div>
     </header>

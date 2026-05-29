@@ -18,35 +18,35 @@ The remote exposes **two** components today: `./Counter` (a context-aware mouse-
 
 ### `naufal-host` — React Host (port 5173)
 
-| File                                           | Role                                                                                                                                       |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `vite.config.ts`                               | Host config; reads `VITE_LAB_URL` via `loadEnv` so the federation `entry` is environment-aware                                              |
-| `index.html`                                   | Inline `<style>` paints the dark background on first frame (avoids white FOUC before JS loads)                                              |
-| `src/main.tsx`                                 | Mounts React inside a top-level `ErrorBoundary` + installs an `unhandledrejection` swallower                                                |
-| `src/App.tsx`                                  | The home-page playground — header, intro, Hero / TechStack / Microfrontend / Presence blocks, footer                                       |
-| `src/components/Header.tsx`, `Footer.tsx`      | Sticky header (name + nav placeholders), footer with social links                                                                          |
-| `src/components/Cell.tsx`                      | The frame primitive: bordered card + monospace label, every block sits in one                                                              |
-| `src/components/RemoteMount.tsx`               | Generic wrapper that mounts any framework-agnostic remote (status + `fallback` + `loadingFallback` + opts)                                 |
-| `src/components/blocks/HeroBlock.tsx`          | Block: host-native interactive wordmark (per-letter cursor repel + emerald glow)                                                            |
-| `src/components/blocks/TechStackBlock.tsx`     | Block: host-native rotating icon orbit; pills active on hover/focus/tap                                                                     |
-| `src/components/blocks/MicrofrontendBlock.tsx` | Block: live Counter + host⇄remote diagram + load status + skeleton loader + simulate-offline toggle                                         |
-| `src/components/blocks/PresenceBlock.tsx`      | Block: loads `lab/Presence` (multiplayer cursors)                                                                                          |
-| `src/lib/mf-fallback-plugin.ts`                | MF runtime plugin — `errorLoadRemote` returns a benign stub on init failure, a throwing stub on block-import failure (see "Resilience")     |
-| `src/vite-env.d.ts`                            | Types `VITE_LAB_URL` / `VITE_PARTY_HOST` env vars                                                                                          |
-| `tsconfig.app.json`                            | `paths` mapping so federated imports resolve to generated types                                                                            |
-| `@mf-types/`                                   | Auto-generated, gitignored — downloaded remote type declarations                                                                           |
+| File                                           | Role                                                                                                                                    |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `vite.config.ts`                               | Host config; reads `VITE_LAB_URL` via `loadEnv` so the federation `entry` is environment-aware                                          |
+| `index.html`                                   | Inline `<style>` paints the dark background on first frame (avoids white FOUC before JS loads)                                          |
+| `src/main.tsx`                                 | Mounts React inside a top-level `ErrorBoundary` + installs an `unhandledrejection` swallower                                            |
+| `src/App.tsx`                                  | The home-page playground — header, intro, Hero / TechStack / Microfrontend / Presence blocks, footer                                    |
+| `src/components/Header.tsx`, `Footer.tsx`      | Sticky header (name + nav placeholders), footer with social links                                                                       |
+| `src/components/Cell.tsx`                      | The frame primitive: bordered card + monospace label, every block sits in one                                                           |
+| `src/components/RemoteMount.tsx`               | Generic wrapper that mounts any framework-agnostic remote (status + `fallback` + `loadingFallback` + opts)                              |
+| `src/components/blocks/HeroBlock.tsx`          | Block: host-native interactive wordmark (per-letter cursor repel + emerald glow)                                                        |
+| `src/components/blocks/TechStackBlock.tsx`     | Block: host-native rotating icon orbit; pills active on hover/focus/tap                                                                 |
+| `src/components/blocks/MicrofrontendBlock.tsx` | Block: live Counter + host⇄remote diagram + load status + skeleton loader + simulate-offline toggle                                     |
+| `src/components/blocks/PresenceBlock.tsx`      | Block: loads `lab/Presence` (multiplayer cursors)                                                                                       |
+| `src/lib/mf-fallback-plugin.ts`                | MF runtime plugin — `errorLoadRemote` returns a benign stub on init failure, a throwing stub on block-import failure (see "Resilience") |
+| `src/vite-env.d.ts`                            | Types `VITE_LAB_URL` / `VITE_PARTY_HOST` env vars                                                                                       |
+| `tsconfig.app.json`                            | `paths` mapping so federated imports resolve to generated types                                                                         |
+| `@mf-types/`                                   | Auto-generated, gitignored — downloaded remote type declarations                                                                        |
 
 ### `naufal-lab` — Svelte Remote (port 5174)
 
-| File                       | Role                                                                                                                              |
-| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `vite.config.ts`           | Configured as a **remote**, exposing `./Counter` and `./Presence`                                                                 |
-| `src/lib/Counter.svelte`   | Context-aware component: a cursor-following glow + counter; imports `../app.css` so Tailwind ships in the federated chunk         |
-| `src/lib/mountCounter.ts`  | Mount adapter for `./Counter`                                                                                                     |
-| `src/lib/Presence.svelte`  | Multiplayer cursor canvas — opens its own `PartySocket` connection; also imports `../app.css`                                     |
-| `src/lib/mountPresence.ts` | Mount adapter for `./Presence`                                                                                                    |
-| `src/App.svelte`           | Standalone page showcasing both exposed components                                                                                |
-| `src/app.css`              | Tailwind + shadcn theme — imported by the **Svelte components** (not the mount adapters) so CSS ships over federation             |
+| File                       | Role                                                                                                                      |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `vite.config.ts`           | Configured as a **remote**, exposing `./Counter` and `./Presence`                                                         |
+| `src/lib/Counter.svelte`   | Context-aware component: a cursor-following glow + counter; imports `../app.css` so Tailwind ships in the federated chunk |
+| `src/lib/mountCounter.ts`  | Mount adapter for `./Counter`                                                                                             |
+| `src/lib/Presence.svelte`  | Multiplayer cursor canvas — opens its own `PartySocket` connection; also imports `../app.css`                             |
+| `src/lib/mountPresence.ts` | Mount adapter for `./Presence`                                                                                            |
+| `src/App.svelte`           | Standalone page showcasing both exposed components                                                                        |
+| `src/app.css`              | Tailwind + shadcn theme — imported by the **Svelte components** (not the mount adapters) so CSS ships over federation     |
 
 ### `naufal-party` — PartyKit Realtime Server (port 1999)
 
@@ -165,7 +165,7 @@ Usage:
 
 The cleanup runs on unmount, so the Svelte component (and any WebSocket it opened) tears down cleanly.
 
-> **Stable props matter.** `load` and `opts` are in the effect deps. Pass them as memoized/module-level constants (`useCallback`, a module const) — an inline object/function changes identity every render and would remount the remote in a loop once the block has state.
+> **Stable props matter** (mostly handled for us now). `load` and `opts` are in the effect deps. An inline object/function changes identity every render and would remount the remote in a loop once the block has state. The React Compiler (see §12) memoizes these automatically — inline objects in JSX work without a `useCallback` or module-level constant. Module-level constants still work and remain readable for the host-only `opts`/`load` pair in `PresenceBlock`; either pattern is fine.
 
 ### 3. The `opts` contract — passing context across the boundary
 
@@ -261,13 +261,13 @@ A subtle plugin behaviour: `@module-federation/vite` does **build-time static an
 
 ```js
 (async () => {
-  const { initHost } = await import(initSrc)
-  const runtime = await initHost()
+  const { initHost } = await import(initSrc);
+  const runtime = await initHost();
   await Promise.all([
     runtime.loadRemote("lab/Counter"),
     runtime.loadRemote("lab/Presence"),
-  ])
-})().then(() => import("/src/main.tsx"))
+  ]);
+})().then(() => import("/src/main.tsx"));
 ```
 
 So `main.tsx` doesn't run until every detected federated chunk has been fetched — over a slow link, this is hundreds of ms of blank page before React even mounts.
@@ -275,12 +275,12 @@ So `main.tsx` doesn't run until every detected federated chunk has been fetched 
 **Opt out by importing through the runtime instead:**
 
 ```ts
-import { loadRemote } from '@module-federation/runtime'
+import { loadRemote } from "@module-federation/runtime";
 
-const load = useCallback<() => Promise<typeof import('lab/Counter')>>(
-  () => loadRemote('lab/Counter') as Promise<typeof import('lab/Counter')>,
-  []
-)
+const load = useCallback<() => Promise<typeof import("lab/Counter")>>(
+  () => loadRemote("lab/Counter") as Promise<typeof import("lab/Counter")>,
+  [],
+);
 ```
 
 The plugin's static scanner only sees `loadRemote('lab/Counter')` as a runtime function call with a string argument — it doesn't add it to the preload list. The `typeof import(...)` type cast is a TypeScript-only construct that gets erased before Vite's plugin runs, so it doesn't leak into the preload either. Result: `main.tsx` only waits on `initHost()` (a single small `remoteEntry.js` fetch), React mounts, blocks render skeletons, and each block's chunk loads lazily in parallel via `RemoteMount`'s `useEffect`.
@@ -300,19 +300,23 @@ The federation `entry` URL in the host's `vite.config.ts` is built from an env v
 
 ```ts
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '')
-  const labUrl = env.VITE_LAB_URL || 'http://127.0.0.1:5174'
+  const env = loadEnv(mode, process.cwd(), "");
+  const labUrl = env.VITE_LAB_URL || "http://127.0.0.1:5174";
   return {
     plugins: [
       // …
       federation({
         remotes: {
-          lab: { type: 'module', name: 'lab', entry: `${labUrl}/remoteEntry.js` },
+          lab: {
+            type: "module",
+            name: "lab",
+            entry: `${labUrl}/remoteEntry.js`,
+          },
         },
       }),
     ],
-  }
-})
+  };
+});
 ```
 
 `VITE_PARTY_HOST` flows through `import.meta.env` into the client (used by `PresenceBlock` for the PartyKit URL). Two npm scripts in `naufal-host`:
@@ -325,6 +329,69 @@ The lab's `preview` and `server` configs set `cors: true` and `allowedHosts: tru
 ### 11. Original lazy-import note
 
 Even without the `loadRemote` opt-out above, remote chunks still load on demand at the call-site level — `RemoteMount`'s `useEffect` only fires the `load()` once it mounts. The `loadRemote` change is purely about getting `main.tsx` to **execute first**, not about whether the chunk loads eagerly vs lazily inside React's lifecycle.
+
+### 12. React Compiler
+
+The host runs `babel-plugin-react-compiler@1.0.0` over every `.tsx` / `.ts` source file during build (and dev). The compiler auto-memoizes components, hooks, and inline values — so the `useCallback` around `RemoteMount`'s `load` prop and the module-level `REMOTE_OPTS`/`PRESENCE_OPTS` constants are no longer required to keep the remote from remounting in a loop (see §2 callout). Inline `{ context: 'host' }` works.
+
+The integration is **not** the documented `@vitejs/plugin-react` v6 path. The documented setup —
+
+```ts
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import babel from "@rolldown/plugin-babel";
+
+plugins: [react(), babel({ presets: [reactCompilerPreset()] })];
+```
+
+— builds cleanly but `@rolldown/plugin-babel`'s `transform` hook never fires for our source in this project. Verified by setting `panicThreshold: 'all_errors'`: a no-op build despite source that the compiler should reject. Likely an environment-handshake interaction with `@module-federation/vite`, but not pinned down.
+
+The working substitute is a ~12-line custom Vite plugin in [`vite.config.ts`](../naufal-host/vite.config.ts) that calls `@babel/core`'s `transformAsync` directly with `babel-plugin-react-compiler`:
+
+```ts
+const reactCompilerPlugin = () => ({
+  name: "react-compiler",
+  enforce: "pre" as const,
+  async transform(code: string, id: string) {
+    if (!/\.[jt]sx?$/.test(id) || id.includes("node_modules")) return null;
+    const result = await transformAsync(code, {
+      filename: id,
+      babelrc: false,
+      configFile: false,
+      plugins: [[reactCompiler, {}]],
+      parserOpts: { sourceType: "module", plugins: ["typescript", "jsx"] },
+    });
+    return result?.code ? { code: result.code, map: result.map } : null;
+  },
+});
+```
+
+Registered first in the plugins array (before `react()`) so it runs `enforce: 'pre'`. Verified by an unminified build: `react/compiler-runtime` is imported and 26 source files get compiled. The compiler's lint rules (e.g. "Calling setState synchronously within an effect") are already on via `eslint-plugin-react-hooks` v7 — the standalone `eslint-plugin-react-compiler` package no longer exists; its rules were folded into `react-hooks` from v6 onward.
+
+Deps: `babel-plugin-react-compiler`, `@babel/core` (via `@rolldown/plugin-babel`'s transitive install initially, kept after uninstall), `@types/babel__core` for TS.
+
+### 13. Dark mode toggle (light / dark / system)
+
+The architecture has been "ready" for dark mode since v0.1 (shadcn CSS variables, host owns the `.dark` class on `<html>`, remotes inherit through the cascade — zero coordination code). v0.2 ships the UI.
+
+- [`src/lib/useTheme.ts`](../naufal-host/src/lib/useTheme.ts) — single hook. `theme: 'light' | 'dark' | 'system'` is the stored preference; `resolvedTheme: 'light' | 'dark'` is what's actually painted. A media-query listener tracks the OS pref so toggling the OS theme while in `system` mode flips the page live. The hook writes the class to `<html>` and the preference to `localStorage`.
+- [`src/components/ThemeToggle.tsx`](../naufal-host/src/components/ThemeToggle.tsx) — shadcn `DropdownMenu` + `DropdownMenuRadioGroup`/`DropdownMenuRadioItem` triggered by a ghost-variant `Button` showing the current resolved icon (Sun / Moon). The built-in radio-item check indicator handles the "which is selected" display — no manual state-mirror.
+- [`index.html`](../naufal-host/index.html) — a small inline `<script>` runs synchronously before any paint, mirrors `useTheme`'s read-the-same-storage logic, and sets `.dark` on `<html>` if needed. Paired with an inline `<style>` that paints `background-color` + `color-scheme` per class state. This kills both the white FOUC and the wrong-theme flash for return visitors (replaces what gotcha #13 used to be aspirational about — see below).
+- [`index.css`](../naufal-host/src/index.css) — `scrollbar-gutter: stable` on `<html>`. Base-ui-react's portal locks body scroll when the dropdown opens; without the reserved gutter the page reflows by the scrollbar width every open/close. Cheap fix, side benefit for any future block that adds a scrollbar mid-session.
+
+The standalone lab page (`localhost:5174`) stays dark-only — the toggle lives in the host because that's the integration surface that owns visitor preference. If the standalone ever needs its own toggle it's a separate small task on the Svelte side; the CSS-variable theme is already in place.
+
+### 14. Scroll-reveal + deferred federated load
+
+Two behaviours sharing one hook.
+
+[`src/lib/useInView.ts`](../naufal-host/src/lib/useInView.ts) — ~25-line `IntersectionObserver` hook. Returns a `[ref, inView]` tuple, fires once, disconnects on first intersection. `rootMargin: '0px 0px -10% 0px'` so the threshold is slightly past viewport-entry, giving the animation room to play.
+
+- **Cell entry animation:** [`Cell.tsx`](../naufal-host/src/components/Cell.tsx) wires the hook and toggles `translate-y-4 opacity-0 → translate-y-0 opacity-100` over `duration-700 ease-out`. `motion-reduce:` variants force the visible state immediately so reduced-motion users get no transition at all. Every block uses `<Cell>` so the reveal is automatic — no per-block plumbing.
+- **Deferred federated load:** [`RemoteMount.tsx`](../naufal-host/src/components/RemoteMount.tsx) gates its `load()` effect on `inView`. The skeleton renders while the cell is below the fold; once the cell crosses the threshold the federated chunk fetches and the Svelte component mounts. Makes the MicrofrontendBlock's on-page copy ("fetched the moment it scrolled into view") literally accurate, and pushes the network cost of blocks the visitor never reaches down to zero.
+
+The hook deliberately does **not** check `prefers-reduced-motion` — that preference belongs to the animation question, not the prefetching question. The CSS handles the motion side; the load gating runs regardless.
+
+Above-the-fold cells (Hero, sometimes TechStack on tall screens) get a one-frame paint at `opacity-0` before the observer's first callback fires, then the 700ms fade begins. The eye reads it as "thing appears" rather than "thing was missing." A pre-paint synchronous viewport check in `useLayoutEffect` would eliminate that frame but trips `eslint-plugin-react-hooks` v7's "setState synchronously within an effect" rule, so it's not worth it.
 
 ---
 
@@ -361,6 +428,9 @@ Open `http://localhost:5173`. Open a second tab (or `http://127.0.0.1:5174` stan
 - **No shared Svelte**: `shared: []` — Svelte is fully bundled into the remote. Host shares only `react` / `react-dom`.
 - **`build.target: 'chrome89'`** on both sides: required by `@module-federation/vite` (native ES modules + top-level `await`).
 - **`127.0.0.1` everywhere**: avoids the Windows IPv6 / dts-plugin IPv4 mismatch.
+- **React Compiler via a ~12-line custom plugin**, not `@rolldown/plugin-babel`. The documented integration is silently inert in this project (federation + plugin-react v6 interaction); see §12.
+- **Theme toggle lives on the host, not in any remote**. CSS variables + `.dark` class cascade from the host's `<html>` into every remote's mounted DOM — zero coordination code. See §13.
+- **Scroll-reveal is plain `IntersectionObserver` + CSS transition**, not Framer Motion (or any animation library). Same hook gates `RemoteMount`'s federated `load()` on viewport entry, so blocks below the fold cost zero network. See §14.
 
 ---
 
@@ -378,5 +448,7 @@ Open `http://localhost:5173`. Open a second tab (or `http://127.0.0.1:5174` stan
 10. **The plugin eagerly preloads every `import('lab/X')` literal it finds**, blocking `main.tsx` until all of them are fetched. Use `loadRemote('lab/X')` from `@module-federation/runtime` for block-level loads to opt out — only the small `remoteEntry.js` then blocks bootstrap, chunks load lazily after React mounts.
 11. **`hostInitInjectLocation` already defaults to `'html'`** — setting it explicitly is a no-op. The blank-on-startup problem isn't this option; it's the eager-preload behaviour above.
 12. **MF plugin rewrites `import('...')` literals even inside comments.** If you write `import('lab/Counter')` in a `.ts` source comment, Vite's import analysis tries to transform it and the file breaks with `Failed to parse source for import analysis`. Phrase code in prose as `lab/Counter` (no `import()` wrapper).
-13. **First-paint white flash isn't MF** — even with MF fully lazy, the browser paints `index.html` before the JS bundle downloads/parses. Inline a `<style>` in `<head>` setting `background-color` + `color-scheme: dark` so the first frame is your theme bg, not browser default white.
+13. **First-paint white flash isn't MF** — even with MF fully lazy, the browser paints `index.html` before the JS bundle downloads/parses. Mitigated by an inline `<style>` in `<head>` setting `background-color` + `color-scheme` per `html` / `html.dark`, plus an inline `<script>` that resolves the user's stored theme + system preference and sets the class **before** the style is parsed (so the first frame is the right theme, not just _a_ theme). See §13.
 14. **DTS-generated tsconfig only extends the root `tsconfig.json`**, not `tsconfig.app.json`. Anything that lives only in the app config (`vite/client` types, svelte types, strict settings) is invisible to type generation — so e.g. side-effect CSS imports in a `.ts` mount adapter fail with `TS2882`. Either put the import in the `.svelte` file, or add the needed types to the root config so the dts tsc sees them.
+15. **`@rolldown/plugin-babel` + `reactCompilerPreset` silently does nothing in this project.** The documented Vite 8 / plugin-react v6 path for the React Compiler builds cleanly and reports no errors but never runs the babel transform on any source file (likely an interaction with `@module-federation/vite`'s environment handling, not pinned down). Verify by setting `panicThreshold: 'all_errors'` — if the build still succeeds on any non-trivial source, babel isn't running. Replace with a ~12-line custom Vite plugin calling `@babel/core` directly (see §12).
+16. **iOS Safari mobile-tap on a non-focusable element doesn't blur a focused button.** Patterns built on the button's `onBlur` to detect "tapped somewhere outside" (e.g., to deselect, close a popover, dismiss state) silently fail on iOS — focus stays on the previously-tapped button, blur never fires, the stale state persists. Workaround: register a document-level `touchstart` listener and run the deselect when the event target is outside your component's container. Use **capture phase** (`{ capture: true }`) so descendants calling `stopPropagation` (base-ui-react's Menu trigger does this) can't swallow it. Also force-reset any "interaction in progress" refs in the same handler — multi-touch and scroll-promotion sequences can leave them stuck `true`, which would defeat the deselect. See [TechStackBlock.tsx](../naufal-host/src/components/blocks/TechStackBlock.tsx) for the pattern.

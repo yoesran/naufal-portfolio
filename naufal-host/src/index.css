@@ -126,5 +126,8 @@
     }
   html {
     @apply font-sans;
+    /* Reserve scrollbar gutter so opening a dropdown (which locks body scroll
+       via base-ui-react's portal) doesn't cause a horizontal layout shift. */
+    scrollbar-gutter: stable;
     }
 }

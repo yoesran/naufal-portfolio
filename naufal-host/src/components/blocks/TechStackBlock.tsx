@@ -25,7 +25,7 @@ const TECH: Tech[] = [
     name: 'Next.js',
     note: 'Landing + onboarding webview at Ajaib, internal dashboards at eDOT.',
     svg: nextSvg,
-    color: '#FFFFFF', // brand is black; overridden for visibility on dark theme
+    color: 'var(--foreground)', // brand is black; follow theme for contrast on both modes
   },
   {
     name: 'TypeScript',
@@ -91,21 +91,54 @@ export function TechStackBlock() {
     return () => mql.removeEventListener('change', onChange)
   }, [])
 
+  // Mobile tap-outside: deselects when a touch lands anywhere outside the
+  // orbit canvas. The pill's onBlur handler is the keyboard equivalent, but
+  // on mobile (iOS Safari especially) tapping a non-focusable element doesn't
+  // blur the button — focus stays on the pill, blur never fires, and the
+  // orbit stays paused with a stale selection. Document-level touchstart fills
+  // the gap. Desktop uses onMouseLeave on the container instead.
+  useEffect(() => {
+    if (desktop) return
+    const onDocTouch = (e: TouchEvent) => {
+      const target = e.target as Node | null
+      if (
+        target &&
+        containerRef.current &&
+        !containerRef.current.contains(target)
+      ) {
+        // Force-reset touchActiveRef alongside the deselect. If a prior touch
+        // sequence left it stale `true` (a touchend that didn't bubble during
+        // scroll-promotion, a multi-touch overlap), recomputePause would keep
+        // pausedRef true even after activeRef goes null. An outside tap should
+        // be an unconditional "reset to spinning" command.
+        touchActiveRef.current = false
+        selectTech(null)
+      }
+    }
+    // Capture phase: fires before any descendant listener has a chance to
+    // call stopPropagation. Base-ui-react's portal triggers, the theme
+    // toggle, and other interactive nodes might swallow bubble-phase events.
+    document.addEventListener('touchstart', onDocTouch, {
+      passive: true,
+      capture: true,
+    })
+    return () =>
+      document.removeEventListener('touchstart', onDocTouch, { capture: true })
+    // selectTech is stable via React Compiler — re-binding the listener every
+    // render would be wasteful and there's nothing in its closure that changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [desktop])
+
   // Single source of truth for "should the orbit be paused?" — paused if
-  // anything is selected (keyboard, hover, or tap) OR the user is currently
-  // engaging the canvas (mouse hovering, finger touching). Each handler
-  // updates one ref and calls recomputePause(); the rAF loop reads pausedRef
-  // every frame.
+  // anything is selected (keyboard, hover, or tap) OR a finger is actively
+  // touching a pill. Empty-canvas hover/touch never engages the pause; the
+  // rAF loop reads pausedRef every frame.
   const activeRef = useRef<Tech | null>(null)
-  const mouseInContainerRef = useRef(false)
   const touchActiveRef = useRef(false)
   const pausedRef = useRef(false)
 
   function recomputePause() {
-    pausedRef.current =
-      activeRef.current !== null ||
-      mouseInContainerRef.current ||
-      touchActiveRef.current
+    pausedRef.current = activeRef.current !== null || touchActiveRef.current
   }
 
   // Always go through this instead of bare setActive so activeRef and pausedRef
@@ -174,32 +207,15 @@ export function TechStackBlock() {
       <div
         ref={containerRef}
         className="relative mx-auto aspect-square w-full max-w-[320px]"
-        // === DESKTOP: hover engages the canvas; leaving clears active ===
-        onMouseEnter={
-          desktop
-            ? () => {
-                mouseInContainerRef.current = true
-                recomputePause()
-              }
-            : undefined
-        }
-        onMouseLeave={
-          desktop
-            ? () => {
-                mouseInContainerRef.current = false
-                selectTech(null)
-              }
-            : undefined
-        }
-        // === MOBILE: tapping empty canvas (not a pill) deselects ===
-        onTouchStart={
-          desktop
-            ? undefined
-            : () => {
-                touchActiveRef.current = true
-                selectTech(null)
-              }
-        }
+        // === DESKTOP: hover a pill to select; leaving the canvas clears it.
+        // Empty-canvas hover never pauses the orbit — pills sweep under the
+        // cursor and the active-selection rule alone drives the pause. ===
+        onMouseLeave={desktop ? () => selectTech(null) : undefined}
+        // === MOBILE: tapping empty canvas (not a pill) deselects — but
+        // doesn't engage the touch-pause flag, so passive touches (e.g. a
+        // finger landing during a scroll) don't stutter the orbit. The pill
+        // itself still engages touchActiveRef on tap. ===
+        onTouchStart={desktop ? undefined : () => selectTech(null)}
         // touchend: release immediately — pausedRef stays true if a pill is
         // still selected (recomputePause reads activeRef), so no hold delay
         // is needed for sticky selections.
