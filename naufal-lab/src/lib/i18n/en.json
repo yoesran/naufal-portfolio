@@ -1,0 +1,19 @@
+{
+  "app": {
+    "title": "Module Federation remote",
+    "descriptionPre": "This is a standalone Svelte app. The components below are exposed over Module Federation and loaded at runtime by the React host — the exact same code, served from this app's"
+  },
+  "counter": {
+    "tracker": "mouse tracker",
+    "context": {
+      "host": "embedded in React host",
+      "standalone": "standalone Svelte app"
+    },
+    "body": "I'm a Svelte component loaded over Module Federation. This glow only tracks inside my own boundary —",
+    "moveCursor": "move your cursor here",
+    "count": "Count is {count}"
+  },
+  "presence": {
+    "cursors": "{count, plural, =0 {no one else here — open a second tab} one {# other cursor live} other {# other cursors live}}"
+  }
+}

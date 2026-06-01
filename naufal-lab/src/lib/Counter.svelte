@@ -2,6 +2,7 @@
   import '../app.css'
 
   import { Button } from '$lib/components/ui/button/index.js'
+  import { t } from '$lib/i18n'
   import { cn } from '$lib/utils'
 
   let { context = 'standalone' }: { context?: 'host' | 'standalone' } = $props()
@@ -14,9 +15,6 @@
   let frame = 0
 
   const embedded = $derived(context === 'host')
-  const label = $derived(
-    embedded ? 'embedded in React host' : 'standalone Svelte app'
-  )
   const glowRgb = $derived(embedded ? '16 185 129' : '56 189 248')
   const accent = $derived(
     embedded
@@ -71,19 +69,25 @@
   <div class="relative z-10">
     <div class="mb-2 flex items-center gap-2 font-mono text-xs">
       <span class={cn('inline-block size-2 rounded-full', accent.dot)}></span>
-      <span class={accent.text}>mouse tracker · {label}</span>
+      <span class={accent.text}>
+        {$t('counter.tracker')} ·
+        {embedded
+          ? $t('counter.context.host')
+          : $t('counter.context.standalone')}
+      </span>
     </div>
 
     <p class="text-muted-foreground mb-3 text-sm leading-relaxed">
-      I'm a Svelte component loaded over Module Federation. This glow only
-      tracks inside my own boundary —
+      {$t('counter.body')}
       <span class="text-foreground font-mono">
         {active
           ? `x ${Math.round(x)} · y ${Math.round(y)}`
-          : 'move your cursor here'}
+          : $t('counter.moveCursor')}
       </span>.
     </p>
 
-    <Button onclick={() => count++}>Count is {count}</Button>
+    <Button onclick={() => count++}>
+      {$t('counter.count', { values: { count } })}
+    </Button>
   </div>
 </div>

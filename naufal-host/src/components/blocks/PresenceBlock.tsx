@@ -1,4 +1,4 @@
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
 import { loadRemote } from '@module-federation/runtime'
 
@@ -6,6 +6,7 @@ import { Cell } from '@/components/Cell'
 import { RemoteMount } from '@/components/RemoteMount'
 
 export function PresenceBlock() {
+  const { t } = useTranslation()
   const load = () =>
     loadRemote('lab/Presence') as Promise<typeof import('lab/Presence')>
 
@@ -13,6 +14,7 @@ export function PresenceBlock() {
     <Cell label="// presence-room · Svelte remote + live WebSocket">
       <p className="text-muted-foreground text-sm leading-relaxed">
         <Trans
+          t={t}
           i18nKey="presence.description"
           components={{
             svelteRemote: <span className="text-foreground font-medium" />,

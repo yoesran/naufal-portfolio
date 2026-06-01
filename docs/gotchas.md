@@ -1,0 +1,41 @@
+# Gotchas Already Solved (don't re-discover)
+
+The single consolidated list — previously duplicated across the MF-setup and handoff docs (which let them drift), now one copy. Also the raw material for the first blog post (the MF build, the TS6/baseUrl trap, the Tailwind-across-the-boundary lesson, and the eager-preload / `loadRemote` pattern are all strong material).
+
+Cross-references point at [mf-core.md](./mf-core.md), [mf-platform.md](./mf-platform.md), and [features.md](./features.md) for the full treatment.
+
+1. **Svelte 5 `new Component()` is gone** — components are functions, not classes. The Svelte 4 API produces misleading `Cannot read properties of null (reading 'nodes')` errors. Use `mount()` / `unmount()`, wrapped in a mount adapter. See [mf-core.md](./mf-core.md) §1.
+
+2. **Windows + dts + `localhost` = silent failure** — the dts-plugin forces IPv4; Windows resolves `localhost` to IPv6 (`::1`) → "Failed to download types archive". Use `127.0.0.1` everywhere in the federation `entry` and the remote's `server.host` / `preview.host`. See [mf-core.md](./mf-core.md) §4.
+
+3. **Remote runs with `vite build --watch` + `vite preview`, not `vite dev`** — `@module-federation/vite` generates `remoteEntry.js` at build time; there's no `remoteEntry` in dev mode.
+
+4. **No HMR across the boundary** — a host plugin watches `../naufal-lab/dist/` and sends `{ type: 'full-reload' }` over Vite's WebSocket. Requires `server.fs.allow` to permit watching a sibling folder. See [running-locally.md](./running-locally.md).
+
+5. **React Strict Mode double-mounts** the remote (mount → unmount → remount to verify cleanup). Intentional; the single counter seen is the second mount. Don't disable Strict Mode.
+
+6. **`@mf-types/` is gitignored** — a regenerated artifact like `node_modules`/`dist`. First run on a fresh clone shows "cannot find module" until the host fetches once. See [running-locally.md](./running-locally.md).
+
+7. **TS 6.0 `baseUrl` is a hard error (TS5101)** that silently kills DTS generation through the dts-plugin's inherited tsconfig — the host gets no types, with only a `#TYPE-001` in the build log. (shadcn-svelte's init added the `baseUrl`.) Add `ignoreDeprecations: "6.0"` (band-aid; removed entirely in TS 7) or drop `baseUrl`. See [mf-core.md](./mf-core.md) §5.
+
+8. **`vite build --watch` does NOT reload `vite.config.ts`** — unlike `vite dev`, it watches source but not the config. After changing `exposes` (e.g. adding `./Presence`), restart the build process or the change never reaches `remoteEntry.js`.
+
+9. **Tailwind utility classes don't cross the MF boundary** — theme **CSS variables** cascade from host into the embedded remote (shadcn tokens just work), but utility classes (`bg-sky-400`, the shadcn Button classes) live in the remote's entry stylesheet, which the host never loads. Import the stylesheet **inside the `.svelte` component** (not the `.ts` mount adapter — see #10) so it ships with the chunk, or style remotes with CSS variables + inline only. See [mf-platform.md](./mf-platform.md).
+
+10. **DTS-generated tsconfig only extends the root `tsconfig.json`**, not `tsconfig.app.json`. Anything app-only (`vite/client` types, svelte types, strict settings) is invisible to type generation — so a bare side-effect `import '../app.css'` in a `.ts` mount adapter fails with `TS2882`. Put the import in the `.svelte` file, or add the needed types to the root config. Same family for `svelte-i18n`: its setup module imports JSON dictionaries, so set `resolveJsonModule` on the **root** config (not just `tsconfig.app.json`) and import that module from the `.svelte` components, not the `.ts` adapters — keeps the dts compile away from the JSON entirely.
+
+11. **The plugin eagerly preloads every `import('lab/X')` literal it finds**, blocking `main.tsx` until all of them are fetched (the "blank screen for a second" over a throttled link). Use `loadRemote('lab/X')` from `@module-federation/runtime` for block-level loads to opt out — only the small `remoteEntry.js` then blocks bootstrap, chunks load lazily after React mounts. See [mf-platform.md](./mf-platform.md).
+
+12. **`hostInitInjectLocation` already defaults to `'html'`** — setting it explicitly is a no-op. The blank-on-startup problem isn't this option; it's the eager-preload behaviour (#11).
+
+13. **MF plugin rewrites `import('...')` literals even inside comments.** Writing `import('lab/Counter')` in a `.ts` source comment makes Vite's import analysis try to transform it, breaking the file with `Failed to parse source for import analysis`. Refer to federated imports in prose as just `lab/Counter` (no `import()` wrapper).
+
+14. **First-paint white flash isn't MF** — even with everything fully lazy, the browser paints `index.html` before the JS bundle downloads/parses/executes. Mitigated by an inline `<style>` in `<head>` setting `background-color` + `color-scheme` per `html` / `html.dark`, plus an inline `<script>` that resolves the user's stored theme + system preference and sets the class **before** the style is parsed (so the first frame is the right theme, not just _a_ theme). See [features.md](./features.md).
+
+15. **Browsers fire `touchcancel` (not `touchend`) when they promote a touch to a scroll/zoom** (or the OS interrupts). Any touch-driven state without a `touchcancel` handler can leak — finger-down refs stuck `true`, animations stuck paused, etc. Always handle `touchcancel` alongside `touchend` for touch UI. (`TechStackBlock`'s orbit pills do exactly this.)
+
+16. **`@rolldown/plugin-babel` + `reactCompilerPreset` silently does nothing in this project.** The documented Vite 8 / plugin-react v6 path for the React Compiler builds cleanly and reports no errors but never runs the babel transform on any source file (likely an interaction with `@module-federation/vite`'s environment handling, not pinned down). Verify by setting `panicThreshold: 'all_errors'` — if the build still succeeds on any non-trivial source, babel isn't running. Replace with a ~12-line custom Vite plugin calling `@babel/core` directly. See [features.md](./features.md).
+
+17. **iOS Safari mobile-tap on a non-focusable element doesn't blur a focused button.** Patterns built on the button's `onBlur` to detect "tapped somewhere else" (to deselect, close a popover, dismiss state) silently fail on iOS — focus stays on the previously-tapped button, blur never fires, the stale state persists. Workaround: register a document-level `touchstart` listener and run the deselect when the event target **isn't one of your interactive children**. Match against a shared marker on those children (a `data-` attribute — `TechStackBlock` uses `!target.closest('[data-orbit-slot]')`, the same marker its `onBlur` checks) rather than the container's bounds: that also deselects on taps that land on inert areas _inside_ the container, and lets the children own their own selection via `onTouchStart`. Use **capture phase** (`{ capture: true }`) so descendants calling `stopPropagation` (base-ui-react's Menu trigger does this) can't swallow it — ordering stays correct because the marker test identifies child taps regardless of which listener fires first. Also force-reset any "interaction in progress" refs in the same handler — multi-touch and scroll-promotion sequences can leave them stuck `true`. See [TechStackBlock.tsx](../naufal-host/src/components/blocks/TechStackBlock.tsx).
+
+18. **React Compiler memoizes `<Trans>`, so it doesn't re-translate on a locale switch.** With `babel-plugin-react-compiler` on, a `<Trans i18nKey="…" components={{…}}>` whose props don't change across a language switch (constant key + a compiler-memoized `components` object) gets its element cached — so plain `{t('key')}` updates on toggle but the `<Trans>` block stays in the old language. Fix: pass the live `t` from `useTranslation()` as `<Trans t={t} …>`. react-i18next returns a **new `t` reference** on `languageChanged` (which is also why plain `t()` keeps working under the compiler), giving the element a changing input so it re-renders translated. Corollary: any block containing a `<Trans>` must call `useTranslation()` itself to subscribe — don't rely on a parent re-render, since the compiler memoizes children too (this bit `PresenceBlock`, which previously had no `useTranslation`). See [features.md](./features.md).

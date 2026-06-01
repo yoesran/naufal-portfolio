@@ -3,6 +3,8 @@
 
   import PartySocket from 'partysocket'
 
+  import { t } from '$lib/i18n'
+
   let {
     host = '127.0.0.1:1999',
     context = 'standalone',
@@ -104,7 +106,5 @@
 </div>
 
 <div class="text-muted-foreground mt-3 font-mono text-xs">
-  {count === 0
-    ? 'no one else here — open a second tab'
-    : `${count} other ${count === 1 ? 'cursor' : 'cursors'} live`}
+  {$t('presence.cursors', { values: { count } })}
 </div>

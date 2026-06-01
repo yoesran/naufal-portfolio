@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { t } from '$lib/i18n'
+
   import Counter from './lib/Counter.svelte'
   import Presence from './lib/Presence.svelte'
 </script>
@@ -9,11 +11,9 @@
       <p class="text-muted-foreground font-mono text-xs">
         naufal-lab · Svelte 5 + Vite
       </p>
-      <h1 class="mt-2 text-2xl font-semibold">Module Federation remote</h1>
+      <h1 class="mt-2 text-2xl font-semibold">{$t('app.title')}</h1>
       <p class="text-muted-foreground mt-3 text-sm leading-relaxed">
-        This is a standalone Svelte app. The components below are exposed over
-        Module Federation and loaded at runtime by the React host — the exact
-        same code, served from this app's
+        {$t('app.descriptionPre')}
         <code class="text-foreground font-mono">remoteEntry.js</code>.
       </p>
     </header>

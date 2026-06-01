@@ -43,6 +43,7 @@ export function MicrofrontendBlock() {
     <Cell label="// microfrontend-meta · React host ⇄ Svelte remote">
       <p className="text-muted-foreground text-sm leading-relaxed">
         <Trans
+          t={t}
           i18nKey="microfrontend.description"
           components={{
             react: <span className="text-foreground font-medium" />,
@@ -214,6 +215,7 @@ function RemoteOffline({ simulated }: { simulated?: boolean }) {
           t('microfrontend.offline.simulatedDescription')
         ) : (
           <Trans
+            t={t}
             i18nKey="microfrontend.offline.devHint"
             components={{
               code1: <code className="text-foreground font-mono" />,

@@ -1,0 +1,19 @@
+{
+  "app": {
+    "title": "Remote Module Federation",
+    "descriptionPre": "Ini aplikasi Svelte mandiri. Komponen di bawah diekspos melalui Module Federation dan dimuat saat runtime oleh host React — kode yang sama persis, disajikan dari berkas"
+  },
+  "counter": {
+    "tracker": "pelacak kursor",
+    "context": {
+      "host": "tertanam di host React",
+      "standalone": "aplikasi Svelte mandiri"
+    },
+    "body": "Saya komponen Svelte yang dimuat lewat Module Federation. Cahaya ini hanya melacak di dalam batas saya sendiri —",
+    "moveCursor": "gerakkan kursor di sini",
+    "count": "Jumlahnya {count}"
+  },
+  "presence": {
+    "cursors": "{count, plural, =0 {belum ada orang lain — buka tab kedua} other {# kursor lain aktif}}"
+  }
+}
