@@ -1,0 +1,61 @@
+{
+  "header": {
+    "nav": {
+      "work": "work",
+      "blog": "blog",
+      "cv": "cv"
+    }
+  },
+  "intro": "A playground of interactive things I build.",
+  "hero": {
+    "tagline": "Frontend engineer working at the seams of frameworks."
+  },
+  "techStack": {
+    "prompt": "pick a tech to see how it shows up in my work →",
+    "notes": {
+      "react": "Daily driver — currently at DBS (microfrontend webview), previously eDOT, Doubler Studio.",
+      "next": "Landing + onboarding webview at Ajaib, internal dashboards at eDOT.",
+      "typescript": "Default for everything I write.",
+      "svelte": "Powers the federated remote you've been interacting with on this page.",
+      "angular": "Feature modules at Bank Danamon — DBankPro 2.0, Single-SPA → NX migration.",
+      "vue": "Exploring — planned as a second federated remote on this playground.",
+      "flutter": "Mobile work at GeekGarden.",
+      "javascript": "Vanilla JS + jQuery on BCA projects at Doubler Studio — where it started."
+    }
+  },
+  "microfrontend": {
+    "description": "This whole page is <react>React</react>. The box below is a separate <svelte>Svelte</svelte> app — compiled and served on its own — fetched over the network the moment it scrolled into view. That's Module Federation.",
+    "liveRemoteLabel": "live svelte remote ↓",
+    "openStandalone": "open standalone ↗",
+    "status": {
+      "connecting": "connecting…",
+      "connectingDetail": "fetching remoteEntry.js",
+      "connected": "connected",
+      "connectedDetail": "remoteEntry.js · loaded in {{ms}}ms",
+      "offline": "remote offline",
+      "offlineDetail": "fallback rendered · host still up"
+    },
+    "actions": {
+      "simulateOffline": "Simulate offline",
+      "reconnect": "Reconnect remote"
+    },
+    "offline": {
+      "simulated": "remote offline (simulated)",
+      "notReachable": "remote not reachable",
+      "simulatedDescription": "This is the fallback a visitor sees when a remote is unavailable. The host stays fully interactive — only this block degrades.",
+      "devHint": "The Svelte remote (naufal-lab) isn't running. In dev, start it with <code1>npm run dev:mf</code1> inside <code2>naufal-lab/</code2>."
+    }
+  },
+  "presence": {
+    "description": "Two patterns at once: this canvas is a separate <svelteRemote>Svelte remote</svelteRemote> loaded over Module Federation, and it holds its own live <ws>WebSocket</ws> connection. Move your cursor inside it — anyone else here sees it in realtime. Open a second tab to watch."
+  },
+  "theme": {
+    "toggleLabel": "Toggle theme",
+    "light": "light",
+    "dark": "dark",
+    "system": "system"
+  },
+  "locale": {
+    "toggleLabel": "Switch language"
+  }
+}

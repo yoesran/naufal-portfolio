@@ -1,0 +1,61 @@
+{
+  "header": {
+    "nav": {
+      "work": "karya",
+      "blog": "blog",
+      "cv": "cv"
+    }
+  },
+  "intro": "Ruang main berisi hal-hal interaktif yang saya buat.",
+  "hero": {
+    "tagline": "Frontend engineer yang bekerja di sambungan antar framework."
+  },
+  "techStack": {
+    "prompt": "pilih sebuah tech untuk melihat penggunaannya dalam pengalaman saya →",
+    "notes": {
+      "react": "Pilihan utama — saat ini di DBS (microfrontend webview), sebelumnya di eDOT, Doubler Studio.",
+      "next": "Landing + onboarding webview di Ajaib, dashboard internal di eDOT.",
+      "typescript": "Default untuk semua yang saya tulis.",
+      "svelte": "Menggerakkan remote terfederasi yang sedang Anda interaksikan di halaman ini.",
+      "angular": "Feature module di Bank Danamon — DBankPro 2.0, migrasi Single-SPA → NX.",
+      "vue": "Sedang dieksplorasi — direncanakan jadi remote terfederasi kedua di playground ini.",
+      "flutter": "Pekerjaan mobile di GeekGarden.",
+      "javascript": "Vanilla JS + jQuery di proyek BCA, Doubler Studio — tempat semuanya bermula."
+    }
+  },
+  "microfrontend": {
+    "description": "Seluruh halaman ini menggunakan <react>React</react>. Kotak di bawah adalah aplikasi <svelte>Svelte</svelte> terpisah — di-compile dan dilayani secara mandiri — diambil melalui jaringan saat ter-scroll ke layar. Inilah Module Federation.",
+    "liveRemoteLabel": "remote svelte live ↓",
+    "openStandalone": "buka mandiri ↗",
+    "status": {
+      "connecting": "menghubungkan…",
+      "connectingDetail": "mengambil remoteEntry.js",
+      "connected": "terhubung",
+      "connectedDetail": "remoteEntry.js · dimuat dalam {{ms}}ms",
+      "offline": "remote offline",
+      "offlineDetail": "fallback dirender · host tetap aktif"
+    },
+    "actions": {
+      "simulateOffline": "Simulasikan offline",
+      "reconnect": "Sambung ulang"
+    },
+    "offline": {
+      "simulated": "remote offline (simulasi)",
+      "notReachable": "remote tidak dapat dijangkau",
+      "simulatedDescription": "Inilah fallback yang dilihat pengunjung saat sebuah remote tidak tersedia. Host tetap sepenuhnya interaktif — hanya block ini yang terdegradasi.",
+      "devHint": "Remote Svelte (naufal-lab) tidak berjalan. Saat development, jalankan dengan <code1>npm run dev:mf</code1> di dalam <code2>naufal-lab/</code2>."
+    }
+  },
+  "presence": {
+    "description": "Dua pola sekaligus: canvas ini adalah <svelteRemote>Svelte remote</svelteRemote> terpisah yang dimuat lewat Module Federation, dan memiliki koneksi <ws>WebSocket</ws> live-nya sendiri. Gerakkan cursor di dalamnya — siapa pun yang sedang di sini melihatnya secara realtime. Buka tab kedua untuk menyaksikan."
+  },
+  "theme": {
+    "toggleLabel": "Ganti tema",
+    "light": "terang",
+    "dark": "gelap",
+    "system": "sistem"
+  },
+  "locale": {
+    "toggleLabel": "Ganti bahasa"
+  }
+}

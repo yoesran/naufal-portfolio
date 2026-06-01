@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 
 import { loadRemote } from '@module-federation/runtime'
 
@@ -12,6 +13,7 @@ import { cn } from '@/lib/utils'
 const LAB_URL = import.meta.env.VITE_LAB_URL ?? 'http://127.0.0.1:5174'
 
 export function MicrofrontendBlock() {
+  const { t } = useTranslation()
   const [status, setStatus] = useState<RemoteStatus>({ state: 'loading' })
   const [offline, setOffline] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -40,12 +42,13 @@ export function MicrofrontendBlock() {
   return (
     <Cell label="// microfrontend-meta · React host ⇄ Svelte remote">
       <p className="text-muted-foreground text-sm leading-relaxed">
-        This whole page is{' '}
-        <span className="text-foreground font-medium">React</span>. The box
-        below is a separate{' '}
-        <span className="text-foreground font-medium">Svelte</span> app —
-        compiled and served on its own — fetched over the network the moment it
-        scrolled into view. That's Module Federation.
+        <Trans
+          i18nKey="microfrontend.description"
+          components={{
+            react: <span className="text-foreground font-medium" />,
+            svelte: <span className="text-foreground font-medium" />,
+          }}
+        />
       </p>
 
       <div className="mt-5 flex items-stretch gap-1">
@@ -57,7 +60,7 @@ export function MicrofrontendBlock() {
       <div className="border-border/70 mt-5 rounded-lg border border-dashed p-4">
         <div className="mb-3 flex items-center justify-between gap-3">
           <span className="text-muted-foreground font-mono text-[10px] tracking-wider uppercase">
-            live svelte remote ↓
+            {t('microfrontend.liveRemoteLabel')}
           </span>
           <a
             href={LAB_URL}
@@ -65,7 +68,7 @@ export function MicrofrontendBlock() {
             rel="noreferrer"
             className="text-muted-foreground hover:text-foreground font-mono text-[10px] transition-colors"
           >
-            open standalone ↗
+            {t('microfrontend.openStandalone')}
           </a>
         </div>
         <div
@@ -94,7 +97,9 @@ export function MicrofrontendBlock() {
             className="self-start sm:self-auto"
             onClick={() => setOffline((v) => !v)}
           >
-            {offline ? 'Reconnect remote' : 'Simulate offline'}
+            {offline
+              ? t('microfrontend.actions.reconnect')
+              : t('microfrontend.actions.simulateOffline')}
           </Button>
         )}
       </div>
@@ -145,20 +150,21 @@ function Arrow({ label, lit }: { label: string; lit?: boolean }) {
 }
 
 function StatusStrip({ status }: { status: RemoteStatus }) {
+  const { t } = useTranslation()
   let dot = 'bg-amber-400'
-  let label = 'connecting…'
-  let detail = 'fetching remoteEntry.js'
+  let label = t('microfrontend.status.connecting')
+  let detail = t('microfrontend.status.connectingDetail')
   let pulse = true
 
   if (status.state === 'loaded') {
     dot = 'bg-emerald-400'
-    label = 'connected'
-    detail = `remoteEntry.js · loaded in ${status.ms}ms`
+    label = t('microfrontend.status.connected')
+    detail = t('microfrontend.status.connectedDetail', { ms: status.ms })
     pulse = false
   } else if (status.state === 'error') {
     dot = 'bg-red-400'
-    label = 'remote offline'
-    detail = 'fallback rendered · host still up'
+    label = t('microfrontend.status.offline')
+    detail = t('microfrontend.status.offlineDetail')
     pulse = false
   }
 
@@ -195,21 +201,25 @@ function CounterSkeleton() {
 }
 
 function RemoteOffline({ simulated }: { simulated?: boolean }) {
+  const { t } = useTranslation()
   return (
     <Alert className="rounded-md border-dashed border-red-400/40 bg-red-400/5">
       <AlertTitle className="text-foreground font-mono text-xs">
-        {simulated ? 'remote offline (simulated)' : 'remote not reachable'}
+        {simulated
+          ? t('microfrontend.offline.simulated')
+          : t('microfrontend.offline.notReachable')}
       </AlertTitle>
       <AlertDescription className="leading-relaxed">
         {simulated ? (
-          'This is the fallback a visitor sees when a remote is unavailable. The host stays fully interactive — only this block degrades.'
+          t('microfrontend.offline.simulatedDescription')
         ) : (
-          <>
-            The Svelte remote (naufal-lab) isn't running. In dev, start it with{' '}
-            <code className="text-foreground font-mono">npm run dev:mf</code>{' '}
-            inside{' '}
-            <code className="text-foreground font-mono">naufal-lab/</code>.
-          </>
+          <Trans
+            i18nKey="microfrontend.offline.devHint"
+            components={{
+              code1: <code className="text-foreground font-mono" />,
+              code2: <code className="text-foreground font-mono" />,
+            }}
+          />
         )}
       </AlertDescription>
     </Alert>

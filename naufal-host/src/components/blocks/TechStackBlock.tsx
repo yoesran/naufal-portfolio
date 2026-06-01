@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import angularSvg from '@/assets/tech-stacks/angular.svg?raw'
 import flutterSvg from '@/assets/tech-stacks/flutter.svg?raw'
@@ -10,59 +11,27 @@ import tsSvg from '@/assets/tech-stacks/typescript.svg?raw'
 import vueSvg from '@/assets/tech-stacks/vuedotjs.svg?raw'
 
 import { Cell } from '@/components/Cell'
+import { type Translations } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
-type Tech = { name: string; note: string; svg: string; color: string }
+type TechNoteKey = keyof Translations['techStack']['notes']
+type Tech = { name: string; noteKey: TechNoteKey; svg: string; color: string }
 
 const TECH: Tech[] = [
-  {
-    name: 'React',
-    note: 'Daily driver — currently at DBS (microfrontend webview), previously eDOT, Doubler Studio.',
-    svg: reactSvg,
-    color: '#61DAFB',
-  },
+  { name: 'React', noteKey: 'react', svg: reactSvg, color: '#61DAFB' },
   {
     name: 'Next.js',
-    note: 'Landing + onboarding webview at Ajaib, internal dashboards at eDOT.',
+    noteKey: 'next',
     svg: nextSvg,
-    color: 'var(--foreground)', // brand is black; follow theme for contrast on both modes
+    // brand is black; follow theme for contrast on both modes
+    color: 'var(--foreground)',
   },
-  {
-    name: 'TypeScript',
-    note: 'Default for everything I write.',
-    svg: tsSvg,
-    color: '#3178C6',
-  },
-  {
-    name: 'Svelte',
-    note: "Powers the federated remote you've been interacting with on this page.",
-    svg: svelteSvg,
-    color: '#FF3E00',
-  },
-  {
-    name: 'Angular',
-    note: 'Feature modules at Bank Danamon — DBankPro 2.0, Single-SPA → NX migration.',
-    svg: angularSvg,
-    color: '#DD0031',
-  },
-  {
-    name: 'Vue',
-    note: 'Exploring — planned as a second federated remote on this playground.',
-    svg: vueSvg,
-    color: '#4FC08D',
-  },
-  {
-    name: 'Flutter',
-    note: 'Mobile work at GeekGarden.',
-    svg: flutterSvg,
-    color: '#02569B',
-  },
-  {
-    name: 'JavaScript',
-    note: 'Vanilla JS + jQuery on BCA projects at Doubler Studio — where it started.',
-    svg: jsSvg,
-    color: '#F7DF1E',
-  },
+  { name: 'TypeScript', noteKey: 'typescript', svg: tsSvg, color: '#3178C6' },
+  { name: 'Svelte', noteKey: 'svelte', svg: svelteSvg, color: '#FF3E00' },
+  { name: 'Angular', noteKey: 'angular', svg: angularSvg, color: '#DD0031' },
+  { name: 'Vue', noteKey: 'vue', svg: vueSvg, color: '#4FC08D' },
+  { name: 'Flutter', noteKey: 'flutter', svg: flutterSvg, color: '#02569B' },
+  { name: 'JavaScript', noteKey: 'javascript', svg: jsSvg, color: '#F7DF1E' },
 ]
 
 const ROTATION_SPEED = 360 / 25000 // 360deg per 25s
@@ -76,6 +45,7 @@ const hasHover = () =>
   window.matchMedia('(hover: hover) and (pointer: fine)').matches
 
 export function TechStackBlock() {
+  const { t } = useTranslation()
   const [active, setActive] = useState<Tech | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -307,11 +277,11 @@ export function TechStackBlock() {
             <>
               <span className="text-foreground font-medium">{active.name}</span>
               <span className="text-muted-foreground/60"> — </span>
-              {active.note}
+              {t(`techStack.notes.${active.noteKey}`)}
             </>
           ) : (
             <span className="text-muted-foreground/60">
-              pick a tech to see how it shows up in my work →
+              {t('techStack.prompt')}
             </span>
           )}
         </div>

@@ -1,3 +1,5 @@
+import { Trans } from 'react-i18next'
+
 import { loadRemote } from '@module-federation/runtime'
 
 import { Cell } from '@/components/Cell'
@@ -10,12 +12,13 @@ export function PresenceBlock() {
   return (
     <Cell label="// presence-room · Svelte remote + live WebSocket">
       <p className="text-muted-foreground text-sm leading-relaxed">
-        Two patterns at once: this canvas is a separate{' '}
-        <span className="text-foreground font-medium">Svelte remote</span>{' '}
-        loaded over Module Federation, and it holds its own live{' '}
-        <span className="text-foreground font-medium">WebSocket</span>{' '}
-        connection. Move your cursor inside it — anyone else here sees it in
-        realtime. Open a second tab to watch.
+        <Trans
+          i18nKey="presence.description"
+          components={{
+            svelteRemote: <span className="text-foreground font-medium" />,
+            ws: <span className="text-foreground font-medium" />,
+          }}
+        />
       </p>
 
       <div className="mt-4">

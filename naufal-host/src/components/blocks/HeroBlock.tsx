@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Cell } from '@/components/Cell'
 
@@ -25,6 +26,7 @@ function prefersReducedMotion() {
 }
 
 export function HeroBlock() {
+  const { t } = useTranslation()
   const wordmarkRef = useRef<HTMLHeadingElement>(null)
   const frame = useRef(0)
   const [reduce, setReduce] = useState(prefersReducedMotion)
@@ -142,7 +144,7 @@ export function HeroBlock() {
           ))}
         </h1>
         <p className="text-muted-foreground mt-4 text-base">
-          Frontend engineer working at the seams of frameworks.
+          {t('hero.tagline')}
         </p>
       </div>
     </Cell>

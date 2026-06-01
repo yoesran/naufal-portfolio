@@ -1,12 +1,16 @@
+import { useTranslation } from 'react-i18next'
+
+import { LocaleToggle } from '@/components/LocaleToggle'
 import { ThemeToggle } from '@/components/ThemeToggle'
 
-const NAV = [
-  { label: 'work', href: '#' },
-  { label: 'blog', href: '#' },
-  { label: 'cv', href: '#' },
-]
-
 export function Header() {
+  const { t } = useTranslation()
+  const nav = [
+    { label: t('header.nav.work'), href: '#' },
+    { label: t('header.nav.blog'), href: '#' },
+    { label: t('header.nav.cv'), href: '#' },
+  ]
+
   return (
     <header className="border-border/50 bg-background/80 sticky top-0 z-50 border-b backdrop-blur-md">
       <div className="mx-auto flex max-w-2xl items-center justify-between px-6 py-3">
@@ -17,7 +21,7 @@ export function Header() {
           naufal.dev
         </a>
         <nav className="flex items-center gap-5 font-mono text-xs">
-          {NAV.map((item) => (
+          {nav.map((item) => (
             <a
               key={item.label}
               href={item.href}
@@ -26,6 +30,7 @@ export function Header() {
               {item.label}
             </a>
           ))}
+          <LocaleToggle />
           <ThemeToggle />
         </nav>
       </div>

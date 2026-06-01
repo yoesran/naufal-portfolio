@@ -380,7 +380,31 @@ The architecture has been "ready" for dark mode since v0.1 (shadcn CSS variables
 
 The standalone lab page (`localhost:5174`) stays dark-only — the toggle lives in the host because that's the integration surface that owns visitor preference. If the standalone ever needs its own toggle it's a separate small task on the Svelte side; the CSS-variable theme is already in place.
 
-### 14. Scroll-reveal + deferred federated load
+### 14. i18n: per-remote with locale via `opts`
+
+**The rule.** Each app in the federation owns its own translations and its own i18n library. Only the locale **string** crosses the MF boundary — it rides on the host's `<html lang>` attribute (which every remote inherits automatically through the DOM) and on the `opts.locale` field of the mount signature. Conventions shared, implementations independent. This mirrors the existing i18n stance at the doc-architecture level (project-handoff.md "Resolved cross-cutting decisions").
+
+**Working convention (host).** Any new user-facing string goes through the i18n system — no hardcoded text in components. Add the key to [`en.json`](../naufal-host/src/lib/locales/en.json) (source of truth), mirror it in [`id.json`](../naufal-host/src/lib/locales/id.json), then use `t('your.key')` or `<Trans i18nKey="..." components={...}>` in the component. The dual-`satisfies` shape check in `i18n.ts` enforces parity at compile time, so adding to one locale without the other fails the build. Exceptions are code-comment-style labels (e.g. `// hero · host-native React` on `Cell`) and brand/code identifiers (e.g. `naufal.dev`, `lab/Counter`, `naufal-lab`) — those stay literal.
+
+**Host setup** (shipped):
+
+- [`src/lib/i18n.ts`](../naufal-host/src/lib/i18n.ts) — `i18next` + `react-i18next` + `i18next-browser-languagedetector`. Resources are bundled `en.json` and `id.json` under one default namespace. Detection order: `localStorage` → `navigator`. Key in storage: `locale`. On every `languageChanged` event the listener sets `document.documentElement.lang = lng`, which is exactly what remotes will read. Same file exports the locale type machinery: `LOCALES` (a `readonly ['en', 'id']` tuple via `as const`), `Locale = (typeof LOCALES)[number]`, `DEFAULT_LOCALE`, and an `isLocale(value): value is Locale` type guard. `Translations = typeof en` is exported so components can derive specific dynamic-key unions.
+- [`src/lib/locales/en.json`](../naufal-host/src/lib/locales/en.json) / [`id.json`](../naufal-host/src/lib/locales/id.json) — nested keys grouped by surface (`header.nav`, `hero`, `techStack`, `microfrontend`, `presence`, `theme`, `locale`). Locale-shape consistency is enforced via a dual `satisfies LocaleShape<...>` at the i18next-init resources block in `i18n.ts`: `id satisfies LocaleShape<typeof en>` catches missing keys in id (would silently fall back to English at runtime), `en satisfies LocaleShape<typeof id>` catches extra keys in id (drift indicator). `LocaleShape<T>` widens string leaves to `string` so the comparison ignores literal value differences and checks only key structure. Both directions are needed because TS only runs excess-property checks on object literals, not on JSON-import bindings.
+- [`src/lib/i18n-types.d.ts`](../naufal-host/src/lib/i18n-types.d.ts) — **`i18next`** module augmentation (not `react-i18next` — `CustomTypeOptions` lives on i18next; react-i18next re-uses it) so `t('key.path')` is type-checked against the English JSON shape and the IDE offers autocomplete on the key argument. Dynamic keys: derive a sub-union via `keyof Translations['path']['to']['object']` next to where you use it — e.g. `TechNoteKey = keyof Translations['techStack']['notes']` in `TechStackBlock.tsx` makes `t(\`techStack.notes.${active.noteKey}\`)` type-check without a cast.
+- [`src/components/LocaleToggle.tsx`](../naufal-host/src/components/LocaleToggle.tsx) — shadcn `ToggleGroup` (binary "EN / ID" pill, segmented-control look with `spacing={0}`). Lives in the header to the left of `ThemeToggle`. Maps over `LOCALES` so adding a third locale to `i18n.ts` automatically adds a third toggle item.
+- Components use `t(key)` for plain strings, `<Trans i18nKey="..." components={...}>` where translations need to wrap their own inline `<span>`/`<code>` for emphasis (MicrofrontendBlock and PresenceBlock have inline-formatted prose).
+
+**Indonesian translations** are best-effort drafts written for the initial implementation — Naufal is the native speaker and the source of truth; expect refinements as he reviews.
+
+**Remote setup** (planned, not yet implemented):
+
+- Each remote will install its framework's shadcn-port-compatible i18n library — `svelte-i18n` for `naufal-lab`. Translation files live inside the remote, not federated.
+- The mount adapter (`mountCounter.ts`, `mountPresence.ts`) reads `opts.locale` and calls the remote's i18n library to switch language on mount. The opts contract from §3 already carries arbitrary data — `locale` slots in as a new optional field without any signature change.
+- The host passes `opts.locale: i18n.resolvedLanguage` when mounting. On locale change the host re-mounts the affected `RemoteMount`s (cheap; the chunk is already loaded), or each remote subscribes to the `<html lang>` attribute via `MutationObserver` and reacts internally — likely the latter, since it avoids host-side coordination.
+
+**Why this shape, not a shared i18n library across the boundary.** A shared library would force every remote to load the same i18next version (or whatever), which negates the framework-independence the architecture is built on. The string-only contract is the smallest thing that crosses the boundary, and it matches what the browser already does with `<html lang>` for accessibility / language detection.
+
+### 15. Scroll-reveal + deferred federated load
 
 Two behaviours sharing one hook.
 
@@ -429,8 +453,9 @@ Open `http://localhost:5173`. Open a second tab (or `http://127.0.0.1:5174` stan
 - **`build.target: 'chrome89'`** on both sides: required by `@module-federation/vite` (native ES modules + top-level `await`).
 - **`127.0.0.1` everywhere**: avoids the Windows IPv6 / dts-plugin IPv4 mismatch.
 - **React Compiler via a ~12-line custom plugin**, not `@rolldown/plugin-babel`. The documented integration is silently inert in this project (federation + plugin-react v6 interaction); see §12.
+- **i18n is per-remote, locale crosses via `opts.locale`**. Host runs `i18next` + `react-i18next`; each remote will own its own library when translated. Host sets `<html lang>`; remotes will read locale from their mount's `opts`. See §14.
 - **Theme toggle lives on the host, not in any remote**. CSS variables + `.dark` class cascade from the host's `<html>` into every remote's mounted DOM — zero coordination code. See §13.
-- **Scroll-reveal is plain `IntersectionObserver` + CSS transition**, not Framer Motion (or any animation library). Same hook gates `RemoteMount`'s federated `load()` on viewport entry, so blocks below the fold cost zero network. See §14.
+- **Scroll-reveal is plain `IntersectionObserver` + CSS transition**, not Framer Motion (or any animation library). Same hook gates `RemoteMount`'s federated `load()` on viewport entry, so blocks below the fold cost zero network. See §15.
 
 ---
 
