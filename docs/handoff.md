@@ -30,7 +30,7 @@ Stance on MF strictness: **pragmatic** — MF where it fits, alternative approac
 ### Two-site architecture, not one
 
 - **Portfolio site at `naufal.dev`** — React Vite host, federated remotes. Home page is a "curated playground" (see below). Job: _show_ building ability, be living proof of the MF architecture.
-- **Blog site at `blog.naufal.dev`** — Standalone Next.js, SSR/SSG for SEO. NOT a federated remote. Holds content: technical articles, the CV (as a styled exportable page), and the deeper "stories" behind each job. Job: _tell_ the story, be findable on Google.
+- **Blog site at `blog.naufal.dev`** — Standalone Next.js, SSG for SEO. NOT a federated remote. Holds content: technical articles, the CV (as a styled exportable page), and the deeper "stories" behind each job. Job: _tell_ the story, be findable on Google. **Built with Next.js 16 static export (`output: 'export'`) → Cloudflare Pages**, deliberately over SSR/OpenNext: a content site needs no per-request server, and static export is unambiguously free + simpler (same direct-upload deploy flow as host/lab), while still fully crawlable. shadcn (React) + the portfolio's theme tokens give visual unity with the host. Scaffolded; CV + first post pending.
 
 Reason for the split: Module Federation is client-rendered, bad for SEO. Content that needs to be crawlable lives in the SSR blog. Interactive things that don't need SEO live in the federated portfolio. Each tool used for what it's actually good at. The two sites share a visual identity so they feel unified, but they're independent deployments. Portfolio links to blog for substance; blog links to portfolio for live demos.
 
@@ -46,7 +46,7 @@ Verified via web search at planning time:
 
 ### Project stack
 
-See the [overview.md](./overview.md) project/stack table for the canonical version. In short: `naufal-host` (React 19) + `naufal-lab` (Svelte 5) + `naufal-party` (PartyKit) all working; `naufal-blog` (Next.js 15, standalone) not started.
+See the [overview.md](./overview.md) project/stack table for the canonical version. In short: `naufal-host` (React 19) + `naufal-lab` (Svelte 5) + `naufal-party` (PartyKit) all working; `naufal-blog` (Next.js 16, standalone, static export) scaffolded.
 
 (There is no separate `naufal-tokens` package — see Design approach below. The earlier idea of a published tokens package was dropped as over-engineered.)
 

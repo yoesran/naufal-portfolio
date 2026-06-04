@@ -23,7 +23,7 @@ The remote exposes **two** components today: `./Counter` (a context-aware mouse-
 | `naufal-host`  | React 19 + Vite + `@module-federation/vite`       | 5173 | Working     |
 | `naufal-lab`   | Plain Svelte 5 + Vite + `@module-federation/vite` | 5174 | Working     |
 | `naufal-party` | PartyKit (WebSocket) — multiplayer presence       | 1999 | Working     |
-| `naufal-blog`  | Next.js 15 App Router (standalone, NOT federated) | —    | Not started |
+| `naufal-blog`  | Next.js 16 · static export (standalone, not fed.) | —    | Scaffolded  |
 
 All three running projects are **separate processes** with no build-time coupling. The host fetches the remote's bundle at runtime from `http://127.0.0.1:5174/remoteEntry.js`; the federated `Presence` component opens a WebSocket to `127.0.0.1:1999`.
 
