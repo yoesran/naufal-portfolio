@@ -28,7 +28,7 @@ Prod values live in committed `.env.production` files (both apps). These are `VI
 
 The host fetches `remoteEntry.js` and its lazy chunks from a _different origin_, so the remote must send CORS headers. Cloudflare Pages reads [`naufal-lab/public/_headers`](../naufal-lab/public/_headers) (copied to `dist/_headers` at build):
 
-```
+```text
 /*
   Access-Control-Allow-Origin: *
 
@@ -81,4 +81,4 @@ Open `https://naufal-host.pages.dev`, then DevTools → Network:
 
 ## Custom domain later (no rework)
 
-When `naufal.dev` is registered (Cloudflare Registrar, ~$10–12/yr for `.dev`): add the domain to each Pages project in the dashboard, bind the party to a subdomain, then update `VITE_LAB_URL` + `VITE_PARTY_HOST` in the two `.env.production` files and the CORS origin in `_headers` (if it was tightened off `*`). No code changes.
+When `naufal.dev` is registered (Cloudflare Registrar, ~$10–12/yr for `.dev`): add the domain to each Pages project in the dashboard, bind the party to a subdomain, then update `VITE_LAB_URL` + `VITE_PARTY_HOST` in the two `.env.production` files, the CORS origin in `_headers` (if it was tightened off `*`), and the absolute `og:url` / `og:image` (and `twitter:image`) URLs in [`naufal-host/index.html`](../naufal-host/index.html). Otherwise no code changes.
