@@ -5,30 +5,10 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>naufal-host</title>
-    <script>
-      // Set theme class before any paint to avoid FOUC. Read user pref from
-      // localStorage; fall back to system preference. Mirrored by useTheme.ts
-      ;(function () {
-        try {
-          var t = localStorage.getItem('theme')
-          var dark =
-            t === 'dark' ||
-            ((!t || t === 'system') &&
-              matchMedia('(prefers-color-scheme: dark)').matches)
-          if (dark) document.documentElement.classList.add('dark')
-        } catch (e) {}
-      })()
-    </script>
-    <style>
-      html {
-        background-color: oklch(1 0 0);
-        color-scheme: light;
-      }
-      html.dark {
-        background-color: oklch(0.145 0 0);
-        color-scheme: dark;
-      }
-    </style>
+    <!-- theme-prepaint -->
+    <!-- ^ replaced at build/serve time by the theme-prepaint Vite plugin with an
+         inline <script> + <style> generated from src/lib/theme-tokens.ts, so the
+         no-FOUC pre-paint logic never drifts from the theme store. -->
   </head>
   <body>
     <div id="root"></div>

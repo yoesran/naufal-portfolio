@@ -9,9 +9,9 @@ import reactSvg from '@/assets/tech-stacks/react.svg?raw'
 import svelteSvg from '@/assets/tech-stacks/svelte.svg?raw'
 import tsSvg from '@/assets/tech-stacks/typescript.svg?raw'
 import vueSvg from '@/assets/tech-stacks/vuedotjs.svg?raw'
-
 import { Cell } from '@/components/Cell'
 import { type Translations } from '@/lib/i18n'
+import { useMediaQuery } from '@/lib/useMediaQuery'
 import { cn } from '@/lib/utils'
 
 type TechNoteKey = keyof Translations['techStack']['notes']
@@ -36,30 +36,18 @@ const TECH: Tech[] = [
 
 const ROTATION_SPEED = 360 / 25000 // 360deg per 25s
 
-// Treat a device as "desktop" only if it both has a hover-capable input AND
-// a fine pointer (real mouse / trackpad). Phones and tablets fail one or both
-// and fall through to the touch handlers. Computed once per render — cheap and
-// stable per session.
-const hasHover = () =>
-  typeof window !== 'undefined' &&
-  window.matchMedia('(hover: hover) and (pointer: fine)').matches
-
 export function TechStackBlock() {
   const { t } = useTranslation()
   const [active, setActive] = useState<Tech | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const [panelHeight, setPanelHeight] = useState<number>()
-  const [desktop, setDesktop] = useState(hasHover)
-
-  // Re-evaluate the device on hover/pointer-capability changes — covers 2-in-1s
-  // where a user docks/undocks a trackpad mid-session.
-  useEffect(() => {
-    const mql = window.matchMedia('(hover: hover) and (pointer: fine)')
-    const onChange = () => setDesktop(mql.matches)
-    mql.addEventListener('change', onChange)
-    return () => mql.removeEventListener('change', onChange)
-  }, [])
+  // Treat a device as "desktop" only if it has BOTH a hover-capable input and a
+  // fine pointer (real mouse / trackpad). Phones and tablets fail one or both
+  // and fall through to the touch handlers. Re-evaluates live on capability
+  // changes — e.g. a 2-in-1 docking/undocking a trackpad mid-session.
+  const desktop = useMediaQuery('(hover: hover) and (pointer: fine)')
+  const reduce = useMediaQuery('(prefers-reduced-motion: reduce)')
 
   // Single source of truth for "should the orbit be paused?" — paused if
   // anything is selected (keyboard, hover, or tap) OR a finger is actively
@@ -133,7 +121,6 @@ export function TechStackBlock() {
     const slots = Array.from(
       container.querySelectorAll<HTMLElement>('[data-orbit-slot]')
     )
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     // Cache radius — recomputed only when the container resizes, not every
     // frame. Saves a layout read per tick.
@@ -166,7 +153,7 @@ export function TechStackBlock() {
       cancelAnimationFrame(raf)
       ro.disconnect()
     }
-  }, [])
+  }, [reduce])
 
   return (
     <Cell label="// tech-stack · host-native React">
@@ -175,7 +162,7 @@ export function TechStackBlock() {
         className="relative mx-auto aspect-square w-full max-w-[320px]"
       >
         {/* center "me" dot */}
-        <div className="absolute top-1/2 left-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/80 shadow-[0_0_12px_rgba(52,211,153,0.6)]" />
+        <div className="bg-brand/80 absolute top-1/2 left-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full shadow-[0_0_12px_color-mix(in_oklch,var(--brand)_60%,transparent)]" />
 
         {TECH.map((tech) => {
           const isActive = active?.name === tech.name
@@ -229,9 +216,9 @@ export function TechStackBlock() {
                       }
                 }
                 className={cn(
-                  'bg-card flex size-12 items-center justify-center rounded-full border shadow-sm transition-[transform,border-color] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/40',
+                  'bg-card focus-visible:ring-brand/40 flex size-12 items-center justify-center rounded-full border shadow-sm transition-[transform,border-color] duration-200 focus:outline-none focus-visible:ring-2',
                   isActive
-                    ? 'scale-125 border-emerald-500/60'
+                    ? 'border-brand/60 scale-125'
                     : 'border-border hover:scale-110'
                 )}
               >

@@ -35,8 +35,9 @@ All three running projects are **separate processes** with no build-time couplin
 
 | File                                           | Role                                                                                                                                                          |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `vite.config.ts`                               | Host config; reads `VITE_LAB_URL` via `loadEnv` so the federation `entry` is environment-aware                                                                |
-| `index.html`                                   | Inline `<style>` paints the dark background on first frame (avoids white FOUC before JS loads)                                                                |
+| `vite.config.ts`                               | Host config; env-aware federation `entry` via `loadEnv`; `theme-prepaint` plugin injects the generated no-FOUC script/style                                   |
+| `index.html`                                   | Holds a `<!-- theme-prepaint -->` slot; the Vite plugin swaps in an inline script/style generated from `theme-tokens.ts` (kills FOUC + flash)                 |
+| `src/lib/theme.ts` / `theme-tokens.ts`         | Shared theme store (`useSyncExternalStore`, five axes) + the DOM-free token module it shares with the pre-paint generator                                     |
 | `src/main.tsx`                                 | Mounts React inside a top-level `ErrorBoundary` + installs an `unhandledrejection` swallower                                                                  |
 | `src/App.tsx`                                  | The home-page playground — header, intro, Hero / TechStack / Microfrontend / Presence blocks, footer                                                          |
 | `src/components/Header.tsx`, `Footer.tsx`      | Sticky header (name + nav placeholders), footer with social links                                                                                             |
@@ -53,16 +54,16 @@ All three running projects are **separate processes** with no build-time couplin
 
 ### `naufal-lab` — Svelte Remote (port 5174)
 
-| File                       | Role                                                                                                                      |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `vite.config.ts`           | Configured as a **remote**, exposing `./Counter` and `./Presence`                                                         |
-| `src/lib/Counter.svelte`   | Context-aware component: a cursor-following glow + counter; imports `../app.css` so Tailwind ships in the federated chunk |
-| `src/lib/mountCounter.ts`  | Mount adapter for `./Counter`                                                                                             |
-| `src/lib/Presence.svelte`  | Multiplayer cursor canvas — opens its own `PartySocket` connection; also imports `../app.css`                             |
-| `src/lib/mountPresence.ts` | Mount adapter for `./Presence`                                                                                            |
-| `src/App.svelte`           | Standalone page showcasing both exposed components                                                                        |
-| `src/app.css`              | Tailwind + shadcn theme — imported by the **Svelte components** (not the mount adapters) so CSS ships over federation     |
-| `src/lib/i18n/`            | `svelte-i18n` setup + `en.json` / `id.json`; reads `<html lang>` (host-owned) for locale, observes it for live switches   |
+| File                       | Role                                                                                                                        |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `vite.config.ts`           | Host config; env-aware federation `entry` via `loadEnv`; `theme-prepaint` plugin injects the generated no-FOUC script/style |
+| `src/lib/Counter.svelte`   | Context-aware component: a cursor-following glow + counter; imports `../app.css` so Tailwind ships in the federated chunk   |
+| `src/lib/mountCounter.ts`  | Mount adapter for `./Counter`                                                                                               |
+| `src/lib/Presence.svelte`  | Multiplayer cursor canvas — opens its own `PartySocket` connection; also imports `../app.css`                               |
+| `src/lib/mountPresence.ts` | Mount adapter for `./Presence`                                                                                              |
+| `src/App.svelte`           | Standalone page showcasing both exposed components                                                                          |
+| `src/app.css`              | Tailwind + shadcn theme — imported by the **Svelte components** (not the mount adapters) so CSS ships over federation       |
+| `src/lib/i18n/`            | `svelte-i18n` setup + `en.json` / `id.json`; reads `<html lang>` (host-owned) for locale, observes it for live switches     |
 
 `Counter.svelte`'s dashed border is intentional — it reads visibly as a remote when embedded in the host.
 
@@ -108,5 +109,5 @@ All three running projects are **separate processes** with no build-time couplin
 - **`127.0.0.1` everywhere**: avoids the Windows IPv6 / dts-plugin IPv4 mismatch. See [gotchas.md](./gotchas.md).
 - **React Compiler via a ~12-line custom plugin**, not `@rolldown/plugin-babel`. The documented integration is silently inert in this project (federation + plugin-react v6 interaction); see [features.md](./features.md).
 - **i18n is per-remote, locale crosses via `opts.locale`**. Host runs `i18next` + `react-i18next`; each remote will own its own library when translated. Host sets `<html lang>`; remotes will read locale from their mount's `opts`. See [features.md](./features.md).
-- **Theme toggle lives on the host, not in any remote**. CSS variables + `.dark` class cascade from the host's `<html>` into every remote's mounted DOM — zero coordination code. See [features.md](./features.md).
+- **Theming lives on the host, not in any remote**. The `theme-lab` block makes the host customizable across five axes (mode, accent, surface, radius, font) — all values on the host's `<html>` (class / `data-*` / CSS vars), backed by one shared store. Because they're CSS variables, they cascade into every remote's mounted DOM with zero coordination code, so re-skinning the page re-skins the federated remote live — a working demo of the cross-boundary cascade. See [features.md](./features.md).
 - **Scroll-reveal is plain `IntersectionObserver` + CSS transition**, not Framer Motion (or any animation library). Same hook gates `RemoteMount`'s federated `load()` on viewport entry, so blocks below the fold cost zero network. See [features.md](./features.md).

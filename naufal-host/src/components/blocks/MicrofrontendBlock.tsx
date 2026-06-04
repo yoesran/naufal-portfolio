@@ -121,9 +121,7 @@ function Node({
     <div
       className={cn(
         'flex-1 rounded-lg border px-3 py-2 transition-colors duration-500',
-        active
-          ? 'border-emerald-500/40 bg-emerald-500/5'
-          : 'border-border bg-muted/30'
+        active ? 'border-brand/40 bg-brand/5' : 'border-border bg-muted/30'
       )}
     >
       <div className="text-foreground font-mono text-sm">{name}</div>
@@ -141,7 +139,7 @@ function Arrow({ label, lit }: { label: string; lit?: boolean }) {
       <span
         className={cn(
           'text-lg leading-none transition-colors duration-500',
-          lit ? 'text-emerald-400' : 'text-muted-foreground/40'
+          lit ? 'text-brand' : 'text-muted-foreground/40'
         )}
       >
         →

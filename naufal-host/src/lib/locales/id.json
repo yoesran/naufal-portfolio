@@ -4,7 +4,8 @@
       "work": "karya",
       "blog": "blog",
       "cv": "cv"
-    }
+    },
+    "menuLabel": "Buka menu"
   },
   "intro": "Ruang main berisi hal-hal interaktif yang saya buat.",
   "hero": {
@@ -50,10 +51,37 @@
     "description": "Dua pola sekaligus: canvas ini adalah <svelteRemote>Svelte remote</svelteRemote> terpisah yang dimuat lewat Module Federation, dan memiliki koneksi <ws>WebSocket</ws> live-nya sendiri. Gerakkan cursor di dalamnya — siapa pun yang sedang di sini melihatnya secara realtime. Buka tab kedua untuk menyaksikan."
   },
   "theme": {
-    "toggleLabel": "Ganti tema",
     "light": "terang",
     "dark": "gelap",
-    "system": "sistem"
+    "system": "sistem",
+    "accents": {
+      "emerald": "zamrud",
+      "blue": "biru",
+      "violet": "ungu",
+      "amber": "ambar",
+      "rose": "mawar"
+    }
+  },
+  "themeLab": {
+    "description": "Sesuaikan sesukamu — dan lihat Svelte remote di bawah ikut berganti tampilan. Satu set CSS variable di host mengalir melintasi batas Module Federation.",
+    "base": "dasar",
+    "accent": "aksen",
+    "surface": "permukaan",
+    "radius": "radius",
+    "font": "font",
+    "reset": "Atur ulang",
+    "surfaces": {
+      "default": "bawaan",
+      "slate": "slate",
+      "stone": "stone",
+      "mono": "mono"
+    },
+    "fonts": {
+      "inter": "Inter",
+      "system": "Sistem",
+      "mono": "Mono",
+      "serif": "Serif"
+    }
   },
   "locale": {
     "toggleLabel": "Ganti bahasa"

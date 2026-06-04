@@ -4,7 +4,8 @@
       "work": "work",
       "blog": "blog",
       "cv": "cv"
-    }
+    },
+    "menuLabel": "Open menu"
   },
   "intro": "A playground of interactive things I build.",
   "hero": {
@@ -50,10 +51,37 @@
     "description": "Two patterns at once: this canvas is a separate <svelteRemote>Svelte remote</svelteRemote> loaded over Module Federation, and it holds its own live <ws>WebSocket</ws> connection. Move your cursor inside it — anyone else here sees it in realtime. Open a second tab to watch."
   },
   "theme": {
-    "toggleLabel": "Toggle theme",
     "light": "light",
     "dark": "dark",
-    "system": "system"
+    "system": "system",
+    "accents": {
+      "emerald": "emerald",
+      "blue": "blue",
+      "violet": "violet",
+      "amber": "amber",
+      "rose": "rose"
+    }
+  },
+  "themeLab": {
+    "description": "Make it yours — and watch the live Svelte remote below re-skin too. One set of CSS variables on the host cascades across the Module Federation boundary.",
+    "base": "base",
+    "accent": "accent",
+    "surface": "surface",
+    "radius": "radius",
+    "font": "font",
+    "reset": "Reset",
+    "surfaces": {
+      "default": "default",
+      "slate": "slate",
+      "stone": "stone",
+      "mono": "mono"
+    },
+    "fonts": {
+      "inter": "Inter",
+      "system": "System",
+      "mono": "Mono",
+      "serif": "Serif"
+    }
   },
   "locale": {
     "toggleLabel": "Switch language"

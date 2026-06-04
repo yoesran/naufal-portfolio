@@ -15,13 +15,19 @@
   let frame = 0
 
   const embedded = $derived(context === 'host')
-  const glowRgb = $derived(embedded ? '16 185 129' : '56 189 248')
+  // Embedded: read the host's themeable `--brand` so the remote re-skins live
+  // with the host's accent. Standalone: keep sky as the remote's own identity.
+  const glowColor = $derived(
+    embedded
+      ? 'color-mix(in oklch, var(--brand) 50%, transparent)'
+      : 'rgb(56 189 248 / 0.5)'
+  )
   const accent = $derived(
     embedded
       ? {
-          border: 'border-emerald-500/40',
-          text: 'text-emerald-400',
-          dot: 'bg-emerald-400',
+          border: 'border-brand/40',
+          text: 'text-brand',
+          dot: 'bg-brand',
         }
       : {
           border: 'border-sky-400/40',
@@ -63,7 +69,7 @@
       'pointer-events-none absolute size-60 -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl transition-opacity duration-200',
       active ? 'opacity-100' : 'opacity-0'
     )}
-    style="left: {x}px; top: {y}px; background: radial-gradient(circle, rgb({glowRgb} / 0.5), transparent 70%);"
+    style="left: {x}px; top: {y}px; background: radial-gradient(circle, {glowColor}, transparent 70%);"
   ></div>
 
   <div class="relative z-10">

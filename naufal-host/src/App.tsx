@@ -6,6 +6,7 @@ import { HeroBlock } from '@/components/blocks/HeroBlock'
 import { MicrofrontendBlock } from '@/components/blocks/MicrofrontendBlock'
 import { PresenceBlock } from '@/components/blocks/PresenceBlock'
 import { TechStackBlock } from '@/components/blocks/TechStackBlock'
+import { ThemeLabBlock } from '@/components/blocks/ThemeLabBlock'
 
 export default function App() {
   const { t } = useTranslation()
@@ -21,6 +22,7 @@ export default function App() {
           <TechStackBlock />
           <MicrofrontendBlock />
           <PresenceBlock />
+          <ThemeLabBlock />
         </div>
       </main>
       <Footer />

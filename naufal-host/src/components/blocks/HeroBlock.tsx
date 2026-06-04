@@ -1,10 +1,10 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Cell } from '@/components/Cell'
+import { useMediaQuery } from '@/lib/useMediaQuery'
 
 const NAME = 'Naufal Yusran'
-const GLOW = '52, 211, 153' // emerald
 const LETTER_STYLE = {
   transition: 'transform 150ms ease-out, text-shadow 150ms ease-out',
 }
@@ -18,26 +18,11 @@ const WORDS = (() => {
   )
 })()
 
-function prefersReducedMotion() {
-  return (
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  )
-}
-
 export function HeroBlock() {
   const { t } = useTranslation()
   const wordmarkRef = useRef<HTMLHeadingElement>(null)
   const frame = useRef(0)
-  const [reduce, setReduce] = useState(prefersReducedMotion)
-
-  // React to OS-level reduced-motion preference changes — rare but free.
-  useEffect(() => {
-    const mql = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const onChange = () => setReduce(mql.matches)
-    mql.addEventListener('change', onChange)
-    return () => mql.removeEventListener('change', onChange)
-  }, [])
+  const reduce = useMediaQuery('(prefers-reduced-motion: reduce)')
 
   useEffect(() => {
     if (reduce) return
@@ -62,7 +47,7 @@ export function HeroBlock() {
           if (dist < radius) {
             const s = 1 - dist / radius
             el.style.transform = `translate(${(dx / dist) * s * maxPush}px, ${(dy / dist) * s * maxPush}px)`
-            el.style.textShadow = `0 0 ${s * 22}px rgba(${GLOW}, ${s * 0.8})`
+            el.style.textShadow = `0 0 ${s * 22}px color-mix(in oklch, var(--brand) ${s * 80}%, transparent)`
           } else {
             el.style.transform = ''
             el.style.textShadow = ''

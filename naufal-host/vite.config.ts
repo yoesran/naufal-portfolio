@@ -6,6 +6,7 @@ import { federation } from '@module-federation/vite'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
+import { buildPrePaintScript, buildPrePaintStyle } from './src/lib/theme-tokens'
 
 // React Compiler. `@rolldown/plugin-babel` + `reactCompilerPreset` is the
 // documented path for Vite 8 / plugin-react v6, but its transform hook never
@@ -60,6 +61,18 @@ export default defineConfig(({ mode }) => {
         hostInitInjectLocation: 'html',
         shared: ['react', 'react-dom'],
       }),
+      {
+        // Generate the no-FOUC pre-paint <script>/<style> from the theme tokens
+        // (single source of truth) and inject them where index.html marks the
+        // slot. Keeps the inline script from drifting out of sync with theme.ts.
+        name: 'theme-prepaint',
+        transformIndexHtml(html) {
+          return html.replace(
+            '<!-- theme-prepaint -->',
+            `<script>${buildPrePaintScript()}</script>\n    <style>${buildPrePaintStyle()}</style>`
+          )
+        },
+      },
       {
         name: 'watch-remote-dist',
         configureServer(server) {
