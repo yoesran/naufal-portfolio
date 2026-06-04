@@ -3,6 +3,11 @@
 
   import Counter from './lib/Counter.svelte'
   import Presence from './lib/Presence.svelte'
+
+  // The standalone page owns its own party host (the host passes one via opts
+  // when embedded). undefined in dev → Presence falls back to its localhost
+  // default; set via .env.production for the deployed standalone page.
+  const partyHost = import.meta.env.VITE_PARTY_HOST
 </script>
 
 <main class="bg-background text-foreground min-h-dvh">
@@ -30,7 +35,7 @@
         <div class="text-muted-foreground mb-3 font-mono text-xs">
           // exposed: ./Presence
         </div>
-        <Presence context="standalone" />
+        <Presence host={partyHost} context="standalone" />
       </section>
     </div>
   </div>

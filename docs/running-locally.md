@@ -4,7 +4,7 @@ Three processes. The remote must be served as a **built** bundle — `@module-fe
 
 ```bash
 # terminal 1 — remote: build watcher + preview server (combined via concurrently)
-cd naufal-lab && npm run dev:mf      # vite build --watch + vite preview --port 5174
+cd naufal-lab && npm run dev:mf      # vite build --watch --mode development + vite preview --port 5174
 
 # terminal 2 — realtime server
 cd naufal-party && npm run dev       # partykit dev → 127.0.0.1:1999

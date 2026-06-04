@@ -1,0 +1,15 @@
+# Cloudflare Pages headers for the Module Federation remote.
+#
+# The host lives on a different origin (naufal-host.pages.dev) and fetches
+# remoteEntry.js + the lazy chunks cross-origin, so they need permissive CORS.
+# These are public, non-credentialed static assets, so `*` is safe — tighten to
+# the exact host origin later if you ever want to.
+/*
+  Access-Control-Allow-Origin: *
+
+# remoteEntry.js is the federation manifest. Never cache it, or a redeployed
+# remote won't be picked up by an already-loaded host. (CORS is already applied
+# by the /* rule above — don't repeat ACAO here, or Pages merges the two rules
+# into an invalid `Access-Control-Allow-Origin: *, *`.)
+/remoteEntry.js
+  Cache-Control: no-store, must-revalidate

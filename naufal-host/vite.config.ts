@@ -34,7 +34,7 @@ const reactCompilerPlugin = () => ({
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const remoteDist = path.resolve(__dirname, '../naufal-lab/dist')
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const labUrl = env.VITE_LAB_URL || 'http://127.0.0.1:5174'
 
@@ -54,7 +54,10 @@ export default defineConfig(({ mode }) => {
         },
         dts: {
           generateTypes: false,
-          consumeTypes: true,
+          // Only download the remote's .d.ts in dev (serve). The production
+          // build doesn't need them for the runtime bundle, and consuming them
+          // would couple the build to the remote being reachable.
+          consumeTypes: command === 'serve',
           displayErrorInTerminal: true,
         },
         runtimePlugins: ['./src/lib/mf-fallback-plugin.ts'],

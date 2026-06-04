@@ -84,3 +84,5 @@ export default defineConfig(({ mode }) => {
 - `dev:tunnel` → `vite --mode tunnel`, loads `.env.tunnel.local` with the VS Code dev-tunnel URLs
 
 The lab's `preview` and `server` configs set `cors: true` and `allowedHosts: true` so cross-origin script fetches from the host's tunnel origin work. (For production, tighten `cors` to the actual host origin and enumerate `allowedHosts`.)
+
+This section is the _mechanism_. The actual live setup — Cloudflare Pages × 2 + PartyKit, the prod env wiring, CORS via the remote's `_headers`, the build-mode separation, and the direct-upload deploy procedure — is in [deployment.md](./deployment.md).
