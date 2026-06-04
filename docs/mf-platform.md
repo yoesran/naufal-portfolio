@@ -44,6 +44,17 @@ The plugin's static scanner only sees `loadRemote('lab/Counter')` as a runtime f
 
 **Lazy-load is layered.** Even without the `loadRemote` opt-out above, remote chunks still load on demand at the call-site level — `RemoteMount`'s `useEffect` only fires the `load()` once it mounts (and once the cell scrolls into view — see [features.md](./features.md)). The `loadRemote` change is purely about getting `main.tsx` to **execute first**, not about whether the chunk loads eagerly vs lazily inside React's lifecycle.
 
+## Initial-load performance: block code-splitting + preconnect
+
+Two host-side build optimisations on top of the federation lazy-loading above:
+
+- **Below-the-fold blocks are `React.lazy`-split** ([`App.tsx`](../naufal-host/src/App.tsx)). Only the above-the-fold `HeroBlock` (the likely LCP element) ships in the initial bundle; `TechStack`, `Microfrontend`, `Presence`, and `ThemeLab` each become a separate chunk that fetches right after mount, off the critical path — trimming the initial `index` chunk by ~20% gzip (the JS that must parse/execute before first paint). Each is wrapped in `<Suspense>` with a Cell-shaped `BlockFallback` that reserves height, so there's no scrollbar jump and — because the blocks are below the fold — no CLS. This is distinct from the `loadRemote` lazy-loading above: that defers the **remote's** chunks; this defers the **host's own** block code.
+- **Preconnect to the remote origin** ([`vite.config.ts`](../naufal-host/vite.config.ts), `preconnect-remote` plugin). A `<link rel="preconnect" crossorigin>` to `VITE_LAB_URL` is injected into `<head>` so the cross-origin `remoteEntry.js` fetch (critical path for the federated blocks) skips the DNS+TLS handshake. Env-aware (dev → `127.0.0.1:5174`, prod → the deployed origin); `crossorigin` matches the module script's anonymous CORS fetch.
+
+**Convention for new blocks.** The gallery grows downward, so a new block lands below the fold → add it as `React.lazy` + `<Suspense fallback={<BlockFallback />}>` (the default). Keep only the first / above-the-fold block (`HeroBlock`) **eager** — it's the LCP element, and lazy-loading it would inject a round-trip + a fallback before first paint. Rule of thumb: above the fold → eager; below → lazy (and if a reorder ever promotes a lazy block to the top, flip it back to eager).
+
+**The ceiling, recorded honestly.** The host is **client-rendered** (SSR lives in the blog — see [overview.md](./overview.md)), so there's an LCP/TBT floor: nothing paints until React downloads, parses, and executes. These two changes shave the easy fat; pushing a CSR SPA meaningfully past that floor needs a host-shell prerender (deliberately deferred — a real job). And lab Lighthouse scores swing widely run-to-run from CPU-throttle noise (observed 68–88 on the same build), so judge with PageSpeed Insights / median-of-N and the individual metrics (LCP, CLS), never a single composite run.
+
 ## Resilience: runtime plugin + error boundary
 
 A failing `remoteEntry.js` fetch used to take down the host bootstrap (blank page) because the auto-init's rejection cascaded. Two layers prevent that now:
@@ -80,7 +91,7 @@ export default defineConfig(({ mode }) => {
 
 `VITE_PARTY_HOST` flows through `import.meta.env` into the client (used by `PresenceBlock` for the PartyKit URL). Two npm scripts in `naufal-host`:
 
-- `dev` → loads `.env.development.local` (none committed → defaults to `127.0.0.1`)
+- `dev` → loads the gitignored `.env.local` (`VITE_LAB_URL` + `VITE_PARTY_HOST` → `127.0.0.1`); the prod values live in committed `.env.production` ([deployment.md](./deployment.md))
 - `dev:tunnel` → `vite --mode tunnel`, loads `.env.tunnel.local` with the VS Code dev-tunnel URLs
 
 The lab's `preview` and `server` configs set `cors: true` and `allowedHosts: true` so cross-origin script fetches from the host's tunnel origin work. (For production, tighten `cors` to the actual host origin and enumerate `allowedHosts`.)

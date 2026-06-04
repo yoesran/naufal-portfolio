@@ -77,6 +77,20 @@ export default defineConfig(({ command, mode }) => {
         },
       },
       {
+        // Warm the connection to the remote's origin so the cross-origin
+        // remoteEntry.js fetch (on the critical path for federated blocks)
+        // skips DNS + TLS setup. Env-aware via labUrl; crossorigin to match the
+        // module script's anonymous CORS fetch.
+        name: 'preconnect-remote',
+        transformIndexHtml: () => [
+          {
+            tag: 'link',
+            attrs: { rel: 'preconnect', href: labUrl, crossorigin: '' },
+            injectTo: 'head',
+          },
+        ],
+      },
+      {
         name: 'watch-remote-dist',
         configureServer(server) {
           server.watcher.add(remoteDist)

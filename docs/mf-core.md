@@ -113,14 +113,14 @@ federation({
   },
   dts: {
     generateTypes: false,
-    consumeTypes: true,
+    consumeTypes: command === "serve", // dev only; see note below
     displayErrorInTerminal: true,
   },
   shared: ["react", "react-dom"],
 });
 ```
 
-The host's `entry` is actually built from an env var (`VITE_LAB_URL`) via `loadEnv` for environment-aware deployment — see [mf-platform.md](./mf-platform.md).
+The host's `entry` is actually built from an env var (`VITE_LAB_URL`) via `loadEnv` for environment-aware deployment — see [mf-platform.md](./mf-platform.md). And `consumeTypes` is gated to `command === "serve"` so it only downloads the remote's `.d.ts` in dev: the production build doesn't need them for the runtime bundle, and consuming them would couple the build to the remote being reachable (see [deployment.md](./deployment.md)).
 
 **Remote** (`naufal-lab/vite.config.ts`):
 

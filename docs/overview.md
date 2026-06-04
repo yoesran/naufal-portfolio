@@ -39,7 +39,7 @@ All three running projects are **separate processes** with no build-time couplin
 | `index.html`                                   | Holds a `<!-- theme-prepaint -->` slot; the Vite plugin swaps in an inline script/style generated from `theme-tokens.ts` (kills FOUC + flash)                 |
 | `src/lib/theme.ts` / `theme-tokens.ts`         | Shared theme store (`useSyncExternalStore`, five axes) + the DOM-free token module it shares with the pre-paint generator                                     |
 | `src/main.tsx`                                 | Mounts React inside a top-level `ErrorBoundary` + installs an `unhandledrejection` swallower                                                                  |
-| `src/App.tsx`                                  | The home-page playground — header, intro, Hero / TechStack / Microfrontend / Presence blocks, footer                                                          |
+| `src/App.tsx`                                  | The home-page playground — header, intro, the Hero block + lazy-split TechStack / Microfrontend / Presence / ThemeLab blocks, footer                          |
 | `src/components/Header.tsx`, `Footer.tsx`      | Sticky header (name + nav placeholders), footer with social links                                                                                             |
 | `src/components/Cell.tsx`                      | The frame primitive: bordered card + monospace label, every block sits in one                                                                                 |
 | `src/components/RemoteMount.tsx`               | Generic wrapper that mounts any framework-agnostic remote (status + `fallback` + `loadingFallback` + opts)                                                    |
@@ -47,6 +47,7 @@ All three running projects are **separate processes** with no build-time couplin
 | `src/components/blocks/TechStackBlock.tsx`     | Block: host-native rotating icon orbit; pills active on hover/focus/tap                                                                                       |
 | `src/components/blocks/MicrofrontendBlock.tsx` | Block: live Counter + host⇄remote diagram + load status + skeleton loader + simulate-offline toggle                                                           |
 | `src/components/blocks/PresenceBlock.tsx`      | Block: loads `lab/Presence` (multiplayer cursors)                                                                                                             |
+| `src/components/blocks/ThemeLabBlock.tsx`      | Block: visitor theme customizer — mode / accent / surface / radius / font as CSS vars on host `<html>`, re-skins the embedded remote live                     |
 | `src/lib/mf-fallback-plugin.ts`                | MF runtime plugin — `errorLoadRemote` returns a benign stub on init failure, a throwing stub on block-import failure (see [mf-platform.md](./mf-platform.md)) |
 | `src/vite-env.d.ts`                            | Types `VITE_LAB_URL` / `VITE_PARTY_HOST` env vars                                                                                                             |
 | `tsconfig.app.json`                            | `paths` mapping so federated imports resolve to generated types                                                                                               |
