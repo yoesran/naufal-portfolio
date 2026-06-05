@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@plugin "@tailwindcss/typography";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -130,4 +132,51 @@
   html {
     @apply font-sans;
   }
+}
+
+/* Post body: bind the typography plugin's prose-invert palette to the site's
+   own tokens (off-white headings, readable body, emerald links) and add the
+   touches prose doesn't: inline-code chips and a branded blockquote rule.
+   Unlayered so it wins over the plugin's utilities-layer defaults. */
+.post-prose {
+  --tw-prose-invert-headings: var(--color-foreground);
+  --tw-prose-invert-bold: var(--color-foreground);
+  --tw-prose-invert-body: color-mix(
+    in srgb,
+    var(--color-foreground) 82%,
+    transparent
+  );
+  --tw-prose-invert-bullets: var(--color-muted-foreground);
+  --tw-prose-invert-counters: var(--color-muted-foreground);
+  --tw-prose-invert-links: var(--brand);
+  --tw-prose-invert-quotes: var(--color-muted-foreground);
+  --tw-prose-invert-quote-borders: var(--brand);
+  --tw-prose-invert-captions: var(--color-muted-foreground);
+  --tw-prose-invert-hr: var(--color-border);
+  --tw-prose-invert-code: var(--color-foreground);
+  --tw-prose-invert-th-borders: var(--color-border);
+  --tw-prose-invert-td-borders: var(--color-border);
+}
+.post-prose a {
+  font-weight: 500;
+  text-decoration: none;
+  text-underline-offset: 4px;
+}
+.post-prose a:hover {
+  text-decoration: underline;
+}
+/* Inline code only — leave code inside fenced blocks alone. */
+.post-prose :not(pre) > code {
+  background: var(--color-muted);
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.375rem;
+  font-weight: 400;
+  font-size: 0.85em;
+}
+.post-prose :not(pre) > code::before,
+.post-prose :not(pre) > code::after {
+  content: none;
+}
+.post-prose pre {
+  border: 1px solid var(--color-border);
 }

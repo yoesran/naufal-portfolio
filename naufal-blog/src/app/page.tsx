@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col justify-center px-6 py-16">
@@ -17,18 +19,18 @@ export default function Home() {
         .
       </p>
       <nav className="mt-8 flex gap-5 font-mono text-sm">
-        <a
+        <Link
           href="/posts"
           className="text-muted-foreground hover:text-foreground transition-colors"
         >
           posts
-        </a>
-        <a
+        </Link>
+        <Link
           href="/cv"
           className="text-muted-foreground hover:text-foreground transition-colors"
         >
           cv
-        </a>
+        </Link>
       </nav>
     </main>
   );

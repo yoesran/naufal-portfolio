@@ -133,8 +133,11 @@
   }
   .cv-sheet {
     zoom: 1 !important;
-    width: 100% !important;
-    margin: 0 !important;
+    /* Fixed A4 width (794px = 210mm @ 96dpi) rather than 100%: makes line-wrap
+       — and therefore the content height tuned to one page — identical on every
+       device's print engine, instead of depending on the print viewport width. */
+    width: 794px !important;
+    margin: 0 auto !important;
     box-shadow: none !important;
   }
   .cv-print-only {
