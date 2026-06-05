@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Menu } from 'lucide-react'
 
 import { LocaleToggle } from '@/components/LocaleToggle'
+import { BLOG_URL } from '@/lib/links'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -20,9 +21,9 @@ export function Header() {
   // sticky header.
   const isDesktop = useMediaQuery('(min-width: 640px)')
   const nav = [
-    { label: t('header.nav.work'), href: '#' },
-    { label: t('header.nav.blog'), href: '#' },
-    { label: t('header.nav.cv'), href: '#' },
+    { label: t('header.nav.work'), href: '#work' },
+    { label: t('header.nav.blog'), href: BLOG_URL },
+    { label: t('header.nav.cv'), href: `${BLOG_URL}/cv` },
   ]
 
   return (

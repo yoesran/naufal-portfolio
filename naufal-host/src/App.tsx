@@ -44,7 +44,10 @@ export default function App() {
   return (
     <div className="bg-background text-foreground flex min-h-dvh flex-col">
       <Header />
-      <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-12">
+      <main
+        id="work"
+        className="mx-auto w-full max-w-2xl flex-1 scroll-mt-16 px-6 py-12"
+      >
         <p className="text-muted-foreground mb-10 text-lg leading-relaxed sm:text-xl">
           {t('intro')}
         </p>

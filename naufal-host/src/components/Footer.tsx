@@ -1,10 +1,12 @@
 const YEAR = new Date().getFullYear()
 
+import { BLOG_URL } from '@/lib/links'
+
 const LINKS = [
   { label: 'github', href: 'https://github.com/naufalyoesran' },
   { label: 'linkedin', href: 'https://www.linkedin.com/in/naufal-yusran' },
   { label: 'email', href: 'mailto:naufalyoesran@gmail.com' },
-  { label: 'blog', href: 'https://blog.naufal.dev' },
+  { label: 'blog', href: BLOG_URL },
 ]
 
 export function Footer() {
