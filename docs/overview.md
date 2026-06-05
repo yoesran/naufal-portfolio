@@ -18,14 +18,16 @@ The remote exposes **two** components today: `./Counter` (a context-aware mouse-
 
 ## Project / stack table
 
-| Project        | Stack                                             | Port | Status      |
-| -------------- | ------------------------------------------------- | ---- | ----------- |
-| `naufal-host`  | React 19 + Vite + `@module-federation/vite`       | 5173 | Working     |
-| `naufal-lab`   | Plain Svelte 5 + Vite + `@module-federation/vite` | 5174 | Working     |
-| `naufal-party` | PartyKit (WebSocket) — multiplayer presence       | 1999 | Working     |
-| `naufal-blog`  | Next.js 16 · static export (standalone, not fed.) | —    | Scaffolded  |
+| Project        | Stack                                             | Port | Status             |
+| -------------- | ------------------------------------------------- | ---- | ------------------ |
+| `naufal-host`  | React 19 + Vite + `@module-federation/vite`       | 5173 | Working            |
+| `naufal-lab`   | Plain Svelte 5 + Vite + `@module-federation/vite` | 5174 | Working            |
+| `naufal-party` | PartyKit (WebSocket) — multiplayer presence       | 1999 | Working            |
+| `naufal-blog`  | Next.js 16 · static export (standalone, not fed.) | —    | Deployed           |
 
 All three running projects are **separate processes** with no build-time coupling. The host fetches the remote's bundle at runtime from `http://127.0.0.1:5174/remoteEntry.js`; the federated `Presence` component opens a WebSocket to `127.0.0.1:1999`.
+
+The blog (`naufal-blog`) is a standalone static site — a branded home, the CV page, and an MDX-driven `posts` section (`@next/mdx` + `remark-gfm`, a `posts/[slug]` route prerendered per entry, Tailwind-typography `prose` tied to the site tokens). It's **deployed at `naufal-blog.pages.dev`** (its own Cloudflare Pages project, independent of the federated three); the first real post is pending.
 
 ---
 
@@ -57,7 +59,7 @@ All three running projects are **separate processes** with no build-time couplin
 
 | File                       | Role                                                                                                                        |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `vite.config.ts`           | Host config; env-aware federation `entry` via `loadEnv`; `theme-prepaint` plugin injects the generated no-FOUC script/style |
+| `vite.config.ts`           | Remote config: `exposes` the mount adapters as `remoteEntry.js`; pins server to `127.0.0.1` (IPv6); `cors` on; `shared: []` |
 | `src/lib/Counter.svelte`   | Context-aware component: a cursor-following glow + counter; imports `../app.css` so Tailwind ships in the federated chunk   |
 | `src/lib/mountCounter.ts`  | Mount adapter for `./Counter`                                                                                               |
 | `src/lib/Presence.svelte`  | Multiplayer cursor canvas — opens its own `PartySocket` connection; also imports `../app.css`                               |
