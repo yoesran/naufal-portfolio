@@ -131,31 +131,37 @@
   }
   html {
     @apply font-sans;
+    /* Reserve the scrollbar gutter so opening the reading-panel popover (Base UI
+       portals can lock body scroll) doesn't cause a horizontal layout shift.
+       Same standard as naufal-host. */
+    scrollbar-gutter: stable;
   }
 }
 
-/* Post body: bind the typography plugin's prose-invert palette to the site's
-   own tokens (off-white headings, readable body, emerald links) and add the
-   touches prose doesn't: inline-code chips and a branded blockquote rule.
-   Unlayered so it wins over the plugin's utilities-layer defaults. */
+/* Post body: bind the typography plugin's prose palette to the site's own
+   tokens (which already flip with .dark, so light/dark both read right without
+   prose-invert), plus the touches prose doesn't: inline-code chips and a
+   branded blockquote. Unlayered so it wins over the plugin's utilities layer;
+   reading.css overrides these per background preset. */
 .post-prose {
-  --tw-prose-invert-headings: var(--color-foreground);
-  --tw-prose-invert-bold: var(--color-foreground);
-  --tw-prose-invert-body: color-mix(
-    in srgb,
-    var(--color-foreground) 82%,
-    transparent
-  );
-  --tw-prose-invert-bullets: var(--color-muted-foreground);
-  --tw-prose-invert-counters: var(--color-muted-foreground);
-  --tw-prose-invert-links: var(--brand);
-  --tw-prose-invert-quotes: var(--color-muted-foreground);
-  --tw-prose-invert-quote-borders: var(--brand);
-  --tw-prose-invert-captions: var(--color-muted-foreground);
-  --tw-prose-invert-hr: var(--color-border);
-  --tw-prose-invert-code: var(--color-foreground);
-  --tw-prose-invert-th-borders: var(--color-border);
-  --tw-prose-invert-td-borders: var(--color-border);
+  --tw-prose-headings: var(--color-foreground);
+  --tw-prose-bold: var(--color-foreground);
+  --tw-prose-body: color-mix(in srgb, var(--color-foreground) 82%, transparent);
+  --tw-prose-bullets: var(--color-muted-foreground);
+  --tw-prose-counters: var(--color-muted-foreground);
+  --tw-prose-links: var(--brand);
+  --tw-prose-quotes: var(--color-muted-foreground);
+  --tw-prose-quote-borders: var(--brand);
+  --tw-prose-captions: var(--color-muted-foreground);
+  --tw-prose-hr: var(--color-border);
+  --tw-prose-code: var(--color-foreground);
+  --tw-prose-th-borders: var(--color-border);
+  --tw-prose-td-borders: var(--color-border);
+}
+/* Let long words / inline code / URLs wrap instead of overflowing the column
+   on small screens (especially at large reading font sizes). */
+.post-prose {
+  overflow-wrap: break-word;
 }
 .post-prose a {
   font-weight: 500;
@@ -172,6 +178,8 @@
   padding: 0.1rem 0.375rem;
   font-weight: 400;
   font-size: 0.85em;
+  /* Break long unbreakable tokens like `src/content/<locale>/<slug>.mdx`. */
+  overflow-wrap: anywhere;
 }
 .post-prose :not(pre) > code::before,
 .post-prose :not(pre) > code::after {

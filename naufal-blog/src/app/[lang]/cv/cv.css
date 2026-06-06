@@ -1,12 +1,15 @@
 /* The CV "sheet": a print-faithful A4 document rendered in HTML/CSS, shown
-   inside the blog's dark frame and scaled to fit small screens via `zoom`
-   (set precisely by JS; media-query fallbacks cover the pre-hydration frame).
+   inside the blog frame and scaled to fit small screens via `zoom` (set
+   precisely by JS; media-query fallbacks cover the pre-hydration frame).
    Document typography intentionally diverges from the site (Calibri, black on
    white) because it IS a document, not site chrome. Tuned to fill one A4 page.*/
 
 .cv-stage {
   width: 100%;
-  padding: 2rem 1rem 4rem;
+  padding: 1.5rem 1rem 4rem;
+}
+.cv-actions {
+  margin-bottom: 1rem;
 }
 .cv-wrap {
   width: 100%;
@@ -30,8 +33,8 @@
   background: #fff;
   color: #000;
   box-shadow: 0 12px 48px rgb(0 0 0 / 0.4);
-  /* Calibri (the source doc's font); compact, so it fills the page like the
-     original. Carlito is the metric-compatible fallback for non-Windows. */
+  /* Calibri (the source doc's font); Carlito is the metric-compatible fallback
+     bundled for non-Windows. */
   font-family: Calibri, Carlito, "Segoe UI", system-ui, sans-serif;
   font-size: var(--fs);
   line-height: var(--lh);
@@ -125,7 +128,9 @@
     size: A4;
     margin: 0;
   }
-  .cv-chrome {
+  /* Hide site chrome + the download action so only the sheet prints. */
+  .site-header,
+  .cv-actions {
     display: none !important;
   }
   .cv-stage {
@@ -133,9 +138,6 @@
   }
   .cv-sheet {
     zoom: 1 !important;
-    /* Fixed A4 width (794px = 210mm @ 96dpi) rather than 100%: makes line-wrap
-       — and therefore the content height tuned to one page — identical on every
-       device's print engine, instead of depending on the print viewport width. */
     width: 794px !important;
     margin: 0 auto !important;
     box-shadow: none !important;

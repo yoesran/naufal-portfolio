@@ -30,7 +30,7 @@ The **portfolio** is a vertically-scrolling gallery of self-contained interactiv
 - **contract** — i18n sends only a locale string across, via `<html lang>` / `opts`, each app owning its own i18n library,
 - **backend** — presence: the remote holds its own WebSocket and shares state through the PartyKit server.
 
-The **blog** is deliberately _not_ federated: client-rendered MF is bad for SEO, so crawlable content (technical posts via MDX, the CV as an exportable one-page document) lives in a static-exported Next.js site that shares the portfolio's theme tokens for visual unity.
+The **blog** is deliberately _not_ federated: client-rendered MF is bad for SEO, so crawlable content (technical posts via MDX, the CV as an exportable one-page document) lives in a static-exported Next.js site that shares the portfolio's theme tokens for visual unity. It's internationalized (EN/ID, locale-routed `/en` `/id` with translated content), has a light/dark/system theme, and a per-post reading panel (font / size / background).
 
 ## Architecture
 

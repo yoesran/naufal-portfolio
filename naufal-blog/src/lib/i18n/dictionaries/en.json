@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "siteTitle": "Naufal Yusran — Engineering writing & CV",
+    "siteDescription": "Writing on frontend and microfrontend engineering, plus my CV. By Naufal Yusran — companion to the live portfolio at naufal-host.pages.dev.",
+    "postsTitle": "Posts",
+    "postsDescription": "Writing on frontend and microfrontend engineering by Naufal Yusran — the portfolio's architecture and the traps hit building it.",
+    "cvTitle": "CV",
+    "cvDescription": "Curriculum vitae of Naufal Yusran — frontend & microfrontend engineer based in Jakarta."
+  },
+  "nav": {
+    "posts": "posts",
+    "cv": "cv"
+  },
+  "home": {
+    "name": "Naufal Yusran",
+    "intro": "Frontend & microfrontend engineer. Writing on the things I build, plus my CV — a companion to the",
+    "portfolioLink": "live portfolio"
+  },
+  "posts": {
+    "title": "Posts",
+    "intro": "Writing on the things I build — cross-framework Module Federation, the portfolio's architecture, and the traps I hit along the way.",
+    "empty": "First post in the works — check back soon.",
+    "backHome": "← naufal.dev"
+  },
+  "post": {
+    "back": "← posts"
+  },
+  "cv": {
+    "download": "Download PDF",
+    "experience": "Professional Experience",
+    "education": "Education",
+    "projects": "Projects & Achievements",
+    "skillsLabel": "Skills"
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "locale": {
+    "label": "Language"
+  },
+  "reading": {
+    "label": "Reading",
+    "font": "Font",
+    "size": "Size",
+    "background": "Background",
+    "reset": "Reset",
+    "fontSans": "Sans",
+    "fontSerif": "Serif",
+    "fontMono": "Mono",
+    "bgDefault": "Default",
+    "bgPaper": "Paper",
+    "bgSepia": "Sepia",
+    "bgInk": "Ink"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "That page doesn't exist (or it moved). Try one of these instead.",
+    "home": "home"
+  }
+}

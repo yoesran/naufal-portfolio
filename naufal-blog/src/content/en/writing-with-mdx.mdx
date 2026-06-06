@@ -1,0 +1,51 @@
+This is a template post — replace it with the real first one (the cross-framework
+Module Federation build is the obvious candidate). It exists so the MDX pipeline
+is wired end-to-end and to show every element the styling handles.
+
+## How posts work
+
+Each post is two things:
+
+1. **Bodies**, one `.mdx` per language in `src/content/<locale>/<slug>.mdx` —
+   plain Markdown, with JSX available when a post needs an interactive component.
+2. **An entry** in `src/lib/posts.ts` — the `slug`, `date`, and per-locale
+   `title` / `description`. That registry drives the index and each post's SEO
+   metadata.
+
+The `[lang]/posts/[slug]` route prerenders one static page per locale × slug
+(`dynamicParams` is `false`, so unknown slugs 404), pulls the right body in with
+a dynamic `import`, and wraps it in a `prose` container with the reader controls
+(font, size, background).
+
+## What the styling covers
+
+Standard Markdown all renders through Tailwind's typography plugin:
+
+- **bold**, _italic_, and `inline code`
+- [internal links](/en/cv) and [external ones](https://nextjs.org) (external get
+  `target="_blank"` automatically)
+- lists, like this one
+
+> Blockquotes for the asides worth pulling out of the flow.
+
+Fenced code blocks are styled to match the site's card surface:
+
+```ts
+export function getPost(slug: string): PostMeta | undefined {
+  return posts.find((post) => post.slug === slug);
+}
+```
+
+GitHub-flavored Markdown is on via `remark-gfm`, so tables work too:
+
+| Piece           | Role                                 |
+| --------------- | ------------------------------------ |
+| `src/content`   | post bodies (`.mdx`, per locale)     |
+| `lib/posts`     | metadata registry + ordering         |
+| `[lang]/[slug]` | the static route that renders a post |
+
+## Adding the next post
+
+Drop a new `.mdx` under each `src/content/<locale>/`, add its entry to
+`src/lib/posts.ts` (newest first), and `next build` picks it up. That's the whole
+loop.

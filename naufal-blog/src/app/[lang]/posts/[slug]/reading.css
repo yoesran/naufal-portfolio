@@ -1,0 +1,61 @@
+/* Reader controls (see ReadingPanel.tsx). Font family + size are CSS vars and
+   the background preset is a data attribute — both set on <html> (so the
+   beforeInteractive pre-paint script can apply them before #reading exists), and
+   surfaced here on the reading container + prose. */
+:root {
+  --reading-font: var(--font-sans);
+  --reading-size: 17px;
+}
+
+.post-prose {
+  font-family: var(--reading-font);
+  font-size: var(--reading-size);
+}
+
+/* Reserve the panel geometry ALWAYS (break out of <main>'s px-6 = 1.5rem, plus
+   its own padding so text keeps the same position), with the default background
+   transparent. Toggling a background then only changes background-color — no
+   layout jump — and that change is what the transition animates. The negative
+   inline margin is cancelled by the padding, so text x-position is unchanged. */
+#reading {
+  margin-inline: -1.5rem;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  transition: background-color 0.2s ease;
+}
+
+[data-reading-bg="paper"] #reading {
+  background: #faf8f3;
+}
+[data-reading-bg="sepia"] #reading {
+  background: #f4ecd8;
+}
+[data-reading-bg="ink"] #reading {
+  background: #0a0a0a;
+}
+
+/* Light surfaces → dark prose. */
+[data-reading-bg="paper"] .post-prose,
+[data-reading-bg="sepia"] .post-prose {
+  --tw-prose-headings: #161310;
+  --tw-prose-body: #2c2823;
+  --tw-prose-bold: #161310;
+  --tw-prose-quotes: #5a5147;
+  --tw-prose-code: #161310;
+}
+[data-reading-bg="paper"] .post-prose :not(pre) > code,
+[data-reading-bg="sepia"] .post-prose :not(pre) > code {
+  background: rgb(0 0 0 / 0.06);
+}
+
+/* Dark surface → light prose. */
+[data-reading-bg="ink"] .post-prose {
+  --tw-prose-headings: #f2f2f2;
+  --tw-prose-body: #cfcfcf;
+  --tw-prose-bold: #f2f2f2;
+  --tw-prose-quotes: #9a9a9a;
+  --tw-prose-code: #f2f2f2;
+}
+[data-reading-bg="ink"] .post-prose :not(pre) > code {
+  background: rgb(255 255 255 / 0.1);
+}

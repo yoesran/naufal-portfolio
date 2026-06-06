@@ -1,0 +1,53 @@
+Ini tulisan templat — ganti dengan tulisan pertama yang sebenarnya (proses
+membangun Module Federation lintas framework adalah kandidat yang paling pas).
+Tulisan ini ada supaya pipeline MDX terpasang utuh dan untuk memperlihatkan
+setiap elemen yang ditangani oleh penataan gaya.
+
+## Cara kerja tulisan
+
+Setiap tulisan terdiri dari dua hal:
+
+1. **Isi**, satu `.mdx` per bahasa di `src/content/<locale>/<slug>.mdx` —
+   Markdown biasa, dengan JSX tersedia saat sebuah tulisan butuh komponen
+   interaktif.
+2. **Satu entri** di `src/lib/posts.ts` — berisi `slug`, `date`, serta `title` /
+   `description` per bahasa. Registry itu menggerakkan halaman indeks dan
+   metadata SEO tiap tulisan.
+
+Route `[lang]/posts/[slug]` membuat satu halaman statis per kombinasi bahasa ×
+slug (`dynamicParams` bernilai `false`, jadi slug tak dikenal akan 404),
+mengambil isi yang tepat lewat `import` dinamis, lalu membungkusnya dalam wadah
+`prose` beserta kontrol pembaca (font, ukuran, latar).
+
+## Apa saja yang ditangani penataan gaya
+
+Markdown standar dirender lewat plugin typography Tailwind:
+
+- **tebal**, _miring_, dan `kode sebaris`
+- [tautan internal](/id/cv) dan [tautan eksternal](https://nextjs.org) (yang
+  eksternal otomatis mendapat `target="_blank"`)
+- daftar, seperti ini
+
+> Kutipan untuk catatan sampingan yang layak dikeluarkan dari alur teks.
+
+Blok kode berpagar ditata agar selaras dengan permukaan kartu situs:
+
+```ts
+export function getPost(slug: string): PostMeta | undefined {
+  return posts.find((post) => post.slug === slug);
+}
+```
+
+GitHub-flavored Markdown aktif lewat `remark-gfm`, jadi tabel pun berfungsi:
+
+| Bagian          | Peran                              |
+| --------------- | ---------------------------------- |
+| `src/content`   | isi tulisan (`.mdx`, per bahasa)   |
+| `lib/posts`     | registry metadata + urutan         |
+| `[lang]/[slug]` | route statis yang merender tulisan |
+
+## Menambah tulisan berikutnya
+
+Taruh `.mdx` baru di tiap `src/content/<locale>/`, tambahkan entrinya ke
+`src/lib/posts.ts` (terbaru di atas), dan `next build` akan memungutnya. Itu saja
+seluruh alurnya.

@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "siteTitle": "Naufal Yusran — Tulisan engineering & CV",
+    "siteDescription": "Tulisan seputar frontend dan microfrontend engineering, plus CV saya. Oleh Naufal Yusran — pendamping portofolio langsung di naufal-host.pages.dev.",
+    "postsTitle": "Tulisan",
+    "postsDescription": "Tulisan seputar frontend dan microfrontend engineering oleh Naufal Yusran — arsitektur portofolio dan jebakan-jebakan saat membangunnya.",
+    "cvTitle": "CV",
+    "cvDescription": "Curriculum vitae Naufal Yusran — frontend & microfrontend engineer yang berbasis di Jakarta."
+  },
+  "nav": {
+    "posts": "tulisan",
+    "cv": "cv"
+  },
+  "home": {
+    "name": "Naufal Yusran",
+    "intro": "Frontend & microfrontend engineer. Menulis tentang hal-hal yang saya bangun, plus CV saya — pendamping dari",
+    "portfolioLink": "portofolio langsung"
+  },
+  "posts": {
+    "title": "Tulisan",
+    "intro": "Tulisan seputar hal-hal yang saya bangun — Module Federation lintas framework, arsitektur portofolio, dan jebakan yang saya temui di sepanjang jalan.",
+    "empty": "Tulisan pertama sedang digarap — pantau terus ya.",
+    "backHome": "← naufal.dev"
+  },
+  "post": {
+    "back": "← tulisan"
+  },
+  "cv": {
+    "download": "Unduh PDF",
+    "experience": "Pengalaman Profesional",
+    "education": "Pendidikan",
+    "projects": "Proyek & Pencapaian",
+    "skillsLabel": "Keahlian"
+  },
+  "theme": {
+    "label": "Tema",
+    "light": "Terang",
+    "dark": "Gelap",
+    "system": "Sistem"
+  },
+  "locale": {
+    "label": "Bahasa"
+  },
+  "reading": {
+    "label": "Membaca",
+    "font": "Font",
+    "size": "Ukuran",
+    "background": "Latar",
+    "reset": "Atur ulang",
+    "fontSans": "Sans",
+    "fontSerif": "Serif",
+    "fontMono": "Mono",
+    "bgDefault": "Bawaan",
+    "bgPaper": "Kertas",
+    "bgSepia": "Sepia",
+    "bgInk": "Tinta"
+  },
+  "notFound": {
+    "title": "Halaman tidak ditemukan",
+    "body": "Halaman itu tidak ada (atau sudah dipindah). Coba salah satu ini.",
+    "home": "beranda"
+  }
+}

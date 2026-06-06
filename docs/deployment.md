@@ -15,7 +15,7 @@ Everything is on **Cloudflare**, free tier, four independent origins (independen
 
 PartyKit is Cloudflare-owned (acquired Oct 2025); `partykit deploy` targets the managed `*.partykit.dev` runtime, free for this scale. A custom domain (`naufal.dev` etc.) is a later, no-rework swap — see the end.
 
-> **`naufal-blog`** is a fourth, fully standalone Cloudflare Pages project (`naufal-blog.pages.dev` → eventually `blog.naufal.dev`). Unlike the federated three it has **no env coupling** to anything — no `VITE_*` vars, no CORS, no order dependency — so it builds and deploys entirely on its own (`next build` → `out/` → `wrangler pages deploy`). The rest of this doc (URL wiring, CORS, build-mode separation) is about the federated three; the blog only needs the deploy step below.
+> **`naufal-blog`** is a fourth, fully standalone Cloudflare Pages project (`naufal-blog.pages.dev` → eventually `blog.naufal.dev`). Unlike the federated three it has **no env coupling** to anything — no `VITE_*` vars, no CORS, no order dependency — so it builds and deploys entirely on its own (`next build` → `out/` → `wrangler pages deploy`). The rest of this doc (URL wiring, CORS, build-mode separation) is about the federated three; the blog only needs the deploy step below. The blog is locale-routed (`/en`, `/id`) and ships a [`public/_redirects`](../naufal-blog/public/_redirects) so the Cloudflare edge sends locale-less paths to the default locale — the apex `/` → `/en`, plus the bare section paths `/cv` → `/en/cv` and `/posts` → `/en/posts` so external links (e.g. the host's CV nav) can stay locale-agnostic (no middleware in a static export — see [gotchas.md](./gotchas.md) #25).
 
 ## How the URLs are wired
 
@@ -95,8 +95,8 @@ When `naufal.dev` is registered (Cloudflare Registrar, ~$10–12/yr for `.dev`):
 
 **Cross-site links to update too** (they're hardcoded URLs, not env vars):
 
-- Host → blog: [`naufal-host/src/components/Footer.tsx`](../naufal-host/src/components/Footer.tsx) (the `blog` link) and the header `blog`/`cv`/`work` nav in [`naufal-host/src/components/Header.tsx`](../naufal-host/src/components/Header.tsx) (currently `href: '#'` placeholders) — point at the blog and its `/cv` page.
-- Blog → host: the `live portfolio` link in [`naufal-blog/src/app/page.tsx`](../naufal-blog/src/app/page.tsx) and the description in [`layout.tsx`](../naufal-blog/src/app/layout.tsx).
+- Host → blog: [`BLOG_URL`](../naufal-host/src/lib/links.ts) in `naufal-host/src/lib/links.ts` — the single source feeding the footer `blog` link and the header `blog`/`cv` nav (the CV item is `${BLOG_URL}/cv`). Swap that one constant for the custom domain.
+- Blog → host: the `live portfolio` link in [`naufal-blog/src/app/[lang]/page.tsx`](../naufal-blog/src/app/[lang]/page.tsx) and the description in [`[lang]/layout.tsx`](../naufal-blog/src/app/[lang]/layout.tsx).
 - Blog's own canonical origin: [`SITE_URL`](../naufal-blog/src/lib/site.ts) (feeds metadata, sitemap, robots).
 
-> **Known dead links (host → blog):** the blog is now live at `https://naufal-blog.pages.dev`, but the host still points at it wrong — the footer `blog` link targets the unregistered `https://blog.naufal.dev`, and the header nav (`work`/`blog`/`cv`) is still `href: '#'`. Until the custom domain exists, point both at the live Pages URL (`https://naufal-blog.pages.dev`, and `/cv` for the CV item) — that's the same convention the blog already uses for its own `SITE_URL` and its host link (`naufal-host.pages.dev`). This needs a host rebuild + redeploy.
+> **Cross-link note:** the host links are wired to the live Pages URL via the single `BLOG_URL` constant (no more `href: '#'` placeholders). The CV item points at `${BLOG_URL}/cv` — a locale-less path that the blog's [`public/_redirects`](../naufal-blog/public/_redirects) sends to `/en/cv` (same default-locale redirect as the apex `/`), so the host link stays locale-agnostic and survives the domain swap. Changing the constant needs a host rebuild + redeploy.

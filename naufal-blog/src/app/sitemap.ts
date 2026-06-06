@@ -1,23 +1,41 @@
 import type { MetadataRoute } from "next";
 
+import { locales } from "@/lib/i18n/config";
+import { posts } from "@/lib/posts";
 import { SITE_URL } from "@/lib/site";
-import { posts } from "./posts/posts-data";
 
-// Emitted as a static sitemap.xml at build (output: 'export'). Lists the fixed
-// pages plus one entry per post from the registry.
+// Static sitemap.xml at build. One entry per locale × route, each carrying
+// hreflang `alternates` so search engines see the language variants.
 export const dynamic = "force-static";
 
+function languagesFor(tail: string) {
+  return Object.fromEntries(locales.map((l) => [l, `${SITE_URL}/${l}${tail}`]));
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages: MetadataRoute.Sitemap = [
-    { url: SITE_URL, lastModified: new Date(), priority: 1 },
-    { url: `${SITE_URL}/posts`, lastModified: new Date() },
-    { url: `${SITE_URL}/cv`, lastModified: new Date() },
-  ];
+  const entries: MetadataRoute.Sitemap = [];
 
-  const postPages: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${SITE_URL}/posts/${post.slug}`,
-    lastModified: new Date(post.date),
-  }));
+  for (const route of ["", "posts", "cv"]) {
+    const tail = route ? `/${route}` : "";
+    for (const lang of locales) {
+      entries.push({
+        url: `${SITE_URL}/${lang}${tail}`,
+        lastModified: new Date(),
+        alternates: { languages: languagesFor(tail) },
+      });
+    }
+  }
 
-  return [...pages, ...postPages];
+  for (const post of posts) {
+    const tail = `/posts/${post.slug}`;
+    for (const lang of locales) {
+      entries.push({
+        url: `${SITE_URL}/${lang}${tail}`,
+        lastModified: new Date(post.date),
+        alternates: { languages: languagesFor(tail) },
+      });
+    }
+  }
+
+  return entries;
 }

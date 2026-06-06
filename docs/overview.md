@@ -18,16 +18,16 @@ The remote exposes **two** components today: `./Counter` (a context-aware mouse-
 
 ## Project / stack table
 
-| Project        | Stack                                             | Port | Status             |
-| -------------- | ------------------------------------------------- | ---- | ------------------ |
-| `naufal-host`  | React 19 + Vite + `@module-federation/vite`       | 5173 | Working            |
-| `naufal-lab`   | Plain Svelte 5 + Vite + `@module-federation/vite` | 5174 | Working            |
-| `naufal-party` | PartyKit (WebSocket) — multiplayer presence       | 1999 | Working            |
-| `naufal-blog`  | Next.js 16 · static export (standalone, not fed.) | —    | Deployed           |
+| Project        | Stack                                             | Port | Status   |
+| -------------- | ------------------------------------------------- | ---- | -------- |
+| `naufal-host`  | React 19 + Vite + `@module-federation/vite`       | 5173 | Working  |
+| `naufal-lab`   | Plain Svelte 5 + Vite + `@module-federation/vite` | 5174 | Working  |
+| `naufal-party` | PartyKit (WebSocket) — multiplayer presence       | 1999 | Working  |
+| `naufal-blog`  | Next.js 16 · static export (standalone, not fed.) | —    | Deployed |
 
 All three running projects are **separate processes** with no build-time coupling. The host fetches the remote's bundle at runtime from `http://127.0.0.1:5174/remoteEntry.js`; the federated `Presence` component opens a WebSocket to `127.0.0.1:1999`.
 
-The blog (`naufal-blog`) is a standalone static site — a branded home, the CV page, and an MDX-driven `posts` section (`@next/mdx` + `remark-gfm`, a `posts/[slug]` route prerendered per entry, Tailwind-typography `prose` tied to the site tokens). It's **deployed at `naufal-blog.pages.dev`** (its own Cloudflare Pages project, independent of the federated three); the first real post is pending.
+The blog (`naufal-blog`) is a standalone static site, **internationalized (EN/ID) with locale-routed URLs** (`/en`, `/id`) for proper multilingual SEO (hreflang + per-locale `sitemap`) — a branded home, the CV page (data + content translated), and an MDX-driven `posts` section (`@next/mdx` + `remark-gfm`, a `[lang]/posts/[slug]` route prerendered per locale × slug, with one `.mdx` body per language). It has a **light/dark/system theme toggle** and a per-post **reading panel** (font family / size / background), both no-FOUC. A root `app/layout.tsx` owns `<html>`/`<body>` above the `[lang]` segment (so a locale switch never re-renders them — keeping the theme class and avoiding a React-19 script warning, see [gotchas.md](./gotchas.md) #24); unmatched URLs use a standard `app/not-found.tsx`, and `/` → `/en` is a Cloudflare `_redirects` rule plus a client redirect for dev (no middleware in a static export). It's **deployed at `naufal-blog.pages.dev`** (its own Cloudflare Pages project, independent of the federated three); the first real post is pending.
 
 ---
 
