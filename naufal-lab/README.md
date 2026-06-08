@@ -1,6 +1,6 @@
 # naufal-lab
 
-The **Svelte 5 remote** of a polyglot microfrontend portfolio. It exposes components over Module Federation as framework-agnostic **mount functions** (not Svelte components), so a React host can render them at runtime with Svelte kept out of the host bundle. Exposed today: `./Counter` (a context-aware cursor-tracker) and `./Presence` (a multiplayer-cursor canvas that holds its own live WebSocket to `naufal-party`).
+The **Svelte 5 remote** of a polyglot microfrontend portfolio. It exposes components over Module Federation as framework-agnostic **mount functions** (not Svelte components), so a React host can render them at runtime with Svelte kept out of the host bundle. Exposed today: `./SpringToy` (a draggable Svelte "lanyard ticket" — verlet swing physics — that you drag onto the React host to mount and tug out to unmount) and `./Presence` (a multiplayer-cursor canvas that holds its own live WebSocket to `naufal-party`).
 
 **Live (standalone):** <https://naufal-lab.pages.dev> — also consumed at runtime by the host.
 

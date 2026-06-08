@@ -24,20 +24,25 @@
       "javascript": "Vanilla JS + jQuery di proyek BCA, Doubler Studio — tempat semuanya bermula."
     }
   },
-  "microfrontend": {
-    "description": "Seluruh halaman ini menggunakan <react>React</react>. Kotak di bawah adalah aplikasi <svelte>Svelte</svelte> terpisah — di-compile dan dilayani secara mandiri — diambil melalui jaringan saat ter-scroll ke layar. Inilah Module Federation.",
-    "liveRemoteLabel": "remote svelte live ↓",
+  "liveRemote": {
+    "description": "Seluruh halaman ini menggunakan <react>React</react>. Komponen yang akan kamu ambil di bawah adalah aplikasi <svelte>Svelte</svelte> terpisah — framework berbeda, deployment-nya sendiri — ditarik melalui jaringan dan dipasang tepat di sini. Inilah Module Federation.",
+    "nodes": {
+      "you": "kamu",
+      "host": "host React",
+      "remote": "remote Svelte"
+    },
+    "loadedIn": "dimuat dalam {{ms}}ms",
     "openStandalone": "buka mandiri ↗",
     "status": {
-      "connecting": "menghubungkan…",
-      "connectingDetail": "mengambil remoteEntry.js",
-      "connected": "terhubung",
-      "connectedDetail": "remoteEntry.js · dimuat dalam {{ms}}ms",
-      "offline": "remote offline",
-      "offlineDetail": "fallback dirender · host tetap aktif"
+      "idle": "diam · tekan Jalankan untuk mengambil remote",
+      "connecting": "mengambil remoteEntry.js…",
+      "live": "live",
+      "offline": "remote offline"
     },
     "actions": {
-      "simulateOffline": "Simulasikan offline",
+      "run": "Jalankan fetch",
+      "replay": "Putar ulang",
+      "simulateOffline": "Putuskan koneksi",
       "reconnect": "Sambung ulang"
     },
     "offline": {
@@ -48,7 +53,7 @@
     }
   },
   "presence": {
-    "description": "Dua pola sekaligus: canvas ini adalah <svelteRemote>Svelte remote</svelteRemote> terpisah yang dimuat lewat Module Federation, dan memiliki koneksi <ws>WebSocket</ws> live-nya sendiri. Gerakkan cursor di dalamnya — siapa pun yang sedang di sini melihatnya secara realtime. Buka tab kedua untuk menyaksikan."
+    "toggleLabel": "Aktifkan kursor live"
   },
   "theme": {
     "light": "terang",
@@ -63,7 +68,9 @@
     }
   },
   "themeLab": {
-    "description": "Sesuaikan sesukamu — dan lihat Svelte remote di bawah ikut berganti tampilan. Satu set CSS variable di host mengalir melintasi batas Module Federation.",
+    "title": "// theme-lab",
+    "openLabel": "Sesuaikan tema",
+    "description": "Ganti tampilan situs secara live. Satu set CSS variable di host mengalir melintasi batas Module Federation — jadi Svelte remote ikut berganti tampilan, tanpa remount.",
     "base": "dasar",
     "accent": "aksen",
     "surface": "permukaan",

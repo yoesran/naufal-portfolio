@@ -9,7 +9,7 @@ type MountFn = (
 
 export type RemoteStatus =
   | { state: 'loading' }
-  | { state: 'loaded'; ms: number }
+  | { state: 'loaded' }
   | { state: 'error'; error: unknown }
 
 export function RemoteMount({
@@ -18,27 +18,34 @@ export function RemoteMount({
   loadingFallback,
   onStatusChange,
   opts,
+  eager = false,
 }: {
   load: () => Promise<{ default: MountFn }>
   fallback?: React.ReactNode
   loadingFallback?: React.ReactNode
   onStatusChange?: (status: RemoteStatus) => void
   opts?: Record<string, unknown>
+  // Skip the scroll-into-view gate and load on mount. For remotes that aren't
+  // tied to a scroll position — e.g. the global presence overlay, which mounts
+  // the moment the visitor toggles it on.
+  eager?: boolean
 }) {
   const [outerRef, inView] = useInView<HTMLDivElement>()
+  const shouldLoad = eager || inView
   const mountRef = useRef<HTMLDivElement>(null)
   const [loaded, setLoaded] = useState(false)
   const [failed, setFailed] = useState(false)
 
-  // The mount must happen exactly once, when the block scrolls into view — not
-  // again on every parent re-render. But `load`/`opts`/`onStatusChange` are
-  // typically passed as inline literals (`load={() => loadRemote(...)}`,
-  // `opts={{ context: 'host' }}`), so their identity changes each render. Listing
-  // them as effect deps would re-run the effect (and re-mount the remote) on any
-  // render — and since the effect itself calls setState via `onStatusChange`,
-  // that's a render loop. (The React Compiler happens to memoize those literals
-  // away today, but we don't want correctness to depend on that.) So we keep the
-  // latest values in refs and gate the effect on `inView` alone.
+  // The mount must happen exactly once, when the remote should load (scrolled
+  // into view, or `eager`) — not again on every parent re-render. But
+  // `load`/`opts`/`onStatusChange` are typically passed as inline literals
+  // (`load={() => loadRemote(...)}`, `opts={{ context: 'host' }}`), so their
+  // identity changes each render. Listing them as effect deps would re-run the
+  // effect (and re-mount the remote) on any render — and since the effect itself
+  // calls setState via `onStatusChange`, that's a render loop. (The React
+  // Compiler happens to memoize those literals away today, but we don't want
+  // correctness to depend on that.) So we keep the latest values in refs and gate
+  // the effect on `shouldLoad` alone.
   const loadRef = useRef(load)
   const optsRef = useRef(opts)
   const onStatusChangeRef = useRef(onStatusChange)
@@ -53,11 +60,10 @@ export function RemoteMount({
   })
 
   useEffect(() => {
-    if (!inView) return
+    if (!shouldLoad) return
 
     let cleanup: (() => void) | undefined
     let cancelled = false
-    const started = performance.now()
     onStatusChangeRef.current?.({ state: 'loading' })
 
     loadRef
@@ -66,10 +72,7 @@ export function RemoteMount({
         if (cancelled || !mountRef.current) return
         cleanup = m.default(mountRef.current, optsRef.current)
         setLoaded(true)
-        onStatusChangeRef.current?.({
-          state: 'loaded',
-          ms: Math.round(performance.now() - started),
-        })
+        onStatusChangeRef.current?.({ state: 'loaded' })
       })
       .catch((error) => {
         if (cancelled) return
@@ -81,7 +84,7 @@ export function RemoteMount({
       cancelled = true
       cleanup?.()
     }
-  }, [inView])
+  }, [shouldLoad])
 
   if (failed && fallback) return <div ref={outerRef}>{fallback}</div>
   return (

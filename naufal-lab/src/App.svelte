@@ -1,8 +1,8 @@
 <script lang="ts">
   import { t } from '$lib/i18n'
 
-  import Counter from './lib/Counter.svelte'
   import Presence from './lib/Presence.svelte'
+  import SpringToy from './lib/SpringToy.svelte'
 
   // The standalone page owns its own party host (the host passes one via opts
   // when embedded). undefined in dev → Presence falls back to its localhost
@@ -26,9 +26,9 @@
     <div class="space-y-6">
       <section class="border-border bg-card rounded-xl border p-5 shadow-sm">
         <div class="text-muted-foreground mb-3 font-mono text-xs">
-          // exposed: ./Counter
+          // exposed: ./SpringToy
         </div>
-        <Counter context="standalone" />
+        <SpringToy context="standalone" />
       </section>
 
       <section class="border-border bg-card rounded-xl border p-5 shadow-sm">

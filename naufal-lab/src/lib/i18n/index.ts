@@ -66,7 +66,7 @@ type Formatter = typeof _ extends Readable<infer F> ? F : never
 
 // Typed wrapper around svelte-i18n's `_` formatter store. Components use `$t`
 // instead of `$_`: identical runtime behaviour, but the key is constrained to
-// `MessageKey`, so `$t('counter.nope')` fails to compile and the editor suggests
+// `MessageKey`, so `$t('springToy.nope')` fails to compile and the editor suggests
 // valid paths — the svelte-i18n analogue of the host's i18next key typing.
 export const t = derived(
   _,

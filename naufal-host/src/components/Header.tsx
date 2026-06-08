@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Menu } from 'lucide-react'
 
 import { LocaleToggle } from '@/components/LocaleToggle'
+import { PresenceToggle } from '@/components/PresenceToggle'
+import { ThemeSheet } from '@/components/ThemeSheet'
 import { BLOG_URL } from '@/lib/links'
 import { Button } from '@/components/ui/button'
 import {
@@ -50,6 +52,8 @@ export function Header() {
           </div>
 
           <LocaleToggle />
+          <PresenceToggle />
+          <ThemeSheet />
 
           {!isDesktop && (
             <DropdownMenu>

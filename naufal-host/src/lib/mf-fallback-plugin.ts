@@ -5,7 +5,7 @@
 // We distinguish two failure cases by looking at args.id:
 //   - "lab"          -> remote-level init failure. Return a benign stub so the
 //                       host bootstrap completes and React mounts.
-//   - "lab/Counter"  -> specific exposed module fetch failed. Return a stub
+//   - "lab/SpringToy"-> specific exposed module fetch failed. Return a stub
 //     "lab/Presence"    whose default function THROWS, so RemoteMount.catch in
 //                       the host block fires and shows the offline fallback UI.
 

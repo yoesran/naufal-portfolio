@@ -22,7 +22,7 @@ PartyKit is Cloudflare-owned (acquired Oct 2025); `partykit deploy` targets the 
 Each origin needs to know the others. The couplings are all **build-time env vars** (so changing one means a rebuild + redeploy of that app):
 
 - **Host → remote**: `VITE_LAB_URL` builds the federation `entry` (`${VITE_LAB_URL}/remoteEntry.js`) in [`naufal-host/vite.config.ts`](../naufal-host/vite.config.ts).
-- **Host → party**: `VITE_PARTY_HOST` flows through `import.meta.env` to `PresenceBlock`, which passes it to the embedded remote as `opts.host`.
+- **Host → party**: `VITE_PARTY_HOST` flows through `import.meta.env` to `PresenceOverlay`, which passes it to the embedded remote as `opts.host`.
 - **Standalone remote → party**: the lab's _own_ page ([`App.svelte`](../naufal-lab/src/App.svelte)) reads `VITE_PARTY_HOST` and passes it to `<Presence>`. The embedded path gets the host from `opts`; the standalone page must supply its own, or it falls back to the component's `127.0.0.1:1999` default — see [gotchas.md](./gotchas.md) #22.
 
 Prod values live in committed `.env.production` files (both apps). These are `VITE_`-prefixed → public by design → safe to commit (no secrets). Local dev values live in gitignored `.env.local`; Vite ranks `.env.production` above `.env.local` in a production build, so the dev values never leak into a deploy.
@@ -85,7 +85,7 @@ The `naufal-blog` Pages project was created once with `wrangler pages project cr
 Open `https://naufal-host.pages.dev`, then DevTools → Network:
 
 - `remoteEntry.js` loads from `naufal-lab.pages.dev`, status 200, with a single `access-control-allow-origin: *` header.
-- The microfrontend block's Counter mounts; the presence block's socket (WS tab) connects to `wss://naufal-party.yoesran.partykit.dev`.
+- The live-remote block's `SpringToy` mounts on **Run**; toggling presence on opens the overlay's socket (WS tab) to `wss://naufal-party.yoesran.partykit.dev`.
 - The standalone remote at `https://naufal-lab.pages.dev` connects its presence to the same party.
 - Kill/000 the remote and the host stays up with per-block fallbacks (the resilience layer — [mf-platform.md](./mf-platform.md)).
 

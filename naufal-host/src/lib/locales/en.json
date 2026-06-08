@@ -24,21 +24,26 @@
       "javascript": "Vanilla JS + jQuery on BCA projects at Doubler Studio — where it started."
     }
   },
-  "microfrontend": {
-    "description": "This whole page is <react>React</react>. The box below is a separate <svelte>Svelte</svelte> app — compiled and served on its own — fetched over the network the moment it scrolled into view. That's Module Federation.",
-    "liveRemoteLabel": "live svelte remote ↓",
+  "liveRemote": {
+    "description": "This whole page is <react>React</react>. The component you'll fetch below is a separate <svelte>Svelte</svelte> app — a different framework, its own deployment — pulled over the network and mounted right here. That's Module Federation.",
+    "nodes": {
+      "you": "you",
+      "host": "React host",
+      "remote": "Svelte remote"
+    },
+    "loadedIn": "loaded in {{ms}}ms",
     "openStandalone": "open standalone ↗",
     "status": {
-      "connecting": "connecting…",
-      "connectingDetail": "fetching remoteEntry.js",
-      "connected": "connected",
-      "connectedDetail": "remoteEntry.js · loaded in {{ms}}ms",
-      "offline": "remote offline",
-      "offlineDetail": "fallback rendered · host still up"
+      "idle": "idle · press Run to fetch the remote",
+      "connecting": "fetching remoteEntry.js…",
+      "live": "live",
+      "offline": "remote offline"
     },
     "actions": {
-      "simulateOffline": "Simulate offline",
-      "reconnect": "Reconnect remote"
+      "run": "Run the fetch",
+      "replay": "Replay",
+      "simulateOffline": "Break the connection",
+      "reconnect": "Reconnect"
     },
     "offline": {
       "simulated": "remote offline (simulated)",
@@ -48,7 +53,7 @@
     }
   },
   "presence": {
-    "description": "Two patterns at once: this canvas is a separate <svelteRemote>Svelte remote</svelteRemote> loaded over Module Federation, and it holds its own live <ws>WebSocket</ws> connection. Move your cursor inside it — anyone else here sees it in realtime. Open a second tab to watch."
+    "toggleLabel": "Toggle live cursors"
   },
   "theme": {
     "light": "light",
@@ -63,7 +68,9 @@
     }
   },
   "themeLab": {
-    "description": "Make it yours — and watch the live Svelte remote below re-skin too. One set of CSS variables on the host cascades across the Module Federation boundary.",
+    "title": "// theme-lab",
+    "openLabel": "Customize theme",
+    "description": "Restyle the site live. One set of CSS variables on the host cascades across the Module Federation boundary — so the Svelte remote re-skins with it, no remount.",
     "base": "base",
     "accent": "accent",
     "surface": "surface",

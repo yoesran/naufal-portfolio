@@ -248,3 +248,14 @@
     scrollbar-gutter: stable;
   }
 }
+
+/* Packet dot that slides along a diagram connector while a remote is loading
+   (LiveRemoteBlock). Travels left→right to read as "request in flight". */
+@keyframes mf-packet {
+  from {
+    left: 0;
+  }
+  to {
+    left: 100%;
+  }
+}

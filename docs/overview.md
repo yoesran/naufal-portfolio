@@ -12,7 +12,7 @@ A portfolio where **the architecture is the portfolio** — a microfrontend syst
 
 Federation uses `@module-federation/vite` — the actively maintained, framework-agnostic plugin. (The older `@module-federation/nextjs-mf` is being deprecated and was deliberately not used.)
 
-The remote exposes **two** components today: `./Counter` (a context-aware mouse-tracker) and `./Presence` (a multiplayer cursor canvas that holds its own live WebSocket). The presence feature is the on-message demo: a federated Svelte component, embedded in a React host, sharing realtime state across deployments.
+The remote exposes **two** components today: `./SpringToy` (a draggable Svelte "lanyard ticket" you mount into — and tug out of — the React host) and `./Presence` (a multiplayer cursor canvas that holds its own live WebSocket). Presence is the on-message demo: a federated Svelte component, embedded in a React host, sharing realtime state across deployments — surfaced as a global, opt-in cursor overlay toggled from the host header.
 
 ---
 
@@ -41,16 +41,19 @@ The blog (`naufal-blog`) is a standalone static site, **internationalized (EN/ID
 | `index.html`                                   | Holds a `<!-- theme-prepaint -->` slot; the Vite plugin swaps in an inline script/style generated from `theme-tokens.ts` (kills FOUC + flash)                 |
 | `src/lib/theme.ts` / `theme-tokens.ts`         | Shared theme store (`useSyncExternalStore`, five axes) + the DOM-free token module it shares with the pre-paint generator                                     |
 | `src/main.tsx`                                 | Mounts React inside a top-level `ErrorBoundary` + installs an `unhandledrejection` swallower                                                                  |
-| `src/App.tsx`                                  | The home-page playground — header, intro, the Hero block + lazy-split TechStack / Microfrontend / Presence / ThemeLab blocks, footer                          |
-| `src/components/Header.tsx`, `Footer.tsx`      | Sticky header (name + nav placeholders), footer with social links                                                                                             |
+| `src/App.tsx`                                  | The home-page playground — header, intro, the Hero block + lazy-split TechStack / LiveRemote blocks, footer; mounts the global `PresenceOverlay`              |
+| `src/components/Header.tsx`, `Footer.tsx`      | Sticky header (name + nav, locale toggle, presence toggle, theme-drawer trigger); footer with social links                                                    |
 | `src/components/Cell.tsx`                      | The frame primitive: bordered card + monospace label, every block sits in one                                                                                 |
-| `src/components/RemoteMount.tsx`               | Generic wrapper that mounts any framework-agnostic remote (status + `fallback` + `loadingFallback` + opts)                                                    |
-| `src/components/blocks/HeroBlock.tsx`          | Block: host-native interactive wordmark (per-letter cursor repel + emerald glow)                                                                              |
-| `src/components/blocks/TechStackBlock.tsx`     | Block: host-native rotating icon orbit; pills active on hover/focus/tap                                                                                       |
-| `src/components/blocks/MicrofrontendBlock.tsx` | Block: live Counter + host⇄remote diagram + load status + skeleton loader + simulate-offline toggle                                                           |
-| `src/components/blocks/PresenceBlock.tsx`      | Block: loads `lab/Presence` (multiplayer cursors)                                                                                                             |
-| `src/components/blocks/ThemeLabBlock.tsx`      | Block: visitor theme customizer — mode / accent / surface / radius / font as CSS vars on host `<html>`, re-skins the embedded remote live                     |
-| `src/lib/mf-fallback-plugin.ts`                | MF runtime plugin — `errorLoadRemote` returns a benign stub on init failure, a throwing stub on block-import failure (see [mf-platform.md](./mf-platform.md)) |
+| `src/components/RemoteMount.tsx`               | Generic wrapper that mounts any framework-agnostic remote (status + `fallback` + `loadingFallback` + `opts`; gates on viewport unless `eager`)                |
+| `src/components/blocks/HeroBlock.tsx`          | Block: host-native interactive wordmark (per-letter cursor repel + brand glow)                                                                                |
+| `src/components/blocks/TechStackBlock.tsx`     | Block: host-native rotating icon orbit; pills active on hover/focus/tap                                                                                        |
+| `src/components/blocks/LiveRemoteBlock.tsx`    | Block: triggerable federation diagram (you → host → lab) wired to the real `loadRemote`; on success reveals the live `lab/SpringToy`; "Break the connection" exercises the fallback |
+| `src/components/PresenceOverlay.tsx`           | Global opt-in whole-page cursor overlay — mounts `lab/Presence` (`eager`) when toggled on; rendered at the App root, not in a cell                            |
+| `src/components/PresenceToggle.tsx`            | Header toggle (cursor icon) for the overlay; reads/writes `lib/presence.ts`                                                                                    |
+| `src/components/ThemeSheet.tsx` · `ThemeControls.tsx` | Theme customizer in a header slide-over `Sheet` — mode / accent / surface / radius / font as CSS vars on host `<html>`, re-skins the embedded remote live |
+| `src/lib/presence.ts`                          | Tiny shared store (`useSyncExternalStore`) for the presence on/off state                                                                                      |
+| `src/components/ui/sheet.tsx`                  | shadcn `Sheet` primitive (backs the theme drawer)                                                                                                             |
+| `src/lib/mf-fallback-plugin.ts`                | MF runtime plugin — `errorLoadRemote` returns a benign stub on init failure, a throwing stub on exposed-module failure (`lab/SpringToy`, `lab/Presence`) (see [mf-platform.md](./mf-platform.md)) |
 | `src/vite-env.d.ts`                            | Types `VITE_LAB_URL` / `VITE_PARTY_HOST` env vars                                                                                                             |
 | `tsconfig.app.json`                            | `paths` mapping so federated imports resolve to generated types                                                                                               |
 | `@mf-types/`                                   | Auto-generated, gitignored — downloaded remote type declarations                                                                                              |
@@ -60,15 +63,15 @@ The blog (`naufal-blog`) is a standalone static site, **internationalized (EN/ID
 | File                       | Role                                                                                                                        |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `vite.config.ts`           | Remote config: `exposes` the mount adapters as `remoteEntry.js`; pins server to `127.0.0.1` (IPv6); `cors` on; `shared: []` |
-| `src/lib/Counter.svelte`   | Context-aware component: a cursor-following glow + counter; imports `../app.css` so Tailwind ships in the federated chunk   |
-| `src/lib/mountCounter.ts`  | Mount adapter for `./Counter`                                                                                               |
+| `src/lib/SpringToy.svelte` | Draggable Svelte "lanyard ticket" (verlet swing physics) — drag it onto the React host to mount, tug to unmount; imports `../app.css` so Tailwind ships in the federated chunk |
+| `src/lib/mountSpringToy.ts` | Mount adapter for `./SpringToy`                                                                                            |
 | `src/lib/Presence.svelte`  | Multiplayer cursor canvas — opens its own `PartySocket` connection; also imports `../app.css`                               |
 | `src/lib/mountPresence.ts` | Mount adapter for `./Presence`                                                                                              |
 | `src/App.svelte`           | Standalone page showcasing both exposed components                                                                          |
 | `src/app.css`              | Tailwind + shadcn theme — imported by the **Svelte components** (not the mount adapters) so CSS ships over federation       |
 | `src/lib/i18n/`            | `svelte-i18n` setup + `en.json` / `id.json`; reads `<html lang>` (host-owned) for locale, observes it for live switches     |
 
-`Counter.svelte`'s dashed border is intentional — it reads visibly as a remote when embedded in the host.
+The ticket carries the **Svelte** logo and the host node carries the **React** + **Module Federation** marks, so the boundary reads at a glance — the Svelte thing is literally running inside the React host.
 
 ### `naufal-party` — PartyKit Realtime Server (port 1999)
 
@@ -84,12 +87,12 @@ The blog (`naufal-blog`) is a standalone static site, **internationalized (EN/ID
 ```text
 ┌──────────────────────────────────┐   runtime import    ┌──────────────────────────────┐
 │  naufal-host  (React, :5173)     │ ──────────────────► │  naufal-lab  (Svelte, :5174) │
-│                                  │  lab/Counter        │                              │
-│  App.tsx → Cell blocks           │  lab/Presence       │  mountCounter / mountPresence│
-│    ├─ MicrofrontendBlock         │ ◄── (target,opts) ──│   └─ Counter / Presence      │
-│    │    └─ RemoteMount → Counter │      returns cleanup│                              │
-│    └─ PresenceBlock              │                     │  Presence opens ─┐           │
-│         └─ RemoteMount → Presence│                     └──────────────────┼───────────┘
+│                                  │  lab/SpringToy      │                              │
+│  App.tsx                         │  lab/Presence       │ mountSpringToy/mountPresence │
+│   ├─ LiveRemoteBlock             │ ◄── (target,opts) ──│   └─ SpringToy / Presence    │
+│   │    └─ RemoteMount → SpringToy│      returns cleanup│                              │
+│   └─ PresenceOverlay (global)    │                     │  Presence opens ─┐           │
+│        └─ RemoteMount → Presence │                     └──────────────────┼───────────┘
 └──────────────────────────────────┘                                        │ WebSocket
                                                                             ▼
                                                           ┌───────────────────────────────┐
@@ -112,5 +115,5 @@ The blog (`naufal-blog`) is a standalone static site, **internationalized (EN/ID
 - **`127.0.0.1` everywhere**: avoids the Windows IPv6 / dts-plugin IPv4 mismatch. See [gotchas.md](./gotchas.md).
 - **React Compiler via a ~12-line custom plugin**, not `@rolldown/plugin-babel`. The documented integration is silently inert in this project (federation + plugin-react v6 interaction); see [features.md](./features.md).
 - **i18n is per-remote, locale crosses via `opts.locale`**. Host runs `i18next` + `react-i18next`; each remote will own its own library when translated. Host sets `<html lang>`; remotes will read locale from their mount's `opts`. See [features.md](./features.md).
-- **Theming lives on the host, not in any remote**. The `theme-lab` block makes the host customizable across five axes (mode, accent, surface, radius, font) — all values on the host's `<html>` (class / `data-*` / CSS vars), backed by one shared store. Because they're CSS variables, they cascade into every remote's mounted DOM with zero coordination code, so re-skinning the page re-skins the federated remote live — a working demo of the cross-boundary cascade. See [features.md](./features.md).
-- **Scroll-reveal is plain `IntersectionObserver` + CSS transition**, not Framer Motion (or any animation library). Same hook gates `RemoteMount`'s federated `load()` on viewport entry, so blocks below the fold cost zero network. See [features.md](./features.md).
+- **Theming lives on the host, not in any remote**. The theme drawer (a header slide-over `Sheet`) makes the host customizable across five axes (mode, accent, surface, radius, font) — all values on the host's `<html>` (class / `data-*` / CSS vars), backed by one shared store. Because they're CSS variables, they cascade into every remote's mounted DOM with zero coordination code, so re-skinning the page re-skins the federated remote live — a working demo of the cross-boundary cascade. See [features.md](./features.md).
+- **Scroll-reveal is plain `IntersectionObserver` + CSS transition**, not Framer Motion (or any animation library). The same hook also backs `RemoteMount`'s optional viewport gate for federated `load()` — though both current remotes opt out with `eager` and load on an explicit user action instead (the live-remote **Run**, the presence toggle). See [features.md](./features.md).

@@ -7,28 +7,28 @@
 The host is React and the remote is Svelte — they can't import each other's component format. Each exposed module is a plain function with a framework-agnostic signature `(target, opts?) => cleanup`:
 
 ```ts
-// naufal-lab/src/lib/mountCounter.ts
+// naufal-lab/src/lib/mountSpringToy.ts
 import { mount, unmount } from "svelte";
 import "../app.css"; // ships the remote's Tailwind over federation — see mf-platform.md
-import Counter from "./Counter.svelte";
+import SpringToy from "./SpringToy.svelte";
 
-export default function mountCounter(
+export default function mountSpringToy(
   target: HTMLElement,
   opts: Record<string, unknown> = {},
 ) {
   const context = opts.context === "standalone" ? "standalone" : "host";
-  const instance = mount(Counter, { target, props: { context } });
+  const instance = mount(SpringToy, { target, props: { context } });
   return () => unmount(instance);
 }
 ```
 
 It mounts the Svelte component into a real DOM element and returns a cleanup function. The caller never needs to know it's Svelte. This same contract works for Angular, Vue, or vanilla JS remotes.
 
-**Svelte 5 note:** Svelte 5 components are functions, not classes. The Svelte 4 API `new Counter({ target })` fails with misleading errors (`Cannot read properties of null (reading 'nodes')`). Use `mount()` / `unmount()`. See [gotchas.md](./gotchas.md).
+**Svelte 5 note:** Svelte 5 components are functions, not classes. The Svelte 4 API `new SpringToy({ target })` fails with misleading errors (`Cannot read properties of null (reading 'nodes')`). Use `mount()` / `unmount()`. See [gotchas.md](./gotchas.md).
 
 ## 2. The host wraps it in a generic React component
 
-`RemoteMount.tsx` works for any remote that exposes `(target, opts?) => cleanup`. It also tracks load status, times the load, forwards `opts`, gates loading on viewport entry (see [features.md](./features.md) scroll-reveal), and renders a fallback when the remote is unreachable:
+`RemoteMount.tsx` works for any remote that exposes `(target, opts?) => cleanup`. It tracks load status, forwards `opts`, gates loading on viewport entry (see [features.md](./features.md) scroll-reveal) unless `eager`, and renders a fallback when the remote is unreachable:
 
 ```tsx
 // naufal-host/src/components/RemoteMount.tsx (abridged)
@@ -37,62 +37,78 @@ export function RemoteMount({
   fallback,
   onStatusChange,
   opts,
+  eager = false,
 }: {
   load: () => Promise<{ default: MountFn }>;
   fallback?: React.ReactNode;
   onStatusChange?: (status: RemoteStatus) => void;
   opts?: Record<string, unknown>;
+  eager?: boolean;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const [outerRef, inView] = useInView<HTMLDivElement>();
+  const shouldLoad = eager || inView;
+  const mountRef = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
 
+  // Latest props in refs so the mount effect can depend on `shouldLoad` alone.
+  const loadRef = useRef(load);
+  const optsRef = useRef(opts);
+  const onStatusRef = useRef(onStatusChange);
   useEffect(() => {
+    loadRef.current = load;
+    optsRef.current = opts;
+    onStatusRef.current = onStatusChange;
+  });
+
+  useEffect(() => {
+    if (!shouldLoad) return;
     let cleanup: (() => void) | undefined;
     let cancelled = false;
-    const started = performance.now();
-    onStatusChange?.({ state: "loading" });
-    load()
+    onStatusRef.current?.({ state: "loading" });
+    loadRef
+      .current()
       .then((m) => {
-        if (cancelled || !ref.current) return;
-        cleanup = m.default(ref.current, opts);
-        onStatusChange?.({
-          state: "loaded",
-          ms: Math.round(performance.now() - started),
-        });
+        if (cancelled || !mountRef.current) return;
+        cleanup = m.default(mountRef.current, optsRef.current);
+        onStatusRef.current?.({ state: "loaded" });
       })
       .catch((error) => {
         if (!cancelled) {
           setFailed(true);
-          onStatusChange?.({ state: "error", error });
+          onStatusRef.current?.({ state: "error", error });
         }
       });
     return () => {
       cancelled = true;
       cleanup?.();
     };
-  }, [load, onStatusChange, opts]);
+  }, [shouldLoad]);
 
-  if (failed && fallback) return <>{fallback}</>;
-  return <div ref={ref} />;
+  if (failed && fallback) return <div ref={outerRef}>{fallback}</div>;
+  return (
+    <div ref={outerRef}>
+      <div ref={mountRef} />
+    </div>
+  );
 }
 ```
 
 Usage:
 
 ```tsx
-<RemoteMount load={() => import("lab/Counter")} opts={{ context: "host" }} />
+<RemoteMount load={() => loadRemote("lab/SpringToy")} opts={{ context: "host" }} eager />
 ```
 
 The cleanup runs on unmount, so the Svelte component (and any WebSocket it opened) tears down cleanly.
 
-> **Stable props matter** (mostly handled for us now). `load` and `opts` are in the effect deps. An inline object/function changes identity every render and would remount the remote in a loop once the block has state. The React Compiler (see [features.md](./features.md)) memoizes these automatically — inline objects in JSX work without a `useCallback` or module-level constant. Module-level constants still work and remain readable for the host-only `opts`/`load` pair in `PresenceBlock`; either pattern is fine.
+> **Why the refs?** `load` / `opts` / `onStatusChange` are usually passed as inline literals, so their identity changes every render. If the mount effect listed them as deps it would re-run — and because the effect calls `setState` via `onStatusChange`, that's a re-mount loop. So the effect is gated on `shouldLoad` (`eager || inView`) **alone**, reading the latest props through refs. The React Compiler (see [features.md](./features.md)) happens to memoize those inline literals too, but correctness no longer depends on it.
 
 ## 3. The `opts` contract — passing context across the boundary
 
 The mount signature's `opts` object is how the host hands data to a remote without caring about its framework. We use it to tell each component **where it's running**:
 
 - The host passes `{ context: 'host' }`; the standalone `App.svelte` passes `context="standalone"`.
-- `Counter` uses it to colour its glow (emerald embedded, sky standalone) and label itself.
+- `SpringToy` uses it to colour its label/accent (brand embedded, sky standalone) and label itself.
 - `Presence` sends its `context` with every cursor message, so each live cursor is tagged `· host` or `· remote`.
 
 `opts` is deliberately typed `Record<string, unknown>` at the boundary (not a specific interface). It crosses a runtime boundary as a plain object, and a loosely-typed param keeps the remote's generated mount type assignable to `RemoteMount`'s generic `MountFn` (a specific opts type fails parameter-contravariance once the host refetches types). The remote narrows it internally. The same `opts` channel is the forward-compat hook for `locale` (see [features.md](./features.md)).
@@ -129,7 +145,7 @@ federation({
   name: "lab",
   filename: "remoteEntry.js",
   exposes: {
-    "./Counter": "./src/lib/mountCounter.ts",
+    "./SpringToy": "./src/lib/mountSpringToy.ts",
     "./Presence": "./src/lib/mountPresence.ts",
   },
   dts: {

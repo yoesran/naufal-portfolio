@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
+import { PresenceOverlay } from '@/components/PresenceOverlay'
 import { HeroBlock } from '@/components/blocks/HeroBlock'
 
 // The Hero is above the fold (and the likely LCP element), so it stays in the
@@ -15,19 +16,9 @@ const TechStackBlock = lazy(() =>
     default: m.TechStackBlock,
   }))
 )
-const MicrofrontendBlock = lazy(() =>
-  import('@/components/blocks/MicrofrontendBlock').then((m) => ({
-    default: m.MicrofrontendBlock,
-  }))
-)
-const PresenceBlock = lazy(() =>
-  import('@/components/blocks/PresenceBlock').then((m) => ({
-    default: m.PresenceBlock,
-  }))
-)
-const ThemeLabBlock = lazy(() =>
-  import('@/components/blocks/ThemeLabBlock').then((m) => ({
-    default: m.ThemeLabBlock,
+const LiveRemoteBlock = lazy(() =>
+  import('@/components/blocks/LiveRemoteBlock').then((m) => ({
+    default: m.LiveRemoteBlock,
   }))
 )
 
@@ -44,6 +35,7 @@ export default function App() {
   return (
     <div className="bg-background text-foreground flex min-h-dvh flex-col">
       <Header />
+      <PresenceOverlay />
       <main
         id="work"
         className="mx-auto w-full max-w-2xl flex-1 scroll-mt-16 px-6 py-12"
@@ -57,13 +49,7 @@ export default function App() {
             <TechStackBlock />
           </Suspense>
           <Suspense fallback={<BlockFallback />}>
-            <MicrofrontendBlock />
-          </Suspense>
-          <Suspense fallback={<BlockFallback />}>
-            <PresenceBlock />
-          </Suspense>
-          <Suspense fallback={<BlockFallback />}>
-            <ThemeLabBlock />
+            <LiveRemoteBlock />
           </Suspense>
         </div>
       </main>

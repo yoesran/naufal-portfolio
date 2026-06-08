@@ -1,13 +1,13 @@
 import { mount, unmount } from 'svelte'
 
-import Counter from './Counter.svelte'
+import SpringToy from './SpringToy.svelte'
 
-export default function mountCounter(
+export default function mountSpringToy(
   target: HTMLElement,
   opts: Record<string, unknown> = {}
 ) {
   const context = opts.context === 'standalone' ? 'standalone' : 'host'
-  const instance = mount(Counter, {
+  const instance = mount(SpringToy, {
     target,
     props: { context },
   })

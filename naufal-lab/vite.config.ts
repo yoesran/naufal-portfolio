@@ -12,7 +12,7 @@ export default defineConfig({
       name: 'lab',
       filename: 'remoteEntry.js',
       exposes: {
-        './Counter': './src/lib/mountCounter.ts',
+        './SpringToy': './src/lib/mountSpringToy.ts',
         './Presence': './src/lib/mountPresence.ts',
       },
       dts: {

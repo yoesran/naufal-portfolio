@@ -24,7 +24,7 @@ Two sites, four independently deployable pieces — each tool used for what it's
 
 All four are deployed on Cloudflare (host/lab/blog on Pages, party on the PartyKit runtime) as independent origins — see [deployment.md](docs/deployment.md).
 
-The **portfolio** is a vertically-scrolling gallery of self-contained interactive blocks. The federated ones (a live Counter, a multiplayer-cursor canvas) are mounted from the Svelte remote through one generic `RemoteMount` over a framework-agnostic `(target, opts) => cleanup` contract — the host never imports Svelte. State crosses the host↔remote boundary three escalating ways, none of which couple the two apps' JavaScript:
+The **portfolio** is a vertically-scrolling gallery of self-contained interactive blocks, plus a global presence overlay and a theme drawer in the header. The federated pieces (a draggable Svelte "lanyard ticket" you mount into the React host, a whole-page multiplayer-cursor overlay) are mounted from the Svelte remote through one generic `RemoteMount` over a framework-agnostic `(target, opts) => cleanup` contract — the host never imports Svelte. State crosses the host↔remote boundary three escalating ways, none of which couple the two apps' JavaScript:
 
 - **cascade** — theming is CSS variables on the host's `<html>`; they flow into the embedded remote with zero coordination code,
 - **contract** — i18n sends only a locale string across, via `<html lang>` / `opts`, each app owning its own i18n library,
@@ -37,12 +37,12 @@ The **blog** is deliberately _not_ federated: client-rendered MF is bad for SEO,
 ```text
 ┌──────────────────────────────────┐   runtime import    ┌──────────────────────────────┐
 │  naufal-host  (React, :5173)     │ ──────────────────► │  naufal-lab  (Svelte, :5174) │
-│                                  │  lab/Counter        │                              │
-│  App.tsx → Cell blocks           │  lab/Presence       │  mountCounter / mountPresence│
-│    ├─ MicrofrontendBlock         │ ◄── (target,opts) ──│   └─ Counter / Presence      │
-│    │    └─ RemoteMount → Counter │      returns cleanup│                              │
-│    └─ PresenceBlock              │                     │  Presence opens ─┐           │
-│         └─ RemoteMount → Presence│                     └──────────────────┼───────────┘
+│                                  │  lab/SpringToy      │                              │
+│  App.tsx                         │  lab/Presence       │ mountSpringToy/mountPresence │
+│   ├─ LiveRemoteBlock             │ ◄── (target,opts) ──│   └─ SpringToy / Presence    │
+│   │    └─ RemoteMount → SpringToy│      returns cleanup│                              │
+│   └─ PresenceOverlay (global)    │                     │  Presence opens ─┐           │
+│        └─ RemoteMount → Presence │                     └──────────────────┼───────────┘
 └──────────────────────────────────┘                                        │ WebSocket
                                                                             ▼
                                                           ┌───────────────────────────────┐
