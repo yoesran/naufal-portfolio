@@ -14,6 +14,12 @@
 
   const embedded = $derived(context === 'host')
 
+  // Honour prefers-reduced-motion: hold/snap instead of swinging (the drag itself
+  // is direct manipulation, so it stays responsive). Read once — it rarely flips.
+  const reduced =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
   // A Svelte "event ticket" on a lanyard (à la Vercel's): grab it and it swings
   // with momentum; fling it and it arcs and settles. Swing/drag it onto the far
   // React / Module-Federation host to mount it (it docks inside React and stays
@@ -58,7 +64,9 @@
 
   const scale = new Spring(1, { stiffness: 0.18, damping: 0.72 })
 
-  const pin = $derived({ x: width * 0.2, y: 16 })
+  // Embedded: lanyard on the left so it can reach the React host on the right.
+  // Standalone: no host to mount into — centre the lanyard on its own.
+  const pin = $derived({ x: width * (embedded ? 0.2 : 0.5), y: 16 })
   const ropeLen = $derived(Math.min(H * 0.5, 148))
   const host = $derived({ x: width * 0.8, y: H * 0.46 })
   const near = $derived(
@@ -124,12 +132,24 @@
       y = pointerY
     } else if (mounted) {
       // Docked inside the host — ease to it and stay (no auto-unmount).
-      x += (host.x - x) * 0.3
-      y += (host.y - y) * 0.3
-      rot += (0 - rot) * 0.3
+      if (reduced) {
+        x = host.x
+        y = host.y
+        rot = 0
+      } else {
+        x += (host.x - x) * 0.3
+        y += (host.y - y) * 0.3
+        rot += (0 - rot) * 0.3
+      }
       clipX = x
       clipY = y
       return
+    } else if (reduced) {
+      // reduced-motion: rest at the dangling point, no swing
+      x = pin.x
+      y = pin.y + ropeLen
+      vx = 0
+      vy = 0
     } else {
       // Free swing: gravity + a string that only pulls when taut, with a capped
       // tension so a big stretch eases back smoothly instead of snapping.
@@ -167,7 +187,7 @@
     y = pointerY
     vx = 0
     vy = 0
-    scale.target = 1 // grow back to full size as you pull it out
+    scale.set(1, { instant: reduced }) // grow back to full size as you pull it out
     wake()
   }
   function move(e: PointerEvent) {
@@ -176,14 +196,18 @@
   function release() {
     if (!dragging) return
     dragging = false
-    const d = Math.hypot(x - host.x, y - host.y)
-    if (!mounted && d < MOUNT_DIST) {
-      mounted = true
-      scale.target = 0.4 // dock inside React
-    } else if (mounted && d <= UNMOUNT_DIST) {
-      scale.target = 0.4 // not pulled far enough — snap back into the host
-    } else if (mounted) {
-      mounted = false // pulled out with force → swings back on the lanyard
+    // Mount/unmount only makes sense embedded in the React host. Standalone, the
+    // ticket just swings back on its lanyard.
+    if (embedded) {
+      const d = Math.hypot(x - host.x, y - host.y)
+      if (!mounted && d < MOUNT_DIST) {
+        mounted = true
+        scale.set(0.4, { instant: reduced }) // dock inside React
+      } else if (mounted && d <= UNMOUNT_DIST) {
+        scale.set(0.4, { instant: reduced }) // not pulled far enough — snap back
+      } else if (mounted) {
+        mounted = false // pulled out with force → swings back on the lanyard
+      }
     }
     wake()
   }
@@ -206,7 +230,7 @@
   </div>
 
   <p class="text-muted-foreground mb-3 text-sm leading-relaxed">
-    {$t('springToy.hint')}
+    {embedded ? $t('springToy.hint') : $t('springToy.hintStandalone')}
   </p>
 
   <div
@@ -230,39 +254,42 @@
           y1={pin.y}
           x2={clipX}
           y2={clipY}
-          stroke="var(--brand)"
+          stroke="var(--color-brand)"
           stroke-width="3"
           stroke-opacity="0.5"
           stroke-linecap="round"
         />
-        <circle cx={pin.x} cy={pin.y} r="4" fill="var(--brand)" />
+        <circle cx={pin.x} cy={pin.y} r="4" fill="var(--color-brand)" />
       </svg>
     {/if}
 
-    <!-- React / Module-Federation host: mount target, far from the lanyard. -->
-    <div
-      class="absolute -translate-x-1/2 -translate-y-1/2"
-      style="left: {host.x}px; top: {host.y}px;"
-    >
+    <!-- React / Module-Federation host: the mount target. Only shown embedded —
+         standalone there's nothing to mount into. -->
+    {#if embedded}
       <div
-        class={cn(
-          'bg-card relative flex size-14 items-center justify-center rounded-full border transition-all duration-200',
-          near || mounted
-            ? 'border-brand scale-110 shadow-[0_0_0_4px_color-mix(in_oklch,var(--brand)_22%,transparent)]'
-            : 'border-border'
-        )}
+        class="absolute -translate-x-1/2 -translate-y-1/2"
+        style="left: {host.x}px; top: {host.y}px;"
       >
-        <span
-          class="[&_path]:fill-current [&_svg]:size-7"
-          style="color: #61DAFB"
-          aria-hidden="true">{@html reactGlyph}</span
+        <div
+          class={cn(
+            'bg-card relative flex size-14 items-center justify-center rounded-full border transition-all duration-200',
+            near || mounted
+              ? 'border-brand scale-110 shadow-[0_0_0_4px_color-mix(in_oklch,var(--brand)_22%,transparent)]'
+              : 'border-border'
+          )}
         >
-        <span
-          class="bg-card absolute -right-1.5 -bottom-1.5 flex size-5 items-center justify-center rounded-full border [&_svg]:size-3.5"
-          aria-hidden="true">{@html mfGlyph}</span
-        >
+          <span
+            class="[&_path]:fill-current [&_svg]:size-7"
+            style="color: #61DAFB"
+            aria-hidden="true">{@html reactGlyph}</span
+          >
+          <span
+            class="bg-card absolute -right-1.5 -bottom-1.5 flex size-5 items-center justify-center rounded-full border [&_svg]:size-3.5"
+            aria-hidden="true">{@html mfGlyph}</span
+          >
+        </div>
       </div>
-    </div>
+    {/if}
 
     <!-- The Svelte ticket. Rotates about its top clip; grabbable even when docked. -->
     <button

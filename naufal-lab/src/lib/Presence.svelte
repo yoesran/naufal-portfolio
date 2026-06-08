@@ -8,14 +8,9 @@
   let {
     host = '127.0.0.1:1999',
     context = 'standalone',
-    global = false,
   }: {
     host?: string
     context?: 'host' | 'standalone'
-    // global: render a fixed, full-viewport, click-through overlay and track the
-    // cursor across the whole page (the host's presence toggle). Otherwise render
-    // a self-contained boxed canvas (the lab's standalone page).
-    global?: boolean
   } = $props()
 
   type Peer = {
@@ -26,7 +21,6 @@
     context: string
   }
 
-  let canvas = $state<HTMLDivElement>()
   let peers = $state<Record<string, Peer>>({})
   let socket: PartySocket | undefined
   let frame = 0
@@ -62,9 +56,8 @@
     }
   })
 
-  // Normalized (0–1) cursor send, rAF-throttled. The reference frame is the
-  // viewport in global mode, or the boxed canvas otherwise — peers render by the
-  // same fractions inside whichever container, so both ends agree.
+  // Send viewport-normalized (0–1) cursor coords, rAF-throttled. Peers render by
+  // the same fractions inside the fixed overlay, so both ends agree.
   function send(nx: number, ny: number) {
     const ps = socket
     if (!ps) return
@@ -76,19 +69,9 @@
     })
   }
 
-  function handleCanvasMove(e: MouseEvent) {
-    const el = canvas
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    send(
-      (e.clientX - rect.left) / rect.width,
-      (e.clientY - rect.top) / rect.height
-    )
-  }
-
-  // Global mode: listen on the window and normalize to the viewport.
+  // Presence is always a page-wide overlay (both the host's toggle and the
+  // standalone page mount it this way) — track the cursor across the whole page.
   $effect(() => {
-    if (!global) return
     const onMove = (e: MouseEvent) =>
       send(e.clientX / window.innerWidth, e.clientY / window.innerHeight)
     window.addEventListener('mousemove', onMove)
@@ -124,32 +107,15 @@
   </div>
 {/snippet}
 
-{#if global}
-  <!-- Fixed, full-viewport, click-through overlay. -->
-  <div class="pointer-events-none fixed inset-0 z-40">
-    {#each Object.entries(peers) as [id, p] (id)}
-      {@render cursor(p)}
-    {/each}
-    <!-- Live count pill (also softens the empty room with a hint). -->
-    <div
-      class="border-border bg-card/90 text-muted-foreground fixed bottom-4 left-1/2 -translate-x-1/2 rounded-full border px-3 py-1.5 font-mono text-xs shadow-sm backdrop-blur"
-    >
-      {$t('presence.cursors', { values: { count } })}
-    </div>
-  </div>
-{:else}
+<!-- Fixed, full-viewport, click-through overlay. -->
+<div class="pointer-events-none fixed inset-0 z-40">
+  {#each Object.entries(peers) as [id, p] (id)}
+    {@render cursor(p)}
+  {/each}
+  <!-- Live count pill (also softens the empty room with a hint). -->
   <div
-    bind:this={canvas}
-    role="presentation"
-    onmousemove={handleCanvasMove}
-    class="border-border bg-muted/20 relative h-64 overflow-hidden rounded-lg border"
+    class="border-border bg-card/90 text-muted-foreground fixed bottom-4 left-1/2 -translate-x-1/2 rounded-full border px-3 py-1.5 font-mono text-xs shadow-sm backdrop-blur"
   >
-    {#each Object.entries(peers) as [id, p] (id)}
-      {@render cursor(p)}
-    {/each}
-  </div>
-
-  <div class="text-muted-foreground mt-3 font-mono text-xs">
     {$t('presence.cursors', { values: { count } })}
   </div>
-{/if}
+</div>

@@ -10,11 +10,13 @@
       "standalone": "aplikasi Svelte mandiri"
     },
     "hint": "Ayunkan tiket Svelte ke host React yang jauh untuk memasangnya — ia menempel di dalam React dan bertahan. Tarik dengan mantap untuk mencabutnya (unmount).",
+    "hintStandalone": "Ini komponen remote-nya sendiri — Svelte yang sama yang dipasang host React lewat Module Federation. Mandiri di sini, ia tidak terpasang di dalam apa pun; cukup seret tiketnya dan biarkan berayun.",
     "framework": "svelte · fisika lanyard",
     "grabLabel": "Pegang tiket Svelte",
     "mounted": "terpasang di dalam React ✓"
   },
   "presence": {
-    "cursors": "{count, plural, =0 {belum ada orang lain — buka tab kedua} other {# kursor lain aktif}}"
+    "cursors": "{count, plural, =0 {belum ada orang lain — buka tab kedua} other {# kursor lain aktif}}",
+    "standaloneNote": "Kursor multiplayer langsung aktif di seluruh halaman ini — gerakkan kursormu, atau buka tab kedua. Jumlahnya tampil di bawah."
   }
 }

@@ -53,7 +53,8 @@
     }
   },
   "presence": {
-    "toggleLabel": "Toggle live cursors"
+    "toggleLabel": "Toggle live cursors",
+    "unavailable": "Live cursors unavailable"
   },
   "theme": {
     "light": "light",
@@ -67,10 +68,10 @@
       "rose": "rose"
     }
   },
-  "themeLab": {
-    "title": "// theme-lab",
+  "themeDrawer": {
+    "title": "// theme",
     "openLabel": "Customize theme",
-    "description": "Restyle the site live. One set of CSS variables on the host cascades across the Module Federation boundary — so the Svelte remote re-skins with it, no remount.",
+    "description": "Restyle the site live. One set of CSS variables on the host cascades across the Module Federation boundary — so a live Svelte remote re-skins with it, no remount.",
     "base": "base",
     "accent": "accent",
     "surface": "surface",

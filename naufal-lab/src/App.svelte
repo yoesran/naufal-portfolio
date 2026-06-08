@@ -11,6 +11,9 @@
 </script>
 
 <main class="bg-background text-foreground min-h-dvh">
+  <!-- Presence is a page-wide fixed overlay (same as embedded in the host). -->
+  <Presence host={partyHost} context="standalone" />
+
   <div class="mx-auto max-w-2xl px-6 py-16">
     <header class="mb-8">
       <p class="text-muted-foreground font-mono text-xs">
@@ -35,7 +38,9 @@
         <div class="text-muted-foreground mb-3 font-mono text-xs">
           // exposed: ./Presence
         </div>
-        <Presence host={partyHost} context="standalone" />
+        <p class="text-muted-foreground text-sm leading-relaxed">
+          {$t('presence.standaloneNote')}
+        </p>
       </section>
     </div>
   </div>

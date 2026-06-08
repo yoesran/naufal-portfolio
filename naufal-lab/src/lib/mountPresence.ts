@@ -8,10 +8,9 @@ export default function mountPresence(
 ) {
   const host = typeof opts.host === 'string' ? opts.host : undefined
   const context = opts.context === 'standalone' ? 'standalone' : 'host'
-  const global = opts.global === true
   const instance = mount(Presence, {
     target,
-    props: { host, context, global },
+    props: { host, context },
   })
   return () => unmount(instance)
 }

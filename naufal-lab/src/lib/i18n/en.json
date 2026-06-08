@@ -10,11 +10,13 @@
       "standalone": "standalone Svelte app"
     },
     "hint": "Swing the Svelte ticket onto the far React host to mount it — it docks inside React and stays. Give it a firm tug to pull it back out (unmount).",
+    "hintStandalone": "This is the remote component on its own — the same Svelte the React host mounts over Module Federation. Standalone here, it isn't mounted inside anything; just drag the ticket and let it swing.",
     "framework": "svelte · lanyard physics",
     "grabLabel": "Grab the Svelte ticket",
     "mounted": "mounted inside React ✓"
   },
   "presence": {
-    "cursors": "{count, plural, =0 {no one else here — open a second tab} one {# other cursor live} other {# other cursors live}}"
+    "cursors": "{count, plural, =0 {no one else here — open a second tab} one {# other cursor live} other {# other cursors live}}",
+    "standaloneNote": "Live multiplayer cursors run across this whole page — move your cursor, or open a second tab. The count shows at the bottom."
   }
 }

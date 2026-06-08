@@ -53,7 +53,8 @@
     }
   },
   "presence": {
-    "toggleLabel": "Aktifkan kursor live"
+    "toggleLabel": "Aktifkan kursor live",
+    "unavailable": "Kursor live tidak tersedia"
   },
   "theme": {
     "light": "terang",
@@ -67,10 +68,10 @@
       "rose": "mawar"
     }
   },
-  "themeLab": {
-    "title": "// theme-lab",
+  "themeDrawer": {
+    "title": "// theme",
     "openLabel": "Sesuaikan tema",
-    "description": "Ganti tampilan situs secara live. Satu set CSS variable di host mengalir melintasi batas Module Federation — jadi Svelte remote ikut berganti tampilan, tanpa remount.",
+    "description": "Ganti tampilan situs secara live. Satu set CSS variable di host mengalir melintasi batas Module Federation — jadi sebuah Svelte remote yang aktif ikut berganti tampilan, tanpa remount.",
     "base": "dasar",
     "accent": "aksen",
     "surface": "permukaan",

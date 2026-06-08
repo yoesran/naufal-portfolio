@@ -26,7 +26,7 @@ export function ThemeSheet() {
           <Button
             variant="ghost"
             size="icon-xs"
-            aria-label={t('themeLab.openLabel')}
+            aria-label={t('themeDrawer.openLabel')}
             className="text-muted-foreground hover:text-foreground"
           >
             <Palette />
@@ -35,9 +35,9 @@ export function ThemeSheet() {
       />
       <SheetContent side="right" className="w-full gap-0 p-0 sm:max-w-sm">
         <SheetHeader>
-          <SheetTitle className="font-mono">{t('themeLab.title')}</SheetTitle>
+          <SheetTitle className="font-mono">{t('themeDrawer.title')}</SheetTitle>
           <SheetDescription className="leading-relaxed">
-            {t('themeLab.description')}
+            {t('themeDrawer.description')}
           </SheetDescription>
         </SheetHeader>
         <div className="px-6 pb-6">

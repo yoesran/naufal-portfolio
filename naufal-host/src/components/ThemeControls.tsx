@@ -66,7 +66,7 @@ export function ThemeControls() {
   return (
     <div className="flex flex-col gap-4">
       {/* Base mode */}
-      <Row label={t('themeLab.base')}>
+      <Row label={t('themeDrawer.base')}>
         <ToggleGroup
           value={[mode]}
           onValueChange={(next: string[]) => {
@@ -74,7 +74,7 @@ export function ThemeControls() {
             if (v) setMode(v as Mode)
           }}
           spacing={0}
-          aria-label={t('themeLab.base')}
+          aria-label={t('themeDrawer.base')}
           className={GROUP}
         >
           {(['light', 'dark', 'system'] as const).map((m) => {
@@ -90,7 +90,7 @@ export function ThemeControls() {
       </Row>
 
       {/* Accent */}
-      <Row label={t('themeLab.accent')}>
+      <Row label={t('themeDrawer.accent')}>
         <div className="flex gap-1.5">
           {ACCENTS.map((a) => (
             <button
@@ -113,7 +113,7 @@ export function ThemeControls() {
       </Row>
 
       {/* Surface */}
-      <Row label={t('themeLab.surface')}>
+      <Row label={t('themeDrawer.surface')}>
         <ToggleGroup
           value={[surface]}
           onValueChange={(next: string[]) => {
@@ -121,7 +121,7 @@ export function ThemeControls() {
             if (v) setSurface(v as (typeof SURFACES)[number])
           }}
           spacing={0}
-          aria-label={t('themeLab.surface')}
+          aria-label={t('themeDrawer.surface')}
           className={GROUP}
         >
           {SURFACES.map((s) => (
@@ -131,14 +131,14 @@ export function ThemeControls() {
                 className="border-border size-3 rounded-full border"
                 style={{ backgroundColor: SURFACE_SWATCH[s] }}
               />
-              {t(`themeLab.surfaces.${s}`)}
+              {t(`themeDrawer.surfaces.${s}`)}
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
       </Row>
 
       {/* Radius */}
-      <Row label={t('themeLab.radius')}>
+      <Row label={t('themeDrawer.radius')}>
         <div className="flex w-full items-center gap-3 sm:w-auto sm:flex-1">
           <Slider
             min={RADIUS_MIN}
@@ -148,7 +148,7 @@ export function ThemeControls() {
             onValueChange={(v) =>
               setRadius((typeof v === 'number' ? v : v[0]) ?? radius)
             }
-            aria-label={t('themeLab.radius')}
+            aria-label={t('themeDrawer.radius')}
             className="w-full"
           />
           <span className="text-muted-foreground w-14 shrink-0 text-right font-mono text-xs tabular-nums">
@@ -158,7 +158,7 @@ export function ThemeControls() {
       </Row>
 
       {/* Font */}
-      <Row label={t('themeLab.font')}>
+      <Row label={t('themeDrawer.font')}>
         <ToggleGroup
           value={[font]}
           onValueChange={(next: string[]) => {
@@ -166,7 +166,7 @@ export function ThemeControls() {
             if (v) setFont(v as (typeof FONTS)[number])
           }}
           spacing={0}
-          aria-label={t('themeLab.font')}
+          aria-label={t('themeDrawer.font')}
           className={GROUP}
         >
           {FONTS.map((f) => (
@@ -176,7 +176,7 @@ export function ThemeControls() {
               className={ITEM}
               style={{ fontFamily: FONT_STACKS[f] }}
             >
-              {t(`themeLab.fonts.${f}`)}
+              {t(`themeDrawer.fonts.${f}`)}
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
@@ -185,7 +185,7 @@ export function ThemeControls() {
       <div className="mt-1 flex justify-end">
         <Button variant="ghost" size="sm" onClick={reset} className="gap-1.5">
           <RotateCcw className="size-3.5" />
-          {t('themeLab.reset')}
+          {t('themeDrawer.reset')}
         </Button>
       </div>
     </div>

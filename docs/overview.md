@@ -12,7 +12,7 @@ A portfolio where **the architecture is the portfolio** — a microfrontend syst
 
 Federation uses `@module-federation/vite` — the actively maintained, framework-agnostic plugin. (The older `@module-federation/nextjs-mf` is being deprecated and was deliberately not used.)
 
-The remote exposes **two** components today: `./SpringToy` (a draggable Svelte "lanyard ticket" you mount into — and tug out of — the React host) and `./Presence` (a multiplayer cursor canvas that holds its own live WebSocket). Presence is the on-message demo: a federated Svelte component, embedded in a React host, sharing realtime state across deployments — surfaced as a global, opt-in cursor overlay toggled from the host header.
+The remote exposes **two** components today: `./SpringToy` (a draggable Svelte "lanyard ticket" you mount into — and tug out of — the React host) and `./Presence` (a page-wide multiplayer cursor overlay that holds its own live WebSocket). Presence is the on-message demo: a federated Svelte component, embedded in a React host, sharing realtime state across deployments — surfaced as a global, opt-in cursor overlay toggled from the host header.
 
 ---
 
@@ -65,7 +65,7 @@ The blog (`naufal-blog`) is a standalone static site, **internationalized (EN/ID
 | `vite.config.ts`           | Remote config: `exposes` the mount adapters as `remoteEntry.js`; pins server to `127.0.0.1` (IPv6); `cors` on; `shared: []` |
 | `src/lib/SpringToy.svelte` | Draggable Svelte "lanyard ticket" (verlet swing physics) — drag it onto the React host to mount, tug to unmount; imports `../app.css` so Tailwind ships in the federated chunk |
 | `src/lib/mountSpringToy.ts` | Mount adapter for `./SpringToy`                                                                                            |
-| `src/lib/Presence.svelte`  | Multiplayer cursor canvas — opens its own `PartySocket` connection; also imports `../app.css`                               |
+| `src/lib/Presence.svelte`  | Page-wide multiplayer cursor overlay — opens its own `PartySocket` connection; also imports `../app.css`                    |
 | `src/lib/mountPresence.ts` | Mount adapter for `./Presence`                                                                                              |
 | `src/App.svelte`           | Standalone page showcasing both exposed components                                                                          |
 | `src/app.css`              | Tailwind + shadcn theme — imported by the **Svelte components** (not the mount adapters) so CSS ships over federation       |
