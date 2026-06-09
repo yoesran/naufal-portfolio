@@ -25,3 +25,14 @@ Open `http://localhost:5173`. Open a second tab (or `http://127.0.0.1:5174` stan
 4. `@mf-types/` populates, errors clear.
 
 **Tunnel preview:** `cd naufal-host && npm run dev:tunnel` runs `vite --mode tunnel`, reading `.env.tunnel.local` for the VS Code dev-tunnel URLs — see [mf-platform.md](./mf-platform.md) for the env-aware deploy wiring.
+
+## Formatting
+
+Prettier is configured in `naufal-host`, `naufal-lab`, and `naufal-blog` (single quotes, no semicolons, sorted imports, Tailwind class ordering — see each project's `.prettierrc`). `naufal-party` is a single file and has no prettier setup.
+
+```bash
+npm run format        # write — run this before committing
+npm run format:check  # verify only (the CI-gate form)
+```
+
+Both scripts are scoped to `src`. The config sets `endOfLine: "auto"`, so Prettier respects whatever line endings are on disk (this repo has `core.autocrlf=true` and no `.gitattributes`) instead of rewriting every file to LF — without it, `format:check` flags every file on line endings alone. There's no pre-commit hook yet, so formatting is run by hand (or editor-on-save).

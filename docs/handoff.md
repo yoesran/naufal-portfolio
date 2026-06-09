@@ -111,11 +111,16 @@ The optional `opts` object is future-proofing — i18n's `locale` rides on it wi
 
 ## Open issues / next concrete tasks
 
-1. **Actual deploy** — env-aware URLs and resilience are in place, but nothing's been shipped yet. Host + remote can go to static hosting (Vercel/Cloudflare Pages); `naufal-party` needs a stateful host (VPS or PartyKit Cloud — Vercel can't run a WebSocket server). VS Code dev tunnels already work as a preview environment via `npm run dev:tunnel`.
-2. **Harden presence** — ghost-replay / synthetic cursors for the empty-room problem (a portfolio usually has one visitor).
-3. **Add a third remote** later (Angular spartan/ui, Vue, or vanilla JS) to validate the `<RemoteMount>` + `opts` pattern scales across frameworks.
-4. **React Router** later — each remote/section gets its own URL.
-5. **First blog post** — draw on [gotchas.md](./gotchas.md), which doubles as the running learnings log (the role the old `LEARNINGS.md` task was meant to fill): the MF build, the TS6/baseUrl trap, the Tailwind-across-the-boundary lesson, and the eager-preload / `loadRemote` pattern are all strong material.
+> Deployment is **done** — all four pieces are live on Cloudflare + the PartyKit runtime via direct upload (see [deployment.md](./deployment.md)). The env-aware URLs, resilience, and CORS that this list once tracked as pending have all shipped. What remains:
+
+1. **First blog post** — the highest-leverage gap. The "show" half (the live architecture) is done; the "tell the story" half isn't written yet. Draw on [gotchas.md](./gotchas.md), which doubles as the running learnings log (the role the old `LEARNINGS.md` task was meant to fill): the MF build, the TS6/baseUrl trap, the Tailwind-across-the-boundary lesson, and the eager-preload / `loadRemote` pattern are all publishable as-is. A template post already seeds the pipeline.
+2. **Harden presence** — ghost-replay / synthetic cursors for the empty-room problem. A portfolio usually has one visitor, so the deployed presence demo currently shows a solo recruiter only their own cursor — arguably higher priority than any new block, since it's the demo most likely to fall flat for the exact audience it's built for.
+3. **Native-speaker pass on the Indonesian copy** — both locale sets (host + lab) are best-effort drafts flagged "awaiting native-speaker review" across the docs; Naufal _is_ the native speaker, so this is a quick self-review that closes a caveat repeated in [features.md](./features.md) and the overview.
+4. **Add a third remote** later (Angular spartan/ui, Vue, or vanilla JS) to validate the `<RemoteMount>` + `opts` pattern scales across frameworks — the highest-value _architectural_ addition, since it proves the contracts are framework-agnostic, not Svelte-specific.
+5. **React Router** later — each remote/section gets its own URL.
+6. **Polish** — real `og.png` (the current one is a placeholder), a skip-to-content link, and optional Playwright smoke tests (host loads, `SpringToy` mounts on Run, presence connects, theme survives a locale switch) to lock in the manual-verify rituals the gotchas already prescribe.
+
+A possible **CI/CD** follow-up: deploys are currently manual direct-uploads (order-sensitive: party → remote → host). A GitHub Action could automate the order, and a public repo is itself part of the showcase — deferred, not blocking.
 
 ---
 
