@@ -1,34 +1,34 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 
-import { isLocale } from "@/lib/i18n/config";
-import { getDictionary } from "@/lib/i18n/dictionaries";
-import { alternates } from "@/lib/i18n/alternates";
+import { alternates } from '@/lib/i18n/alternates'
+import { isLocale } from '@/lib/i18n/config'
+import { getDictionary } from '@/lib/i18n/dictionaries'
 
-const HOST_URL = "https://naufal-host.pages.dev";
+const HOST_URL = 'https://naufal-host.pages.dev'
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: string }>;
+  params: Promise<{ lang: string }>
 }): Promise<Metadata> {
-  const { lang } = await params;
-  if (!isLocale(lang)) return {};
-  const dict = getDictionary(lang);
+  const { lang } = await params
+  if (!isLocale(lang)) return {}
+  const dict = getDictionary(lang)
   return {
     title: { absolute: dict.meta.siteTitle },
     alternates: alternates(lang),
-  };
+  }
 }
 
 export default async function Home({
   params,
 }: {
-  params: Promise<{ lang: string }>;
+  params: Promise<{ lang: string }>
 }) {
-  const { lang } = await params;
-  if (!isLocale(lang)) notFound();
-  const dict = getDictionary(lang);
+  const { lang } = await params
+  if (!isLocale(lang)) notFound()
+  const dict = getDictionary(lang)
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-6 py-16">
@@ -37,7 +37,7 @@ export default async function Home({
         {dict.home.name}
       </h1>
       <p className="text-muted-foreground mt-4 text-lg leading-relaxed">
-        {dict.home.intro}{" "}
+        {dict.home.intro}{' '}
         <a
           href={HOST_URL}
           className="text-foreground hover:text-brand underline underline-offset-4 transition-colors"
@@ -47,5 +47,5 @@ export default async function Home({
         .
       </p>
     </main>
-  );
+  )
 }

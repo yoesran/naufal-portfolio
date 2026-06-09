@@ -8,7 +8,9 @@
     "dev:mf": "concurrently \"vite build --watch --mode development\" \"vite preview --port 5174\"",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
+    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
+    "format": "prettier --write src",
+    "format:check": "prettier --check src"
   },
   "devDependencies": {
     "@fontsource-variable/inter": "^5.2.8",

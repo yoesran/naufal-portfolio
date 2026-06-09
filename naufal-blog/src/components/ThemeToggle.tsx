@@ -1,26 +1,26 @@
-"use client";
+'use client'
 
-import { Monitor, Moon, Sun } from "lucide-react";
+import { Monitor, Moon, Sun } from 'lucide-react'
 
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { type Mode, setMode, useThemeMode } from "@/lib/theme";
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { type Mode, setMode, useThemeMode } from '@/lib/theme'
 
-type Labels = { label: string; light: string; dark: string; system: string };
+type Labels = { label: string; light: string; dark: string; system: string }
 
 const ITEMS: { mode: Mode; Icon: typeof Sun }[] = [
-  { mode: "light", Icon: Sun },
-  { mode: "dark", Icon: Moon },
-  { mode: "system", Icon: Monitor },
-];
+  { mode: 'light', Icon: Sun },
+  { mode: 'dark', Icon: Moon },
+  { mode: 'system', Icon: Monitor },
+]
 
 export function ThemeToggle({ labels }: { labels: Labels }) {
-  const mode = useThemeMode();
+  const mode = useThemeMode()
   return (
     <ToggleGroup
       value={[mode]}
       onValueChange={(next: string[]) => {
-        const v = next[0];
-        if (v) setMode(v as Mode);
+        const v = next[0]
+        if (v) setMode(v as Mode)
       }}
       spacing={0}
       size="sm"
@@ -39,5 +39,5 @@ export function ThemeToggle({ labels }: { labels: Labels }) {
         </ToggleGroupItem>
       ))}
     </ToggleGroup>
-  );
+  )
 }

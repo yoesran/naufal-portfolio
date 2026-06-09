@@ -1,41 +1,42 @@
-"use client";
+'use client'
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react'
 
-import { Button } from "@/components/ui/button";
-import type { CvData } from "./cv-data";
+import { Button } from '@/components/ui/button'
 
-const SHEET_WIDTH = 794; // A4 @ 96dpi
+import type { CvData } from './cv-data'
+
+const SHEET_WIDTH = 794 // A4 @ 96dpi
 
 type Labels = {
-  download: string;
-  experience: string;
-  education: string;
-  projects: string;
-  skillsLabel: string;
-};
+  download: string
+  experience: string
+  education: string
+  projects: string
+  skillsLabel: string
+}
 
 export function CvDocument({ data, labels }: { data: CvData; labels: Labels }) {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const sheetRef = useRef<HTMLDivElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const sheetRef = useRef<HTMLDivElement>(null)
   const { contact, experience, compactRoles, education, achievements, skills } =
-    data;
+    data
 
   // Scale the fixed A4 sheet down to fit narrow viewports via `zoom` (reflows,
   // so no leftover whitespace and the sheet stays centred). Print resets it.
   useEffect(() => {
-    const wrap = wrapRef.current;
-    const sheet = sheetRef.current;
-    if (!wrap || !sheet) return;
+    const wrap = wrapRef.current
+    const sheet = sheetRef.current
+    if (!wrap || !sheet) return
     const update = () => {
-      const z = Math.min(1, wrap.clientWidth / SHEET_WIDTH);
-      sheet.style.setProperty("--cv-zoom", String(z));
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(wrap);
-    return () => ro.disconnect();
-  }, []);
+      const z = Math.min(1, wrap.clientWidth / SHEET_WIDTH)
+      sheet.style.setProperty('--cv-zoom', String(z))
+    }
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(wrap)
+    return () => ro.disconnect()
+  }, [])
 
   return (
     <div className="cv-stage">
@@ -142,5 +143,5 @@ export function CvDocument({ data, labels }: { data: CvData; labels: Labels }) {
         </article>
       </div>
     </div>
-  );
+  )
 }

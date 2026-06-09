@@ -35,7 +35,9 @@ export function ThemeSheet() {
       />
       <SheetContent side="right" className="w-full gap-0 p-0 sm:max-w-sm">
         <SheetHeader>
-          <SheetTitle className="font-mono">{t('themeDrawer.title')}</SheetTitle>
+          <SheetTitle className="font-mono">
+            {t('themeDrawer.title')}
+          </SheetTitle>
           <SheetDescription className="leading-relaxed">
             {t('themeDrawer.description')}
           </SheetDescription>

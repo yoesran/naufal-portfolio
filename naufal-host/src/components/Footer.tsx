@@ -1,6 +1,6 @@
-const YEAR = new Date().getFullYear()
-
 import { BLOG_URL } from '@/lib/links'
+
+const YEAR = new Date().getFullYear()
 
 const LINKS = [
   { label: 'github', href: 'https://github.com/naufalyoesran' },

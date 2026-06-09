@@ -1,40 +1,40 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
-import { isLocale, type Locale } from "@/lib/i18n/config";
-import { getDictionary } from "@/lib/i18n/dictionaries";
-import { alternates } from "@/lib/i18n/alternates";
-import { posts } from "@/lib/posts";
+import { alternates } from '@/lib/i18n/alternates'
+import { type Locale, isLocale } from '@/lib/i18n/config'
+import { getDictionary } from '@/lib/i18n/dictionaries'
+import { posts } from '@/lib/posts'
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: string }>;
+  params: Promise<{ lang: string }>
 }): Promise<Metadata> {
-  const { lang } = await params;
-  if (!isLocale(lang)) return {};
-  const dict = getDictionary(lang);
+  const { lang } = await params
+  if (!isLocale(lang)) return {}
+  const dict = getDictionary(lang)
   return {
     title: dict.meta.postsTitle,
     description: dict.meta.postsDescription,
-    alternates: alternates(lang, "posts"),
-  };
+    alternates: alternates(lang, 'posts'),
+  }
 }
 
 export default async function PostsPage({
   params,
 }: {
-  params: Promise<{ lang: string }>;
+  params: Promise<{ lang: string }>
 }) {
-  const { lang } = await params;
-  if (!isLocale(lang)) notFound();
-  const dict = getDictionary(lang);
+  const { lang } = await params
+  if (!isLocale(lang)) notFound()
+  const dict = getDictionary(lang)
   const dateFmt = new Intl.DateTimeFormat(lang, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-6 py-16">
@@ -81,5 +81,5 @@ export default async function PostsPage({
         </ul>
       )}
     </main>
-  );
+  )
 }

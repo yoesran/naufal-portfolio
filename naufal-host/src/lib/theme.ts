@@ -3,8 +3,8 @@ import { useSyncExternalStore } from 'react'
 import {
   ACCENTS,
   ACCENT_SWATCH,
-  DEFAULT_RADIUS,
   DEFAULTS,
+  DEFAULT_RADIUS,
   FONTS,
   FONT_STACKS,
   KEYS,

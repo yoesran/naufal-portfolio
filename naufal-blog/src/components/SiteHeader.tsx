@@ -1,9 +1,9 @@
-import Link from "next/link";
+import Link from 'next/link'
 
-import { LocaleToggle } from "@/components/LocaleToggle";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import type { Locale } from "@/lib/i18n/config";
-import type { Dictionary } from "@/lib/i18n/dictionaries";
+import { LocaleToggle } from '@/components/LocaleToggle'
+import { ThemeToggle } from '@/components/ThemeToggle'
+import type { Locale } from '@/lib/i18n/config'
+import type { Dictionary } from '@/lib/i18n/dictionaries'
 
 // Shared sticky chrome on every page: brand (left) + nav + locale/theme toggles
 // (right). Hidden in print via the `site-header` class (see cv.css).
@@ -37,5 +37,5 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         </nav>
       </div>
     </header>
-  );
+  )
 }

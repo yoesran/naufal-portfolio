@@ -35,7 +35,7 @@
   box-shadow: 0 12px 48px rgb(0 0 0 / 0.4);
   /* Calibri (the source doc's font); Carlito is the metric-compatible fallback
      bundled for non-Windows. */
-  font-family: Calibri, Carlito, "Segoe UI", system-ui, sans-serif;
+  font-family: Calibri, Carlito, 'Segoe UI', system-ui, sans-serif;
   font-size: var(--fs);
   line-height: var(--lh);
 }

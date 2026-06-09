@@ -1,9 +1,8 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import { Play, RotateCcw, User } from 'lucide-react'
-
 import { loadRemote } from '@module-federation/runtime'
+import { Play, RotateCcw, User } from 'lucide-react'
 
 import mfSvg from '@/assets/tech-stacks/module-federation.svg?raw'
 import reactSvg from '@/assets/tech-stacks/react.svg?raw'

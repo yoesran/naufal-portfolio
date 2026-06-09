@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+import type { Metadata } from 'next'
+import Link from 'next/link'
 
-import { defaultLocale } from "@/lib/i18n/config";
+import { defaultLocale } from '@/lib/i18n/config'
 
 // Root 404 for URLs that match no route at all (rendered inside the root layout,
 // which owns <html>/<body>). In-locale notFound() uses [lang]/not-found.tsx
 // instead. English/default — there's no locale context at the root.
 export const metadata: Metadata = {
-  title: "Page not found",
-};
+  title: 'Page not found',
+}
 
 export default function NotFound() {
   return (
@@ -29,5 +29,5 @@ export default function NotFound() {
         </Link>
       </nav>
     </main>
-  );
+  )
 }

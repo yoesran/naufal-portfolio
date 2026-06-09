@@ -1,22 +1,22 @@
-import type { Viewport } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
-import Script from "next/script";
+import type { Viewport } from 'next'
+import { Geist_Mono, Inter } from 'next/font/google'
+import Script from 'next/script'
 
-import "./globals.css";
+import './globals.css'
 
 // Inter to match the host's typeface (brand unity); Geist Mono for code/labels.
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
+const inter = Inter({ variable: '--font-inter', subsets: ['latin'] })
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+})
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
   ],
-};
+}
 
 // Root layout — sits ABOVE the dynamic [lang] segment, so it does NOT re-render
 // on a locale switch. That's essential: the theme `.dark` class (set imperatively
@@ -28,7 +28,7 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html
@@ -41,5 +41,5 @@ export default function RootLayout({
         {children}
       </body>
     </html>
-  );
+  )
 }

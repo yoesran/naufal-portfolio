@@ -1,24 +1,24 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
-import { defaultLocale, isLocale } from "@/lib/i18n/config";
-import { getDictionary } from "@/lib/i18n/dictionaries";
+import { defaultLocale, isLocale } from '@/lib/i18n/config'
+import { getDictionary } from '@/lib/i18n/dictionaries'
 
 // Localized 404 for notFound() thrown inside a locale (e.g. an unknown post
 // slug). Reads the locale from the path since not-found gets no params.
 export default function LocalizedNotFound() {
-  const pathname = usePathname() ?? "/";
-  const seg = pathname.split("/")[1] ?? "";
-  const lang = isLocale(seg) ? seg : defaultLocale;
-  const dict = getDictionary(lang);
+  const pathname = usePathname() ?? '/'
+  const seg = pathname.split('/')[1] ?? ''
+  const lang = isLocale(seg) ? seg : defaultLocale
+  const dict = getDictionary(lang)
 
   const links: [string, string][] = [
     [`/${lang}`, dict.notFound.home],
     [`/${lang}/posts`, dict.nav.posts],
     [`/${lang}/cv`, dict.nav.cv],
-  ];
+  ]
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-6 py-16">
@@ -41,5 +41,5 @@ export default function LocalizedNotFound() {
         ))}
       </nav>
     </main>
-  );
+  )
 }
