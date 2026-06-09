@@ -30,7 +30,12 @@
     socket = ps
 
     ps.addEventListener('message', (e) => {
-      const data = JSON.parse(e.data)
+      let data
+      try {
+        data = JSON.parse(e.data)
+      } catch {
+        return
+      }
       if (data.type === 'cursor') {
         peers = {
           ...peers,
