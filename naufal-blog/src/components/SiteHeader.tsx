@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import { LocaleToggle } from '@/components/LocaleToggle'
+import { MobileNav } from '@/components/MobileNav'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import type { Locale } from '@/lib/i18n/config'
 import type { Dictionary } from '@/lib/i18n/dictionaries'
@@ -18,8 +19,8 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           naufal.dev
         </Link>
         <nav className="flex items-center gap-2 sm:gap-3">
-          {/* Secondary text nav hides on phones to keep the toggles from
-              overflowing; reachable via the logo (→ home) + page back-links. */}
+          {/* Inline text nav on >=sm; collapses into the MobileNav menu on phones
+              to keep the toggles from overflowing. */}
           <Link
             href={`/${lang}/posts`}
             className="text-muted-foreground hover:text-foreground hidden transition-colors sm:inline"
@@ -34,6 +35,14 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           </Link>
           <LocaleToggle current={lang} label={dict.locale.label} />
           <ThemeToggle labels={dict.theme} />
+          <MobileNav
+            lang={lang}
+            labels={{
+              posts: dict.nav.posts,
+              cv: dict.nav.cv,
+              menu: dict.nav.menu,
+            }}
+          />
         </nav>
       </div>
     </header>

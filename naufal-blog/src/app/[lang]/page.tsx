@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { alternates } from '@/lib/i18n/alternates'
@@ -46,6 +47,24 @@ export default async function Home({
         </a>
         .
       </p>
+      {/* In-page links into the two sections — the header is the nav landmark
+          (a phone menu on small screens), so these stay plain content links to
+          avoid a second, unlabeled navigation landmark; they keep Posts/CV
+          visible in the body on every device. */}
+      <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 font-mono text-sm">
+        <Link
+          href={`/${lang}/posts`}
+          className="text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {dict.nav.posts} →
+        </Link>
+        <Link
+          href={`/${lang}/cv`}
+          className="text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {dict.nav.cv} →
+        </Link>
+      </div>
     </main>
   )
 }
