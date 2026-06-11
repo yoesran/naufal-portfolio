@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 
+import { Link } from '@/components/Link'
 import { defaultLocale } from '@/lib/i18n/config'
 
 // Root 404 for URLs that match no route at all (rendered inside the root layout,

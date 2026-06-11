@@ -1,8 +1,8 @@
 'use client'
 
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+import { Link } from '@/components/Link'
 import { defaultLocale, isLocale } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/dictionaries'
 

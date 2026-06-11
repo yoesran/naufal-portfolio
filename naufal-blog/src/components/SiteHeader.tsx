@@ -1,5 +1,4 @@
-import Link from 'next/link'
-
+import { Link } from '@/components/Link'
 import { LocaleToggle } from '@/components/LocaleToggle'
 import { MobileNav } from '@/components/MobileNav'
 import { ThemeToggle } from '@/components/ThemeToggle'
