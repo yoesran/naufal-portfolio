@@ -11,8 +11,8 @@ import NextLink from 'next/link'
 // wrapper defaults `prefetch={false}`; click navigation still fetches the real
 // page. Pass `prefetch` explicitly to override on a specific link.
 //
-// forwardRef so the ref survives — MobileNav hands this to Base UI's `render`
-// prop, which clones it with a ref for menu focus management.
+// forwardRef so the ref survives — the MobileMenu drawer hands this to Base UI's
+// `render` prop, which clones it with a ref for focus management.
 type Props = ComponentProps<typeof NextLink>
 
 export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(

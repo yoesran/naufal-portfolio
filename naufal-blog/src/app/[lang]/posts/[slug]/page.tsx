@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { Link } from '@/components/Link'
-import { ReadingPanel } from '@/components/ReadingPanel'
 import { alternates } from '@/lib/i18n/alternates'
 import { type Locale, isLocale } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/dictionaries'
@@ -52,15 +51,12 @@ export default async function PostPage({
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-6 py-16">
-      <div className="flex items-center justify-between gap-4">
-        <Link
-          href={`/${lang}/posts`}
-          className="text-muted-foreground hover:text-foreground font-mono text-sm transition-colors"
-        >
-          {dict.post.back}
-        </Link>
-        <ReadingPanel labels={dict.reading} />
-      </div>
+      <Link
+        href={`/${lang}/posts`}
+        className="text-muted-foreground hover:text-foreground font-mono text-sm transition-colors"
+      >
+        {dict.post.back}
+      </Link>
 
       <header className="mt-8">
         <time

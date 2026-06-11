@@ -29,3 +29,11 @@ export const posts: PostMeta[] = [
 export function getPost(slug: string): PostMeta | undefined {
   return posts.find((post) => post.slug === slug)
 }
+
+// True for a post-detail route (/{lang}/posts/{slug}), not the posts index.
+// Single source for the header bits that only apply on a post page (the reading
+// panel) — used by HeaderReading and the MobileMenu drawer.
+export function isPostDetailPath(pathname: string): boolean {
+  const seg = pathname.split('/').filter(Boolean) // [lang, 'posts', slug]
+  return seg[1] === 'posts' && seg.length >= 3
+}
