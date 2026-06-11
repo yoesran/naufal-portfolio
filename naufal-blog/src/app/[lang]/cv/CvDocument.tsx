@@ -22,15 +22,24 @@ export function CvDocument({ data, labels }: { data: CvData; labels: Labels }) {
   const { contact, experience, compactRoles, education, achievements, skills } =
     data
 
-  // Scale the fixed A4 sheet down to fit narrow viewports via `zoom` (reflows,
-  // so no leftover whitespace and the sheet stays centred). Print resets it.
+  // Scale the fixed A4 sheet down to fit narrow viewports via `transform: scale`
+  // (consistent across engines, unlike `zoom` — see cv.css). transform doesn't
+  // reflow, so we also set the wrapper's height to the sheet's *scaled* height,
+  // otherwise the full-size layout box leaves a large gap below. Print resets it.
   useEffect(() => {
     const wrap = wrapRef.current
     const sheet = sheetRef.current
     if (!wrap || !sheet) return
+    let lastWidth = -1
     const update = () => {
-      const z = Math.min(1, wrap.clientWidth / SHEET_WIDTH)
+      const width = wrap.clientWidth
+      // Only react to width changes — we mutate the wrapper's height below, which
+      // would otherwise re-trigger the observer into a loop.
+      if (width === lastWidth) return
+      lastWidth = width
+      const z = Math.min(1, width / SHEET_WIDTH)
       sheet.style.setProperty('--cv-zoom', String(z))
+      wrap.style.height = `${sheet.getBoundingClientRect().height}px`
     }
     update()
     const ro = new ResizeObserver(update)

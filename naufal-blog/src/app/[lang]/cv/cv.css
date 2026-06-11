@@ -13,6 +13,10 @@
 }
 .cv-wrap {
   width: 100%;
+  /* The sheet is scaled with `transform` (see .cv-sheet), whose layout box keeps
+     its full 794px size — clip it; JS sets this wrapper's height to the sheet's
+     scaled height so there's no gap below. */
+  overflow: hidden;
 }
 
 .cv-sheet {
@@ -25,7 +29,14 @@
   --section-gap: 13px; /* gap between sections */
   /* ─────────────────────────────────────────────────────────────────────── */
 
-  zoom: var(--cv-zoom, 1);
+  /* Scale the fixed 794px sheet to fit narrow viewports. `transform: scale` (not
+     `zoom`) because iOS Safari's `zoom` scales the box but not text/layout
+     uniformly — the sheet rendered ~1.7x too tall there. `transform` scales
+     everything identically on every engine; the wrapper takes the scaled height
+     via JS (transform doesn't reflow). `top left` origin + `margin: 0 auto`:
+     fills the width flush-left on phones, centres at full size on desktop. */
+  transform: scale(var(--cv-zoom, 1));
+  transform-origin: top left;
   box-sizing: border-box;
   width: 794px; /* A4 @ 96dpi */
   margin: 0 auto;
@@ -136,8 +147,12 @@
   .cv-stage {
     padding: 0 !important;
   }
+  .cv-wrap {
+    height: auto !important;
+    overflow: visible !important;
+  }
   .cv-sheet {
-    zoom: 1 !important;
+    transform: none !important;
     width: 794px !important;
     margin: 0 auto !important;
     box-shadow: none !important;
