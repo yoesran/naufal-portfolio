@@ -16,6 +16,10 @@
     "mounted": "terpasang di dalam React ✓"
   },
   "presence": {
+    "self": "kamu si {name}",
+    "selfTag": "kamu",
+    "connecting": "menghubungkan ke server kursor…",
+    "error": "tidak bisa terhubung ke server kursor — coba muat ulang halaman",
     "cursors": "{count, plural, =0 {belum ada orang lain — buka tab kedua} other {# kursor lain aktif}}",
     "standaloneNote": "Kursor multiplayer langsung aktif di seluruh halaman ini — gerakkan kursormu, atau buka tab kedua. Jumlahnya tampil di bawah."
   }

@@ -94,6 +94,7 @@ export function buildPrePaintScript(): string {
     keys: KEYS,
     fontStacks: FONT_STACKS,
     surfaceBg: SURFACE_BG,
+    radius: { min: RADIUS_MIN, max: RADIUS_MAX },
   })
   return `(function(){try{
 var d=${data},root=document.documentElement,ls=localStorage;
@@ -102,7 +103,7 @@ var dark=t==='dark'||((!t||t==='system')&&matchMedia('(prefers-color-scheme: dar
 if(dark)root.classList.add('dark');
 var a=ls.getItem(d.keys.accent);if(a)root.setAttribute('data-accent',a);
 var s=ls.getItem(d.keys.surface)||'default';if(s!=='default')root.setAttribute('data-surface',s);
-var r=ls.getItem(d.keys.radius);if(r)root.style.setProperty('--radius',r+'rem');
+var r=Number(ls.getItem(d.keys.radius)||NaN);if(r>=d.radius.min&&r<=d.radius.max)root.style.setProperty('--radius',r+'rem');
 var f=ls.getItem(d.keys.font);if(f&&d.fontStacks[f])root.style.setProperty('--font-app',d.fontStacks[f]);
 var pair=d.surfaceBg[s]||d.surfaceBg.default;root.style.backgroundColor=pair[dark?1:0];
 }catch(e){}})()`

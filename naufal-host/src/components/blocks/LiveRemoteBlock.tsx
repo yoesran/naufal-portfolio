@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import { loadRemote } from '@module-federation/runtime'
+import { loadRemote, registerRemotes } from '@module-federation/runtime'
 import { Play, RotateCcw, User } from 'lucide-react'
 
 import mfSvg from '@/assets/tech-stacks/module-federation.svg?raw'
@@ -22,7 +22,10 @@ const MIN_FETCH_MS = 750
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 const LAB_URL = import.meta.env.VITE_LAB_URL ?? 'http://127.0.0.1:5174'
-const HOST_HOST = 'naufal-host.pages.dev'
+// The page's own origin — truthful in every environment (dev, tunnel, prod,
+// future custom domain), unlike a hardcoded deploy hostname next to the
+// env-derived labHost below.
+const hostHost = window.location.host
 const labHost = (() => {
   try {
     return new URL(LAB_URL).host
@@ -48,6 +51,11 @@ export function LiveRemoteBlock() {
   const loading = started && status.state === 'loading'
   const done = started && status.state === 'loaded'
   const failed = started && status.state === 'error'
+  // A real failure (remote actually unreachable), as opposed to the simulated
+  // one. The controls differ: real failure offers Retry (re-fire the real
+  // load); simulated failure offers Reconnect (turn the simulation off) — and
+  // "Break the connection" is hidden when there's no live connection to break.
+  const realFailed = failed && !offline
 
   // Animate the reveal open/closed by measuring its content and transitioning
   // `height` (grid-template-rows transitions snapped here). Same pattern as
@@ -62,11 +70,35 @@ export function LiveRemoteBlock() {
     return () => ro.disconnect()
   }, [])
 
+  // Retrying a real failure needs more than re-running loadRemote: the remote
+  // is `type: 'module'`, so its entry is fetched with a native import(), and
+  // browsers cache a FAILED module import by URL for the page's lifetime — the
+  // retry rejects instantly with the cached error, no network (verified: zero
+  // requests on Retry). Fix: re-register the remote (force clears the MF
+  // runtime's own entry/module caches) under a cache-busted entry URL, which
+  // the browser treats as a brand-new module. Harmless to caching semantics —
+  // remoteEntry.js is served no-store anyway (see docs/deployment.md).
+  // run() arms this when retrying from a real failure.
+  const retryResetRef = useRef(false)
+
   const load = (): Promise<typeof import('lab/SpringToy')> => {
     if (offline)
       return sleep(MIN_FETCH_MS).then(() =>
         Promise.reject(new Error('Simulated offline'))
       )
+    if (retryResetRef.current) {
+      retryResetRef.current = false
+      registerRemotes(
+        [
+          {
+            name: 'lab',
+            type: 'module',
+            entry: `${LAB_URL}/remoteEntry.js?retry=${Date.now()}`,
+          },
+        ],
+        { force: true }
+      )
+    }
     const t0 = performance.now()
     const mod = (
       loadRemote('lab/SpringToy') as Promise<typeof import('lab/SpringToy')>
@@ -78,6 +110,8 @@ export function LiveRemoteBlock() {
   }
 
   function run() {
+    // Retrying after a real failure: arm the cache reset (see retryResetRef).
+    if (realFailed) retryResetRef.current = true
     setStarted(true)
     setNonce((n) => n + 1)
   }
@@ -116,7 +150,7 @@ export function LiveRemoteBlock() {
         />
         <DiagramNode
           name={t('liveRemote.nodes.host')}
-          sub={HOST_HOST}
+          sub={hostHost}
           glyph={reactSvg}
           badge={mfSvg}
           color="#61DAFB"
@@ -181,7 +215,7 @@ export function LiveRemoteBlock() {
           {t('liveRemote.openStandalone')}
         </a>
         <div className="flex flex-wrap gap-2">
-          {!started || done ? (
+          {!started || done || realFailed ? (
             <Button
               variant="outline"
               size="sm"
@@ -193,12 +227,14 @@ export function LiveRemoteBlock() {
               ) : (
                 <Play className="size-3.5" />
               )}
-              {started
-                ? t('liveRemote.actions.replay')
-                : t('liveRemote.actions.run')}
+              {!started
+                ? t('liveRemote.actions.run')
+                : realFailed
+                  ? t('liveRemote.actions.retry')
+                  : t('liveRemote.actions.replay')}
             </Button>
           ) : null}
-          {started && (
+          {started && !realFailed && (
             <Button variant="ghost" size="sm" onClick={toggleOffline}>
               {offline
                 ? t('liveRemote.actions.reconnect')

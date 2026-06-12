@@ -42,6 +42,7 @@
     "actions": {
       "run": "Jalankan fetch",
       "replay": "Putar ulang",
+      "retry": "Coba lagi",
       "simulateOffline": "Putuskan koneksi",
       "reconnect": "Sambung ulang"
     },
@@ -54,7 +55,7 @@
   },
   "presence": {
     "toggleLabel": "Aktifkan kursor live",
-    "unavailable": "Kursor live tidak tersedia"
+    "unavailable": "Kursor live tidak tersedia — coba muat ulang halaman"
   },
   "theme": {
     "light": "terang",

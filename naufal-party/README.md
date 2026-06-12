@@ -1,6 +1,6 @@
 # naufal-party
 
-The **realtime server** of a polyglot microfrontend portfolio — a tiny [PartyKit](https://docs.partykit.io/) WebSocket relay that powers the multiplayer-cursor presence block. On connect it assigns each visitor a colour + friendly name; on a cursor message it broadcasts the normalized position (tagged `host` or `remote`) to everyone else; on disconnect it broadcasts `leave`. The federated `Presence` component in `naufal-lab` opens its own socket to it, so cursors are shared across both deployments.
+The **realtime server** of a polyglot microfrontend portfolio — a tiny [PartyKit](https://docs.partykit.io/) WebSocket relay that powers the multiplayer-cursor presence block. On connect it assigns each visitor a colour + friendly name (returned to that visitor as a `welcome` message — the client shows it as their own cursor tag); on a cursor message it broadcasts the normalized position (tagged `host` or `remote`) to everyone else; on disconnect it broadcasts `leave`. The federated `Presence` component in `naufal-lab` opens its own socket to it, so cursors are shared across both deployments.
 
 **Stack:** PartyKit (Cloudflare-owned) · TypeScript.
 

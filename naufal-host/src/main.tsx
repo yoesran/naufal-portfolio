@@ -26,6 +26,9 @@ class TopErrorBoundary extends Component<
 
   render() {
     if (this.state.error) {
+      // Deliberate i18n exception: this copy stays literal English. The boundary
+      // is the last resort when anything in the tree threw — possibly i18n
+      // itself — so it must render with zero dependencies beyond React.
       return (
         <div className="bg-background text-foreground min-h-dvh">
           <div className="mx-auto max-w-2xl px-6 py-16 font-mono text-sm">
