@@ -47,29 +47,55 @@ export default class CursorServer implements Party.Server {
   }
 
   onMessage(message: string, sender: Party.Connection<ConnState>) {
-    let data: { type?: string; x?: number; y?: number; context?: string };
+    let data: {
+      type?: string;
+      x?: number;
+      y?: number;
+      context?: string;
+      pointer?: string;
+    };
     try {
       data = JSON.parse(message);
     } catch {
       return;
     }
-    if (data.type !== "cursor") return;
+    if (typeof data.x !== "number" || typeof data.y !== "number") return;
 
     const color = sender.state?.color ?? colorFor(sender.id);
     const name = sender.state?.name ?? "Guest";
-    const context = data.context === "host" ? "host" : "remote";
-    this.room.broadcast(
-      JSON.stringify({
-        type: "cursor",
-        id: sender.id,
-        color,
-        name,
-        context,
-        x: data.x,
-        y: data.y,
-      }),
-      [sender.id],
-    );
+
+    if (data.type === "cursor") {
+      const context = data.context === "host" ? "host" : "remote";
+      // `pointer` tells receivers how to draw the position: a resting arrow
+      // (mouse) or an ephemeral fingertip trail (touch).
+      const pointer = data.pointer === "touch" ? "touch" : "mouse";
+      this.room.broadcast(
+        JSON.stringify({
+          type: "cursor",
+          id: sender.id,
+          color,
+          name,
+          context,
+          pointer,
+          x: data.x,
+          y: data.y,
+        }),
+        [sender.id],
+      );
+    } else if (data.type === "burst") {
+      // A tap/click firework — relayed in the sender's color; the sender
+      // already rendered its own locally.
+      this.room.broadcast(
+        JSON.stringify({
+          type: "burst",
+          id: sender.id,
+          color,
+          x: data.x,
+          y: data.y,
+        }),
+        [sender.id],
+      );
+    }
   }
 
   onClose(conn: Party.Connection) {

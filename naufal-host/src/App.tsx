@@ -5,6 +5,7 @@ import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { PresenceOverlay } from '@/components/PresenceOverlay'
 import { HeroBlock } from '@/components/blocks/HeroBlock'
+import { usePresenceActive } from '@/lib/presence'
 
 // The Hero is above the fold (and the likely LCP element), so it stays in the
 // initial bundle. The rest are split out of it via React.lazy so first paint
@@ -32,6 +33,11 @@ function BlockFallback() {
 
 export default function App() {
   const { t } = useTranslation()
+  // While the presence overlay is on, dock space for its floating count pill
+  // (fixed bottom-center, rendered by the remote): without it the pill parks on
+  // top of the footer links at the end of the page. The spacer reserves the
+  // pill's strip below the footer, so it floats over empty dock, not content.
+  const presenceActive = usePresenceActive()
   return (
     <div className="bg-background text-foreground flex min-h-dvh flex-col">
       <Header />
@@ -54,6 +60,7 @@ export default function App() {
         </div>
       </main>
       <Footer />
+      {presenceActive && <div aria-hidden className="h-16" />}
     </div>
   )
 }

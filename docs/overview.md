@@ -75,10 +75,10 @@ The ticket carries the **Svelte** logo and the host node carries the **React** +
 
 ### `naufal-party` — PartyKit Realtime Server (port 1999)
 
-| File            | Role                                                                                          |
-| --------------- | --------------------------------------------------------------------------------------------- |
-| `src/server.ts` | Cursor relay: assigns each connection a color + name, broadcasts cursor positions to the room |
-| `partykit.json` | PartyKit config (`name`, `main`)                                                              |
+| File            | Role                                                                                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/server.ts` | Cursor relay: assigns each connection a color + name, broadcasts cursor positions (mouse arrows / touch trails) + tap-firework bursts to the room |
+| `partykit.json` | PartyKit config (`name`, `main`)                                                                                                                  |
 
 ---
 
