@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Menu } from 'lucide-react'
 
+import { CanvasToggle } from '@/components/CanvasToggle'
 import { LocaleToggle } from '@/components/LocaleToggle'
 import { PresenceToggle } from '@/components/PresenceToggle'
 import { ThemeSheet } from '@/components/ThemeSheet'
@@ -53,6 +54,7 @@ export function Header() {
 
           <LocaleToggle />
           <PresenceToggle />
+          <CanvasToggle />
           <ThemeSheet />
 
           {!isDesktop && (

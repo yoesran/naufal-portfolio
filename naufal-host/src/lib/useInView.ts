@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 
+import { useCanvasMode } from '@/lib/canvas'
+
 export function useInView<T extends HTMLElement>(options?: {
   rootMargin?: string
 }) {
   const ref = useRef<T>(null)
   const [inView, setInView] = useState(false)
+  // On the zoom/pan canvas, IntersectionObserver against the viewport is
+  // unreliable (the content is transformed), so reveal everything at once there.
+  const canvas = useCanvasMode()
 
   useEffect(() => {
     const el = ref.current
@@ -26,5 +31,5 @@ export function useInView<T extends HTMLElement>(options?: {
     return () => observer.disconnect()
   }, [options?.rootMargin])
 
-  return [ref, inView] as const
+  return [ref, inView || canvas] as const
 }

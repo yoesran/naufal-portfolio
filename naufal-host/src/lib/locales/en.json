@@ -147,5 +147,36 @@
   },
   "locale": {
     "toggleLabel": "Switch language"
+  },
+  "canvas": {
+    "toggleLabel": "Canvas view",
+    "exitLabel": "Exit canvas",
+    "frameLabel": "naufal.dev · home — React host",
+    "hint": "drag to pan · scroll or pinch to zoom",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "fit": "Fit to view",
+    "arch": {
+      "title": "why it's split",
+      "body": "State crosses the host↔remote boundary three ways, each more coupled than the last: cascade (theme · CSS vars) · contract (i18n · one string) · backend (presence · WebSocket)."
+    },
+    "notes": {
+      "hero": {
+        "title": "cursor repel",
+        "body": "Move your pointer across the name — each letter pushes away. Host-native React, no library."
+      },
+      "techStack": {
+        "title": "icon orbit",
+        "body": "A requestAnimationFrame loop spins the stack. Hover or tap a pill to pause it and read the note."
+      },
+      "liveRemote": {
+        "title": "live federation",
+        "body": "Run fires the real loadRemote('lab/SpringToy') — a Svelte app mounts inside this React host. Break the link to see the fallback."
+      },
+      "experience": {
+        "title": "git terminal",
+        "body": "The career as a git graph. The prompt is a working shell — type checkout, diff, log, or help."
+      }
+    }
   }
 }

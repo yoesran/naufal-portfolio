@@ -146,7 +146,7 @@ export function TechStackBlock() {
   }, [reduce])
 
   return (
-    <Cell label="// tech-stack · host-native React">
+    <Cell id="tech-stack" label="// tech-stack · host-native React">
       <div
         ref={containerRef}
         className="relative mx-auto aspect-square w-full max-w-[320px]"

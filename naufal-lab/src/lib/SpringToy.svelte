@@ -176,8 +176,15 @@
 
   function rel(e: PointerEvent) {
     const r = container!.getBoundingClientRect()
-    pointerX = Math.max(0, Math.min(width, e.clientX - r.left))
-    pointerY = Math.max(0, Math.min(H, e.clientY - r.top))
+    // Map screen px → the toy's own (unscaled) coords. When embedded in the
+    // host's zoom canvas the toy sits inside a CSS transform, so the bounding
+    // rect is scaled while the physics work in layout px — divide by the
+    // rendered ratio so the grab point stays under the finger at any zoom (the
+    // ratio is 1 in normal/standalone use, so nothing changes there).
+    const sx = r.width / container!.offsetWidth || 1
+    const sy = r.height / container!.offsetHeight || 1
+    pointerX = Math.max(0, Math.min(width, (e.clientX - r.left) / sx))
+    pointerY = Math.max(0, Math.min(H, (e.clientY - r.top) / sy))
   }
   function grab(e: PointerEvent) {
     dragging = true

@@ -104,7 +104,7 @@ export function HeroBlock() {
   }, [reduce])
 
   return (
-    <Cell label="// hero · host-native React">
+    <Cell id="hero" label="// hero · host-native React">
       <div className="py-6">
         <h1
           ref={wordmarkRef}

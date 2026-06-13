@@ -5,6 +5,7 @@ import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { PresenceOverlay } from '@/components/PresenceOverlay'
 import { HeroBlock } from '@/components/blocks/HeroBlock'
+import { useCanvasMode } from '@/lib/canvas'
 import { usePresenceActive } from '@/lib/presence'
 
 // The Hero is above the fold (and the likely LCP element), so it stays in the
@@ -27,6 +28,11 @@ const ExperienceBlock = lazy(() =>
     default: m.ExperienceBlock,
   }))
 )
+// Canvas mode is opt-in, so its stage (pan/zoom + annotations) is split out and
+// only fetched when the visitor toggles it on — play mode never ships it.
+const CanvasStage = lazy(() =>
+  import('@/components/CanvasStage').then((m) => ({ default: m.CanvasStage }))
+)
 
 // Cell-shaped placeholder that reserves height while a block chunk loads, so the
 // page doesn't jump. Matches the Cell frame (border + card bg + rounded).
@@ -43,32 +49,50 @@ export default function App() {
   // top of the footer links at the end of the page. The spacer reserves the
   // pill's strip below the footer, so it floats over empty dock, not content.
   const presenceActive = usePresenceActive()
+  const canvas = useCanvasMode()
+
+  // The artboard content — the intro + the block gallery. Shared by both the
+  // normal page and the canvas frame, so the blocks have one source.
+  const body = (
+    <>
+      <p className="text-muted-foreground mb-10 text-lg leading-relaxed sm:text-xl">
+        {t('intro')}
+      </p>
+      <div className="space-y-6">
+        <HeroBlock />
+        <Suspense fallback={<BlockFallback />}>
+          <TechStackBlock />
+        </Suspense>
+        <Suspense fallback={<BlockFallback />}>
+          <LiveRemoteBlock />
+        </Suspense>
+        <Suspense fallback={<BlockFallback />}>
+          <ExperienceBlock />
+        </Suspense>
+      </div>
+    </>
+  )
+
   return (
     <div className="bg-background text-foreground flex min-h-dvh flex-col">
       <Header />
       <PresenceOverlay />
-      <main
-        id="work"
-        className="mx-auto w-full max-w-2xl flex-1 scroll-mt-16 px-6 py-12"
-      >
-        <p className="text-muted-foreground mb-10 text-lg leading-relaxed sm:text-xl">
-          {t('intro')}
-        </p>
-        <div className="space-y-6">
-          <HeroBlock />
-          <Suspense fallback={<BlockFallback />}>
-            <TechStackBlock />
-          </Suspense>
-          <Suspense fallback={<BlockFallback />}>
-            <LiveRemoteBlock />
-          </Suspense>
-          <Suspense fallback={<BlockFallback />}>
-            <ExperienceBlock />
-          </Suspense>
-        </div>
-      </main>
-      <Footer />
-      {presenceActive && <div aria-hidden className="h-16" />}
+      {canvas ? (
+        <Suspense fallback={<div className="flex-1" />}>
+          <CanvasStage>{body}</CanvasStage>
+        </Suspense>
+      ) : (
+        <>
+          <main
+            id="work"
+            className="mx-auto w-full max-w-2xl flex-1 scroll-mt-16 px-6 py-12"
+          >
+            {body}
+          </main>
+          <Footer />
+          {presenceActive && <div aria-hidden className="h-16" />}
+        </>
+      )}
     </div>
   )
 }

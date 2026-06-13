@@ -114,7 +114,10 @@ export function LiveRemoteBlock() {
   }
 
   return (
-    <Cell label="// live-remote · a Svelte app running inside React">
+    <Cell
+      id="live-remote"
+      label="// live-remote · a Svelte app running inside React"
+    >
       <p className="text-muted-foreground text-sm leading-relaxed">
         <Trans
           t={t}

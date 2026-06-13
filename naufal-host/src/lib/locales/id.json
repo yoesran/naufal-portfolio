@@ -147,5 +147,36 @@
   },
   "locale": {
     "toggleLabel": "Ganti bahasa"
+  },
+  "canvas": {
+    "toggleLabel": "Tampilan kanvas",
+    "exitLabel": "Keluar kanvas",
+    "frameLabel": "naufal.dev · beranda — host React",
+    "hint": "seret untuk geser · scroll atau cubit untuk zoom",
+    "zoomIn": "Perbesar",
+    "zoomOut": "Perkecil",
+    "fit": "Pas ke layar",
+    "arch": {
+      "title": "kenapa dipisah",
+      "body": "State melintasi batas host↔remote dengan tiga cara, makin ke kanan makin terkopel: cascade (tema · variabel CSS) · contract (i18n · satu string) · backend (presence · WebSocket)."
+    },
+    "notes": {
+      "hero": {
+        "title": "tolak kursor",
+        "body": "Gerakkan pointer melintasi nama — tiap huruf menjauh. React asli di host, tanpa library."
+      },
+      "techStack": {
+        "title": "orbit ikon",
+        "body": "Loop requestAnimationFrame memutar tech stack. Arahkan atau ketuk pil untuk menjeda dan membaca catatannya."
+      },
+      "liveRemote": {
+        "title": "federasi langsung",
+        "body": "Run memanggil loadRemote('lab/SpringToy') sungguhan — aplikasi Svelte ter-mount di dalam host React ini. Putuskan koneksinya untuk melihat fallback."
+      },
+      "experience": {
+        "title": "terminal git",
+        "body": "Karier sebagai graph git. Prompt-nya shell sungguhan — ketik checkout, diff, log, atau help."
+      }
+    }
   }
 }
