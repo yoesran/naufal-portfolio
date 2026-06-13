@@ -96,7 +96,11 @@ export function RemoteMount({
 Usage:
 
 ```tsx
-<RemoteMount load={() => loadRemote("lab/SpringToy")} opts={{ context: "host" }} eager />
+<RemoteMount
+  load={() => loadRemote("lab/SpringToy")}
+  opts={{ context: "host" }}
+  eager
+/>
 ```
 
 The cleanup runs on unmount, so the Svelte component (and any WebSocket it opened) tears down cleanly.
