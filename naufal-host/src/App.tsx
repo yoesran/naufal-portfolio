@@ -22,6 +22,11 @@ const LiveRemoteBlock = lazy(() =>
     default: m.LiveRemoteBlock,
   }))
 )
+const ExperienceBlock = lazy(() =>
+  import('@/components/blocks/ExperienceBlock').then((m) => ({
+    default: m.ExperienceBlock,
+  }))
+)
 
 // Cell-shaped placeholder that reserves height while a block chunk loads, so the
 // page doesn't jump. Matches the Cell frame (border + card bg + rounded).
@@ -56,6 +61,9 @@ export default function App() {
           </Suspense>
           <Suspense fallback={<BlockFallback />}>
             <LiveRemoteBlock />
+          </Suspense>
+          <Suspense fallback={<BlockFallback />}>
+            <ExperienceBlock />
           </Suspense>
         </div>
       </main>

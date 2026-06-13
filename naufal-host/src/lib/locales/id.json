@@ -53,6 +53,58 @@
       "devHint": "Remote Svelte (naufal-lab) tidak berjalan. Saat development, jalankan dengan <code1>npm run dev:mf</code1> di dalam <code2>naufal-lab/</code2>."
     }
   },
+  "experience": {
+    "lineLabel": "Pengalaman kerja",
+    "present": "sekarang",
+    "roles": {
+      "dbs": "React.js Developer",
+      "edot": "Frontend Developer",
+      "ajaib": "Fullstack Developer",
+      "danamon": "Web Developer",
+      "doubler": "Frontend Developer (freelance)"
+    },
+    "summaries": {
+      "dbs": "Aplikasi perbankan berbasis webview di atas React dalam microfrontend Module Federation — arsitektur yang sama dengan portofolio ini.",
+      "edot": "Dashboard pemantau proses bisnis perusahaan klien — Next.js, React Query, shadcn/ui; merilis empat fitur produksi secara menyeluruh.",
+      "ajaib": "Memigrasikan halaman landing ajaib.co.id dari WordPress ke Next.js dengan SSR/SSG + SEO, serta membangun sistem formulir webview yang digerakkan backend untuk onboarding.",
+      "danamon": "Back office DBankPro 2.0: container React yang memasang feature module Angular lewat Single-SPA, lalu dimigrasikan ke NX — pola lintas framework yang persis didemokan playground ini.",
+      "doubler": "Proyek klien (termasuk BCA) dengan vanilla JS, jQuery, Nunjucks, React, dan Next.js — sering sebagai satu-satunya developer."
+    },
+    "earlier": {
+      "node": "sebelumnya",
+      "title": "Peran sebelumnya",
+      "roles": {
+        "infosys": "Infosys Solusi Terpadu (2024 – 25) — dua aplikasi back-office dengan Next.js + Angular; vendor di balik kontrak Danamon",
+        "geekgarden": "GeekGarden (2022 – 23) — satu-satunya developer Flutter untuk dua aplikasi klien yang rilis, dari Figma sampai lolos QA",
+        "ehealth": "Ehealth.co.id (2022 – 23) — Junior Software Engineer, UI Polymer pada produk kesehatan",
+        "traveloka": "Traveloka (2022) — magang Web Engineer: riset browser automation, infrastruktur web, komponen UI library"
+      },
+      "cvLink": "CV lengkap ↗"
+    },
+    "actions": {
+      "story": "baca ceritanya ↗",
+      "demo": "Jalankan demo"
+    },
+    "demoUnavailable": "demo tidak tersedia — coba muat ulang halaman",
+    "commits": {
+      "dbs": "feat: webview react + module federation",
+      "edot": "feat: dashboard proses bisnis (next.js)",
+      "ajaib": "feat: wordpress → next.js + onboarding webview",
+      "danamon": "feat: container react + module angular",
+      "doubler": "feat: proyek klien bca, vanilla js → next",
+      "earlier": "traveloka · ehealth · geekgarden · infosys"
+    },
+    "promptLabel": "Ketik perintah git — coba: git checkout danamon",
+    "promptHint": "klik prompt-nya — coba 'help'",
+    "clearOutput": "Bersihkan output terminal",
+    "industries": {
+      "dbs": "Perbankan",
+      "edot": "SaaS",
+      "ajaib": "Fintech",
+      "danamon": "Perbankan",
+      "doubler": "Agensi digital"
+    }
+  },
   "presence": {
     "toggleLabel": "Aktifkan kursor live",
     "unavailable": "Kursor live tidak tersedia — coba muat ulang halaman"

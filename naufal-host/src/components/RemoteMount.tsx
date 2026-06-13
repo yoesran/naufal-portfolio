@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { useInView } from '@/lib/useInView'
 
-type MountFn = (
+export type MountFn = (
   target: HTMLElement,
   opts?: Record<string, unknown>
 ) => () => void

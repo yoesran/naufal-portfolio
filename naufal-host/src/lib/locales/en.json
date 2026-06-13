@@ -53,6 +53,58 @@
       "devHint": "The Svelte remote (naufal-lab) isn't running. In dev, start it with <code1>npm run dev:mf</code1> inside <code2>naufal-lab/</code2>."
     }
   },
+  "experience": {
+    "lineLabel": "Work experience",
+    "present": "present",
+    "roles": {
+      "dbs": "React.js Developer",
+      "edot": "Frontend Developer",
+      "ajaib": "Fullstack Developer",
+      "danamon": "Web Developer",
+      "doubler": "Frontend Developer (freelance)"
+    },
+    "summaries": {
+      "dbs": "A webview banking app built on React inside a Module Federation microfrontend — the same architecture this portfolio runs on.",
+      "edot": "A dashboard tracking business processes for client companies — Next.js, React Query, shadcn/ui; shipped four production features end-to-end.",
+      "ajaib": "Migrated ajaib.co.id landing pages from WordPress to Next.js with SSR/SSG + SEO, and built a backend-driven webview form system for onboarding.",
+      "danamon": "DBankPro 2.0 back office: a React container mounting Angular feature modules over Single-SPA, later migrated to NX — the exact cross-framework pattern this playground demonstrates.",
+      "doubler": "Client projects (including BCA) in vanilla JS, jQuery, Nunjucks, React, and Next.js — often as the sole developer."
+    },
+    "earlier": {
+      "node": "earlier",
+      "title": "Earlier roles",
+      "roles": {
+        "infosys": "Infosys Solusi Terpadu (2024 – 25) — two back-office apps in Next.js + Angular; the vendor behind the Danamon contract",
+        "geekgarden": "GeekGarden (2022 – 23) — sole Flutter developer on two shipped client apps, Figma to QA-passed builds",
+        "ehealth": "Ehealth.co.id (2022 – 23) — Junior Software Engineer, Polymer UI on a healthcare product",
+        "traveloka": "Traveloka (2022) — Web Engineer intern: browser-automation research, web infra, UI-library components"
+      },
+      "cvLink": "full CV ↗"
+    },
+    "actions": {
+      "story": "read the story ↗",
+      "demo": "Run the demo"
+    },
+    "demoUnavailable": "demo unavailable — try refreshing the page",
+    "commits": {
+      "dbs": "feat: react + module federation webview",
+      "edot": "feat: business-process dashboard (next.js)",
+      "ajaib": "feat: wordpress → next.js + webview onboarding",
+      "danamon": "feat: react container + angular modules",
+      "doubler": "feat: bca client projects, vanilla js → next",
+      "earlier": "traveloka · ehealth · geekgarden · infosys"
+    },
+    "promptLabel": "Type a git command — try: git checkout danamon",
+    "promptHint": "click the prompt — try 'help'",
+    "clearOutput": "Clear terminal output",
+    "industries": {
+      "dbs": "Banking",
+      "edot": "SaaS",
+      "ajaib": "Fintech",
+      "danamon": "Banking",
+      "doubler": "Digital agency"
+    }
+  },
   "presence": {
     "toggleLabel": "Toggle live cursors",
     "unavailable": "Live cursors unavailable — try refreshing the page"
