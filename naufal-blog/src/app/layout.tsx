@@ -18,6 +18,12 @@ export const viewport: Viewport = {
   ],
 }
 
+// Cloudflare Web Analytics beacon token (public; embedded in the page). Inlined
+// at build time from NEXT_PUBLIC_CF_BEACON_TOKEN. Unset (local dev, or a fork) →
+// no beacon ships. Privacy-first: no cookies, so no consent banner. See
+// .env.example and ../../docs/deployment.md.
+const cfBeaconToken = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN
+
 // Root layout — sits ABOVE the dynamic [lang] segment, so it does NOT re-render
 // on a locale switch. That's essential: the theme `.dark` class (set imperatively
 // on <html> by the toggle / prepaint) survives navigation instead of being
@@ -39,6 +45,13 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col">
         <Script src="/prepaint.js" strategy="beforeInteractive" />
         {children}
+        {cfBeaconToken && (
+          <Script
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            strategy="afterInteractive"
+            data-cf-beacon={JSON.stringify({ token: cfBeaconToken })}
+          />
+        )}
       </body>
     </html>
   )

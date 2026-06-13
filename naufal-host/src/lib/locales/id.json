@@ -95,6 +95,7 @@
       "earlier": "traveloka · ehealth · geekgarden · infosys"
     },
     "promptLabel": "Ketik perintah git — coba: git checkout danamon",
+    "promptCta": "ketik",
     "promptHint": "klik prompt-nya — coba 'help'",
     "clearOutput": "Bersihkan output terminal",
     "industries": {

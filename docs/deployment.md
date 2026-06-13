@@ -15,7 +15,7 @@ Everything is on **Cloudflare**, free tier, four independent origins (independen
 
 PartyKit is Cloudflare-owned (acquired Oct 2025); `partykit deploy` targets the managed `*.partykit.dev` runtime, free for this scale. A custom domain (`naufal.dev` etc.) is a later, no-rework swap — see the end.
 
-> **`naufal-blog`** is a fourth, fully standalone Cloudflare Pages project (`naufal-blog.pages.dev` → eventually `blog.naufal.dev`). Unlike the federated three it has **no env coupling** to anything — no `VITE_*` vars, no CORS, no order dependency — so it builds and deploys entirely on its own (`next build` → `out/` → `wrangler pages deploy`). The rest of this doc (URL wiring, CORS, build-mode separation) is about the federated three; the blog only needs the deploy step below. The blog is locale-routed (`/en`, `/id`) and ships a [`public/_redirects`](../naufal-blog/public/_redirects) so the Cloudflare edge sends locale-less paths to the default locale — the apex `/` → `/en`, plus the bare section paths `/cv` → `/en/cv` and `/posts` → `/en/posts` so external links (e.g. the host's CV nav) can stay locale-agnostic (no middleware in a static export — see [gotchas.md](./gotchas.md) #25).
+> **`naufal-blog`** is a fourth, fully standalone Cloudflare Pages project (`naufal-blog.pages.dev` → eventually `blog.naufal.dev`). Unlike the federated three it has **no cross-origin env coupling** — no `VITE_LAB_URL`/party wiring, no CORS, no order dependency — so it builds and deploys entirely on its own (`next build` → `out/` → `wrangler pages deploy`). Its only env input is the optional `NEXT_PUBLIC_CF_BEACON_TOKEN` (see Analytics below). The rest of this doc (URL wiring, CORS, build-mode separation) is about the federated three; the blog only needs the deploy step below. The blog is locale-routed (`/en`, `/id`) and ships a [`public/_redirects`](../naufal-blog/public/_redirects) so the Cloudflare edge sends the locale-less section paths `/cv` → `/en/cv` and `/posts` → `/en/posts` to the default locale (external links like the host's CV nav stay locale-agnostic). The apex `/` is **not** an edge redirect — it serves [`app/page.tsx`](../naufal-blog/src/app/page.tsx), which detects the visitor's browser language client-side and routes to `/en` or `/id` (the edge can't read Accept-Language on a static export; no middleware either — see [gotchas.md](./gotchas.md) #25).
 
 ## How the URLs are wired
 
@@ -26,6 +26,15 @@ Each origin needs to know the others. The couplings are all **build-time env var
 - **Standalone remote → party**: the lab's _own_ page ([`App.svelte`](../naufal-lab/src/App.svelte)) reads `VITE_PARTY_HOST` and passes it to `<Presence>`. The embedded path gets the host from `opts`; the standalone page must supply its own, or it falls back to the component's `127.0.0.1:1999` default — see [gotchas.md](./gotchas.md) #22.
 
 Prod values live in committed `.env.production` files (both apps). These are `VITE_`-prefixed → public by design → safe to commit (no secrets). Local dev values live in gitignored `.env.local`; Vite ranks `.env.production` above `.env.local` in a production build, so the dev values never leak into a deploy.
+
+## Analytics & the canonical site URL
+
+Both public-facing sites use **Cloudflare Web Analytics** — privacy-first (no cookies → no consent banner), free, and injected only when a token is configured (so local dev and forks ship no beacon). Get one token **per site** from the CF dashboard → Web Analytics → add site → copy the token, then:
+
+- **Host**: set `VITE_CF_BEACON_TOKEN` in [`naufal-host/.env.production`](../naufal-host/.env.production). The [`vite.config.ts`](../naufal-host/vite.config.ts) `cf-web-analytics` plugin injects the beacon at build; an empty value injects nothing.
+- **Blog**: set `NEXT_PUBLIC_CF_BEACON_TOKEN` in `naufal-blog/.env.production` (gitignored — copy [`.env.example`](../naufal-blog/.env.example)). [`app/layout.tsx`](../naufal-blog/src/app/layout.tsx) renders the beacon only when it's set.
+
+The host also reads **`VITE_SITE_URL`** (host `.env.production`) for the OG/Twitter share tags — `index.html` ships a `__SITE_URL__` placeholder the build replaces, so the share URLs follow the deploy target. Flip it to `https://naufal.dev` when the custom domain lands (see _Custom domain later_ below).
 
 ## CORS — the remote serves cross-origin assets
 

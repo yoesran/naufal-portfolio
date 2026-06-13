@@ -1,0 +1,46 @@
+# Uptime monitor — NOT deploy CI. Deploys stay manual direct-uploads (see
+# docs/deployment.md); this is read-only monitoring. It pings the live origins on
+# a schedule and fails the run if any is down — GitHub emails the repo owner on a
+# failed scheduled workflow, so a silently-broken demo (the whole pitch) surfaces
+# without anyone watching. Runs only once this repo is pushed to GitHub.
+#
+# When the custom domain lands, point the host/blog URLs at it.
+name: uptime
+
+on:
+  schedule:
+    - cron: '*/30 * * * *' # every 30 minutes (UTC)
+  workflow_dispatch: {} # allow a manual run from the Actions tab
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping live origins
+        run: |
+          set -u
+          fail=0
+          # check <name> <url> <allowed-http-code-regex>
+          check() {
+            local name="$1" url="$2" want="$3" code
+            code=$(curl -s -o /dev/null -w '%{http_code}' \
+              --retry 3 --retry-delay 5 --retry-all-errors --max-time 20 \
+              "$url" || echo 000)
+            if [[ "$code" =~ $want ]]; then
+              echo "ok   $name  $url  ->  $code"
+            else
+              echo "DOWN $name  $url  ->  $code  (wanted $want)"
+              fail=1
+            fi
+          }
+          # The host page, the federated entry (the "demo works" signal), the blog.
+          check host   "https://naufal-host.pages.dev/"               '^200$'
+          check remote "https://naufal-lab.pages.dev/remoteEntry.js"  '^200$'
+          check blog   "https://naufal-blog.pages.dev/"               '^200$'
+          # PartyKit answers HTTP on unknown paths with a 4xx — any 2xx/3xx/4xx
+          # means the realtime server is reachable; only 5xx/000 is "down".
+          check party  "https://naufal-party.yoesran.partykit.dev/"   '^[234][0-9][0-9]$'
+          exit $fail

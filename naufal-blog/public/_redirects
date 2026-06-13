@@ -1,7 +1,10 @@
-# No middleware in a static export, so redirect locale-less paths to the default
-# locale at the Cloudflare edge. Each locale's pages are served directly (/en, /id).
-# The bare section paths keep external links locale-agnostic — e.g. the host nav
-# links to `<blog>/cv`, which lands on /en/cv (see ../../docs/deployment.md).
-/          /en          302
+# No middleware in a static export, so redirect locale-less section paths to the
+# default locale at the Cloudflare edge. Each locale's pages are served directly
+# (/en, /id). The bare section paths keep external links locale-agnostic — e.g.
+# the host nav links to `<blog>/cv`, which lands on /en/cv (see ../../docs/deployment.md).
+#
+# The apex `/` is deliberately NOT redirected here — it serves app/page.tsx,
+# which detects the visitor's browser language client-side and routes to /en or
+# /id (the edge can't read Accept-Language on a static export). See that file.
 /cv        /en/cv       302
 /posts     /en/posts    302

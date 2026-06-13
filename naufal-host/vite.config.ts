@@ -1,11 +1,12 @@
-import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react'
 import { transformAsync } from '@babel/core'
-import reactCompiler from 'babel-plugin-react-compiler'
 import { federation } from '@module-federation/vite'
+import tailwindcss from '@tailwindcss/vite'
+import react from '@vitejs/plugin-react'
+import reactCompiler from 'babel-plugin-react-compiler'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig, loadEnv } from 'vite'
+
 import { buildPrePaintScript, buildPrePaintStyle } from './src/lib/theme-tokens'
 
 // React Compiler. `@rolldown/plugin-babel` + `reactCompilerPreset` is the
@@ -37,6 +38,15 @@ const remoteDist = path.resolve(__dirname, '../naufal-lab/dist')
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const labUrl = env.VITE_LAB_URL || 'http://127.0.0.1:5174'
+  // Canonical origin for the OG/Twitter share tags. Env-driven so the deploy
+  // target (pages.dev today, naufal.dev once the custom domain lands) is a
+  // one-line change, not a hunt through index.html. The default keeps dev sane.
+  const siteUrl = env.VITE_SITE_URL || 'https://naufal-host.pages.dev'
+  // Cloudflare Web Analytics beacon token (public, page-embedded — not a
+  // secret). When unset (e.g. local dev), no beacon is injected at all, so dev
+  // traffic never reaches analytics. Token comes from the CF dashboard →
+  // Web Analytics → your site. See docs/deployment.md.
+  const cfBeaconToken = env.VITE_CF_BEACON_TOKEN || ''
 
   return {
     plugins: [
@@ -89,6 +99,36 @@ export default defineConfig(({ command, mode }) => {
             injectTo: 'head',
           },
         ],
+      },
+      {
+        // Bake the canonical origin into the share tags. index.html ships the
+        // `__SITE_URL__` placeholder so the OG/Twitter URLs follow the deploy
+        // target without a hardcoded hostname.
+        name: 'site-url',
+        transformIndexHtml(html) {
+          return html.replaceAll('__SITE_URL__', siteUrl)
+        },
+      },
+      {
+        // Inject the Cloudflare Web Analytics beacon — only when a token is
+        // configured, so local dev (no token) ships no analytics at all. The
+        // beacon is privacy-first (no cookies → no consent banner) and defer'd
+        // off the critical path.
+        name: 'cf-web-analytics',
+        transformIndexHtml: () =>
+          cfBeaconToken
+            ? [
+                {
+                  tag: 'script',
+                  attrs: {
+                    defer: true,
+                    src: 'https://static.cloudflareinsights.com/beacon.min.js',
+                    'data-cf-beacon': JSON.stringify({ token: cfBeaconToken }),
+                  },
+                  injectTo: 'body',
+                },
+              ]
+            : [],
       },
       {
         name: 'watch-remote-dist',

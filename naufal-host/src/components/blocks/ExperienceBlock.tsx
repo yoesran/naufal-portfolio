@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { MoreHorizontal, Play } from 'lucide-react'
+import { MoreHorizontal, Play, Terminal } from 'lucide-react'
 
 import { Cell } from '@/components/Cell'
 import { RemoteMount } from '@/components/RemoteMount'
@@ -389,6 +389,10 @@ function CheckoutPrompt({
   if (!editing) {
     return (
       <div className="mb-2">
+        {/* Reads as a clickable terminal input, not static output: a dashed box
+            that lights on hover plus a persistent "type" cue — so the visitor
+            discovers the prompt is a real shell (the block's richest interaction
+            is otherwise easy to miss). */}
         <button
           type="button"
           aria-label={t('experience.promptLabel')}
@@ -398,11 +402,15 @@ function CheckoutPrompt({
             setOutput([])
             setEditing(true)
           }}
-          className="focus-visible:ring-brand/40 -mx-1 block w-[calc(100%+0.5rem)] cursor-text rounded px-1 text-left focus:outline-none focus-visible:ring-2"
+          className="group/prompt border-border/60 hover:border-brand/40 hover:bg-muted/30 focus-visible:ring-brand/40 -mx-1 flex w-[calc(100%+0.5rem)] cursor-text items-center gap-2 rounded-md border border-dashed px-2 py-1.5 text-left transition-colors focus:outline-none focus-visible:ring-2"
         >
-          <TypedLine text={canonical} />
+          <TypedLine text={canonical} className="min-w-0 flex-1 truncate" />
+          <span className="text-muted-foreground/60 group-hover/prompt:text-brand flex shrink-0 items-center gap-1 font-mono text-[10px] transition-colors">
+            <Terminal className="size-3" aria-hidden="true" />
+            {t('experience.promptCta')}
+          </span>
         </button>
-        <span className="text-muted-foreground/50 mt-0.5 block font-mono text-[10px]">
+        <span className="text-muted-foreground/50 mt-1 block font-mono text-[10px]">
           {'// '}
           {t('experience.promptHint')}
         </span>

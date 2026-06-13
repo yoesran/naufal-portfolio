@@ -95,6 +95,7 @@
       "earlier": "traveloka · ehealth · geekgarden · infosys"
     },
     "promptLabel": "Type a git command — try: git checkout danamon",
+    "promptCta": "type",
     "promptHint": "click the prompt — try 'help'",
     "clearOutput": "Clear terminal output",
     "industries": {

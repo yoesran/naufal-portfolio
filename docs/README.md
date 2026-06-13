@@ -17,6 +17,6 @@ Documentation for the polyglot microfrontend portfolio (React host + Svelte remo
 
 ## How the docs relate
 
-- **`overview.md` + `mf-core.md` + `mf-platform.md` + `features.md`** are the technical _source of truth_ for the current code. When code and these docs disagree, the code wins and the doc should be fixed.
-- **`handoff.md`** is the planning/decision record — it explains _why_ things are the way they are. It deliberately does not duplicate current code; it points here.
+- **`overview.md` + `mf-core.md` + `mf-platform.md` + `features.md`** are the technical _source of truth_ for the current code. When code and these docs disagree, the code wins and the doc should be fixed. **Current status/roadmap lives in `overview.md`** (stack table + per-project sections) — update it there, not in three places.
+- **`handoff.md`** is the planning/decision record — it explains _why_ things are the way they are. It deliberately does not duplicate current code or per-feature status; its roadmap is the decision-level arc only and points to `overview.md` for live status.
 - **`gotchas.md`** is referenced from across the technical docs. It used to be duplicated in two places (which caused drift); now there's one copy.
