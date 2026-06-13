@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { loadRemote, registerRemotes } from '@module-federation/runtime'
@@ -11,6 +11,7 @@ import { Cell } from '@/components/Cell'
 import { RemoteMount, type RemoteStatus } from '@/components/RemoteMount'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { useMeasuredHeight } from '@/lib/useMeasuredHeight'
 import { cn } from '@/lib/utils'
 
 // A floor on how long the "fetch" reads as in-flight. A federated remoteEntry.js
@@ -22,9 +23,9 @@ const MIN_FETCH_MS = 750
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 const LAB_URL = import.meta.env.VITE_LAB_URL ?? 'http://127.0.0.1:5174'
-// The page's own origin — truthful in every environment (dev, tunnel, prod,
-// future custom domain), unlike a hardcoded deploy hostname next to the
-// env-derived labHost below.
+// The page's own origin — truthful in every environment (dev, prod, future
+// custom domain), unlike a hardcoded deploy hostname next to the env-derived
+// labHost below.
 const hostHost = window.location.host
 const labHost = (() => {
   try {
@@ -57,18 +58,10 @@ export function LiveRemoteBlock() {
   // "Break the connection" is hidden when there's no live connection to break.
   const realFailed = failed && !offline
 
-  // Animate the reveal open/closed by measuring its content and transitioning
-  // `height` (grid-template-rows transitions snapped here). Same pattern as
-  // TechStackBlock. Collapsed while still loading so the diagram stays the focus.
-  const panelRef = useRef<HTMLDivElement>(null)
-  const [revealHeight, setRevealHeight] = useState(0)
-  useLayoutEffect(() => {
-    const el = panelRef.current
-    if (!el) return
-    const ro = new ResizeObserver(() => setRevealHeight(el.offsetHeight))
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
+  // Animate the reveal open/closed by measuring its content height and
+  // transitioning `height` — collapsed while still loading so the diagram stays
+  // the focus. Shared measurement engine with the other blocks' panels.
+  const [panelRef, revealHeight] = useMeasuredHeight<HTMLDivElement>()
 
   // Retrying a real failure needs more than re-running loadRemote: the remote
   // is `type: 'module'`, so its entry is fetched with a native import(), and
@@ -186,7 +179,7 @@ export function LiveRemoteBlock() {
           load resolves so the diagram stays the focus while it's in flight. */}
       <div
         className="overflow-hidden transition-[height] duration-300 ease-out"
-        style={{ height: done || failed ? revealHeight : 0 }}
+        style={{ height: done || failed ? (revealHeight ?? 0) : 0 }}
       >
         <div ref={panelRef} className="pt-4">
           <div className="border-border/70 rounded-lg border border-dashed p-4">

@@ -5,10 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "partykit dev",
-    "deploy": "partykit deploy"
+    "deploy": "partykit deploy",
+    "check": "tsc --noEmit",
+    "format": "prettier --write src",
+    "format:check": "prettier --check src"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "partykit": "^0.0.115",
+    "prettier": "^3.8.3",
     "typescript": "^6.0.3"
   }
 }

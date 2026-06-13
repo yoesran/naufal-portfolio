@@ -87,11 +87,8 @@ export default defineConfig(({ mode }) => {
 });
 ```
 
-`VITE_PARTY_HOST` flows through `import.meta.env` into the client (used by `PresenceOverlay` for the PartyKit URL). Two npm scripts in `naufal-host`:
+`VITE_PARTY_HOST` flows through `import.meta.env` into the client (used by `PresenceOverlay` for the PartyKit URL). `npm run dev` needs no env file: `VITE_LAB_URL` and `VITE_PARTY_HOST` both fall back to their `127.0.0.1` defaults in code (and in `vite.config.ts`), so a fresh clone runs locally as-is. The prod values live in the committed `.env.production` ([deployment.md](./deployment.md)); to point local dev at a non-default lab/party (e.g. a different port), drop those vars in a gitignored `.env.local`.
 
-- `dev` → loads the gitignored `.env.local` (`VITE_LAB_URL` + `VITE_PARTY_HOST` → `127.0.0.1`); the prod values live in committed `.env.production` ([deployment.md](./deployment.md))
-- `dev:tunnel` → `vite --mode tunnel`, loads `.env.tunnel.local` with the VS Code dev-tunnel URLs
-
-The lab's `preview` and `server` configs set `cors: true` and `allowedHosts: true` so cross-origin script fetches from the host's tunnel origin work. (For production, tighten `cors` to the actual host origin and enumerate `allowedHosts`.)
+The lab's `preview` and `server` configs set `cors: true` and `allowedHosts: true` so the host's cross-origin script fetches work in dev. (For production, tighten `cors` to the actual host origin and enumerate `allowedHosts`.)
 
 This section is the _mechanism_. The actual live setup — Cloudflare Pages × 2 + PartyKit, the prod env wiring, CORS via the remote's `_headers`, the build-mode separation, and the direct-upload deploy procedure — is in [deployment.md](./deployment.md).

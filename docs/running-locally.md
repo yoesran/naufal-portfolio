@@ -24,11 +24,9 @@ Open `http://localhost:5173`. Open a second tab (or `http://127.0.0.1:5174` stan
 3. `cd naufal-host && npm install && npm run dev`
 4. `@mf-types/` populates, errors clear.
 
-**Tunnel preview:** `cd naufal-host && npm run dev:tunnel` runs `vite --mode tunnel`, reading `.env.tunnel.local` for the VS Code dev-tunnel URLs — see [mf-platform.md](./mf-platform.md) for the env-aware deploy wiring.
-
 ## Formatting
 
-Prettier is configured in `naufal-host`, `naufal-lab`, and `naufal-blog` (single quotes, no semicolons, sorted imports, Tailwind class ordering — see each project's `.prettierrc`). `naufal-party` is a single file and has no prettier setup.
+Prettier is configured in all four projects (single quotes, no semicolons, sorted imports — plus Tailwind class ordering in the three with markup — see each project's `.prettierrc`). Run `npm run format` (write) or `npm run format:check` in any of them.
 
 ```bash
 npm run format        # write — run this before committing

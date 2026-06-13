@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import angularSvg from '@/assets/tech-stacks/angular.svg?raw'
@@ -11,6 +11,7 @@ import tsSvg from '@/assets/tech-stacks/typescript.svg?raw'
 import vueSvg from '@/assets/tech-stacks/vuedotjs.svg?raw'
 import { Cell } from '@/components/Cell'
 import { type Translations } from '@/lib/i18n'
+import { useMeasuredHeight } from '@/lib/useMeasuredHeight'
 import { useMediaQuery } from '@/lib/useMediaQuery'
 import { cn } from '@/lib/utils'
 
@@ -40,8 +41,7 @@ export function TechStackBlock() {
   const { t } = useTranslation()
   const [active, setActive] = useState<Tech | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const panelRef = useRef<HTMLDivElement>(null)
-  const [panelHeight, setPanelHeight] = useState<number>()
+  const [panelRef, panelHeight] = useMeasuredHeight<HTMLDivElement>()
   // Treat a device as "desktop" only if it has BOTH a hover-capable input and a
   // fine pointer (real mouse / trackpad). Phones and tablets fail one or both
   // and fall through to the touch handlers. Re-evaluates live on capability
@@ -103,16 +103,6 @@ export function TechStackBlock() {
     // render would be wasteful and there's nothing in its closure that changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [desktop])
-
-  useLayoutEffect(() => {
-    const panel = panelRef.current
-    if (!panel) return
-    const ro = new ResizeObserver(() => {
-      setPanelHeight(panel.offsetHeight)
-    })
-    ro.observe(panel)
-    return () => ro.disconnect()
-  }, [])
 
   useEffect(() => {
     const container = containerRef.current

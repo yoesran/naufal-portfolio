@@ -25,7 +25,7 @@ Each origin needs to know the others. The couplings are all **build-time env var
 - **Host → party**: `VITE_PARTY_HOST` flows through `import.meta.env` to `PresenceOverlay`, which passes it to the embedded remote as `opts.host`.
 - **Standalone remote → party**: the lab's _own_ page ([`App.svelte`](../naufal-lab/src/App.svelte)) reads `VITE_PARTY_HOST` and passes it to `<Presence>`. The embedded path gets the host from `opts`; the standalone page must supply its own, or it falls back to the component's `127.0.0.1:1999` default — see [gotchas.md](./gotchas.md) #22.
 
-Prod values live in committed `.env.production` files (both apps). These are `VITE_`-prefixed → public by design → safe to commit (no secrets). Local dev values live in gitignored `.env.local`; Vite ranks `.env.production` above `.env.local` in a production build, so the dev values never leak into a deploy.
+Prod values live in committed `.env.production` files (both apps). These are `VITE_`-prefixed → public by design → safe to commit (no secrets). Local dev needs no env file — `VITE_LAB_URL`/`VITE_PARTY_HOST` default to `127.0.0.1` in code; to override (e.g. a different port), add a gitignored `.env.local`, which Vite ranks below `.env.production` in a prod build so dev values never leak into a deploy.
 
 ## Analytics & the canonical site URL
 
@@ -34,7 +34,14 @@ Both public-facing sites use **Cloudflare Web Analytics** — privacy-first (no 
 - **Host**: set `VITE_CF_BEACON_TOKEN` in [`naufal-host/.env.production`](../naufal-host/.env.production). The [`vite.config.ts`](../naufal-host/vite.config.ts) `cf-web-analytics` plugin injects the beacon at build; an empty value injects nothing.
 - **Blog**: set `NEXT_PUBLIC_CF_BEACON_TOKEN` in `naufal-blog/.env.production` (gitignored — copy [`.env.example`](../naufal-blog/.env.example)). [`app/layout.tsx`](../naufal-blog/src/app/layout.tsx) renders the beacon only when it's set.
 
-The host also reads **`VITE_SITE_URL`** (host `.env.production`) for the OG/Twitter share tags — `index.html` ships a `__SITE_URL__` placeholder the build replaces, so the share URLs follow the deploy target. Flip it to `https://naufal.dev` when the custom domain lands (see _Custom domain later_ below).
+Both sites also have an env-driven **canonical origin** so the custom-domain switch is a one-line flip, not a code edit:
+
+- **Host**: `VITE_SITE_URL` (host `.env.production`) feeds the OG/Twitter share tags — `index.html` ships a `__SITE_URL__` placeholder the build replaces.
+- **Blog**: `NEXT_PUBLIC_SITE_URL` ([`src/lib/site.ts`](../naufal-blog/src/lib/site.ts), unset → the Pages name) feeds metadata (canonical/OG/`metadataBase`), `sitemap.xml`, `robots.txt`, and hreflang.
+
+The **cross-site links** are env-driven too, so the migration is purely env on both sides: the host points at the blog via `VITE_BLOG_URL` ([`src/lib/links.ts`](../naufal-host/src/lib/links.ts), used by the header/footer/experience links), and the blog points back at the portfolio via `NEXT_PUBLIC_HOST_URL` ([`src/lib/site.ts`](../naufal-blog/src/lib/site.ts)). Each defaults to the other's Pages name.
+
+When the custom domains land, flip all four (host `VITE_SITE_URL` + `VITE_BLOG_URL`; blog `NEXT_PUBLIC_SITE_URL` + `NEXT_PUBLIC_HOST_URL`) to `https://naufal.dev` / `https://blog.naufal.dev` — see _Custom domain later_ below.
 
 ## CORS — the remote serves cross-origin assets
 
@@ -54,7 +61,7 @@ The host fetches `remoteEntry.js` and its lazy chunks from a _different origin_,
 
 ## Build-mode separation (the remote is always a prod build)
 
-The host gets a clean dev/prod split for free: `vite` (dev, `serve`) loads `.env.local`; `vite build` (prod) loads `.env.production`. The remote can't — it's _always_ built (`vite build --watch` for dev, `vite build` for deploy), so both would be production mode and pull prod env. Fix: the dev watcher runs `--mode development` (see `dev:mf` in [`naufal-lab/package.json`](../naufal-lab/package.json)), so local dev keeps the standalone page on the local party while the deploy build (`vite build`, production) uses `.env.production`. See [gotchas.md](./gotchas.md) #22.
+The host gets a clean dev/prod split for free: `vite` (dev, `serve`) uses the code defaults (or a gitignored `.env.local` if present); `vite build` (prod) loads `.env.production`. The remote can't — it's _always_ built (`vite build --watch` for dev, `vite build` for deploy), so both would be production mode and pull prod env. Fix: the dev watcher runs `--mode development` (see `dev:mf` in [`naufal-lab/package.json`](../naufal-lab/package.json)), so local dev keeps the standalone page on the local party while the deploy build (`vite build`, production) uses `.env.production`. See [gotchas.md](./gotchas.md) #22.
 
 Also in the host config: `dts.consumeTypes` is on **only in `serve`** (dev). The prod build doesn't need the remote's `.d.ts` for the runtime bundle, and consuming them would couple the build to the remote being reachable.
 

@@ -1,15 +1,19 @@
 import type { MetadataRoute } from 'next'
 
-import { locales } from '@/lib/i18n/config'
+import { defaultLocale, locales } from '@/lib/i18n/config'
 import { posts } from '@/lib/posts'
 import { SITE_URL } from '@/lib/site'
 
 // Static sitemap.xml at build. One entry per locale × route, each carrying
-// hreflang `alternates` so search engines see the language variants.
+// hreflang `alternates` (the language variants + an `x-default`) so search
+// engines see the relationships.
 export const dynamic = 'force-static'
 
 function languagesFor(tail: string) {
-  return Object.fromEntries(locales.map((l) => [l, `${SITE_URL}/${l}${tail}`]))
+  return {
+    ...Object.fromEntries(locales.map((l) => [l, `${SITE_URL}/${l}${tail}`])),
+    'x-default': `${SITE_URL}/${defaultLocale}${tail}`,
+  }
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {

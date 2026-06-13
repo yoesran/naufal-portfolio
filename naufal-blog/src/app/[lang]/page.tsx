@@ -5,8 +5,7 @@ import { Link } from '@/components/Link'
 import { alternates } from '@/lib/i18n/alternates'
 import { isLocale } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/dictionaries'
-
-const HOST_URL = 'https://naufal-host.pages.dev'
+import { HOST_URL } from '@/lib/site'
 
 export async function generateMetadata({
   params,

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { MoreHorizontal, Play, Terminal } from 'lucide-react'
@@ -16,6 +16,7 @@ import {
 import { DEFAULT_LOCALE, type Translations, isLocale } from '@/lib/i18n'
 import { BLOG_URL } from '@/lib/links'
 import { useInView } from '@/lib/useInView'
+import { useMeasuredHeight } from '@/lib/useMeasuredHeight'
 import { useMediaQuery } from '@/lib/useMediaQuery'
 import { cn } from '@/lib/utils'
 
@@ -549,16 +550,8 @@ export function ExperienceBlock() {
     return () => clearTimeout(id)
   }, [drawn])
 
-  // Height-animated detail panel — same measured-height pattern as TechStack.
-  const panelRef = useRef<HTMLDivElement>(null)
-  const [panelHeight, setPanelHeight] = useState<number>()
-  useLayoutEffect(() => {
-    const panel = panelRef.current
-    if (!panel) return
-    const ro = new ResizeObserver(() => setPanelHeight(panel.offsetHeight))
-    ro.observe(panel)
-    return () => ro.disconnect()
-  }, [])
+  // Height-animated detail panel — shared measured-height engine.
+  const [panelRef, panelHeight] = useMeasuredHeight<HTMLDivElement>()
 
   const rows: {
     sel: ExperienceSelection
