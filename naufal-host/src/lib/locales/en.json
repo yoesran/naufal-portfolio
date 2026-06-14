@@ -7,6 +7,7 @@
     },
     "menuLabel": "Open menu"
   },
+  "skipToContent": "Skip to content",
   "intro": "A playground of interactive things I build.",
   "hero": {
     "tagline": "Frontend engineer working at the seams of frameworks."

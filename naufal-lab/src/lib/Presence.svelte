@@ -83,6 +83,17 @@
   let socket: PartySocket | undefined
   let frame = 0
 
+  // Echoes — anonymous cursor paths the server remembers from recent visitors,
+  // replayed (translucent, labelled "echo") only when this visitor is alone, so
+  // the multiplayer demo is never an empty room. They never pretend to be live.
+  type Ghost = { color: string; name: string; path: { x: number; y: number }[] }
+  let ghosts = $state<Ghost[]>([])
+  let echoes = $state<
+    { key: number; color: string; name: string; x: number; y: number }[]
+  >([])
+  const ECHO_SHOW = 3 // how many drift at once
+  const ECHO_STEP_MS = 90 // ms per recorded point
+
   $effect(() => {
     const ps = new PartySocket({ host, room: 'cursors' })
     socket = ps
@@ -152,6 +163,8 @@
           delete nextTrails[data.id]
           trails = nextTrails
         }
+      } else if (data.type === 'echoes') {
+        ghosts = Array.isArray(data.ghosts) ? data.ghosts : []
       }
     })
 
@@ -362,6 +375,36 @@
   })
 
   const count = $derived(Object.keys(peers).length)
+
+  // Replay echoes only while genuinely alone (connected, no live peers) — and
+  // not under reduced motion, since this is auto-playing (not input-driven)
+  // movement. Each shown ghost walks its recorded path on a shared clock,
+  // staggered so they don't move in lockstep; the loop wraps so they drift on.
+  const showEchoes = $derived(
+    status === 'open' && count === 0 && ghosts.length > 0 && !reducedMotion
+  )
+  $effect(() => {
+    if (!showEchoes) {
+      echoes = []
+      return
+    }
+    // Guard against an empty path (`% 0` → NaN index) — the server never sends
+    // one, but this data crossed the wire.
+    const shown = ghosts.filter((g) => g.path?.length).slice(0, ECHO_SHOW)
+    const heads = shown.map((g, i) =>
+      Math.floor((g.path.length / shown.length) * i)
+    )
+    const tick = () => {
+      echoes = shown.map((g, i) => {
+        const p = g.path[heads[i] % g.path.length]
+        heads[i]++
+        return { key: i, color: g.color, name: g.name, x: p.x, y: p.y }
+      })
+    }
+    tick()
+    const id = setInterval(tick, ECHO_STEP_MS)
+    return () => clearInterval(id)
+  })
 </script>
 
 {#snippet nameTag(color: string, label: string, sub: string)}
@@ -446,6 +489,28 @@
           ></span>
         {/each}
       {/if}
+    </div>
+  {/each}
+
+  <!-- Echoes: translucent cursors of remembered visitors, replayed only when
+       alone (see showEchoes). Dimmed + tagged "echo" so they never read as live;
+       the short linear transition glides them between recorded points. -->
+  {#each echoes as e (e.key)}
+    <div
+      class="pointer-events-none absolute opacity-40"
+      style="left: {e.x * 100}%; top: {e.y *
+        100}%; transition: left 140ms linear, top 140ms linear;"
+    >
+      <svg width="18" height="18" viewBox="0 0 16 18" fill="none">
+        <path
+          d="M0 0 L0 16 L4.5 12 L7 18 L9.5 17 L7 11 L13 11 Z"
+          fill={e.color}
+          stroke="white"
+          stroke-width="1"
+          stroke-linejoin="round"
+        />
+      </svg>
+      {@render nameTag(e.color, e.name, $t('presence.echoTag'))}
     </div>
   {/each}
 

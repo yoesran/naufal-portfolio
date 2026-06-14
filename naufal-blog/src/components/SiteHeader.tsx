@@ -5,6 +5,7 @@ import { MobileMenu } from '@/components/MobileMenu'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import type { Locale } from '@/lib/i18n/config'
 import type { Dictionary } from '@/lib/i18n/dictionaries'
+import { HOST_URL } from '@/lib/site'
 
 // Shared sticky chrome on every page: brand (left) + nav + locale/theme/reading
 // (right). On >=sm those sit inline; on phones they collapse into the MobileMenu
@@ -22,6 +23,13 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         <nav className="flex items-center gap-2 sm:gap-3">
           {/* Inline cluster on >=sm; on phones everything moves into the drawer. */}
           <div className="hidden items-center gap-3 sm:flex">
+            {/* Back to the portfolio (the host) — external, so a plain anchor. */}
+            <a
+              href={HOST_URL}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {dict.nav.portfolio}
+            </a>
             <Link
               href={`/${lang}/posts`}
               className="text-muted-foreground hover:text-foreground transition-colors"

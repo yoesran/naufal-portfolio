@@ -813,7 +813,7 @@ export function ExperienceBlock() {
                     </a>
                     {entry.story && (
                       <a
-                        href={`${BLOG_URL}/${locale}/work/${entry.story}`}
+                        href={`${BLOG_URL}/work/${entry.story}`}
                         className={cn(
                           buttonVariants({ variant: 'outline', size: 'sm' }),
                           'font-mono text-xs'
@@ -875,7 +875,7 @@ export function ExperienceBlock() {
                     ))}
                   </ul>
                   <a
-                    href={`${BLOG_URL}/${locale}/cv`}
+                    href={`${BLOG_URL}/cv`}
                     className="text-muted-foreground hover:text-foreground mt-3 inline-block font-mono text-xs transition-colors"
                   >
                     {t('experience.earlier.cvLink')}

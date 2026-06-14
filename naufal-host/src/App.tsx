@@ -75,6 +75,13 @@ export default function App() {
 
   return (
     <div className="bg-background text-foreground flex min-h-dvh flex-col">
+      {/* Skip link — first focusable element; visually hidden until focused. */}
+      <a
+        href="#work"
+        className="bg-card text-foreground focus-visible:ring-brand sr-only z-60 rounded-md px-3 py-2 font-mono text-sm shadow focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:ring-2"
+      >
+        {t('skipToContent')}
+      </a>
       <Header />
       <PresenceOverlay />
       {canvas ? (
@@ -85,7 +92,8 @@ export default function App() {
         <>
           <main
             id="work"
-            className="mx-auto w-full max-w-2xl flex-1 scroll-mt-16 px-6 py-12"
+            tabIndex={-1}
+            className="mx-auto w-full max-w-2xl flex-1 scroll-mt-16 px-6 py-12 focus:outline-none"
           >
             {body}
           </main>

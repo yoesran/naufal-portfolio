@@ -1,4 +1,5 @@
 {
+  "skipToContent": "Skip to content",
   "meta": {
     "siteTitle": "Naufal Yusran — Engineering writing & CV",
     "siteDescription": "Writing on frontend and microfrontend engineering, plus my CV. By Naufal Yusran — companion to the live microfrontend portfolio.",
@@ -8,6 +9,7 @@
     "cvDescription": "Curriculum vitae of Naufal Yusran — frontend & microfrontend engineer based in Jakarta."
   },
   "nav": {
+    "portfolio": "portfolio",
     "posts": "posts",
     "cv": "cv",
     "menu": "Menu"

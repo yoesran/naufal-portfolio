@@ -61,6 +61,13 @@ export default async function LangLayout({
 
   return (
     <>
+      {/* Skip link — first focusable element; visually hidden until focused. */}
+      <a
+        href="#content"
+        className="bg-card text-foreground focus-visible:ring-brand sr-only z-50 rounded-md px-3 py-2 font-mono text-sm shadow focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:ring-2"
+      >
+        {dict.skipToContent}
+      </a>
       <SiteHeader lang={lang as Locale} dict={dict} />
       {children}
     </>

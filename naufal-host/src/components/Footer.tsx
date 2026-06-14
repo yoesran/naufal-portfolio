@@ -3,7 +3,7 @@ import { BLOG_URL } from '@/lib/links'
 const YEAR = new Date().getFullYear()
 
 const LINKS = [
-  { label: 'github', href: 'https://github.com/naufalyoesran' },
+  { label: 'github', href: 'https://github.com/yoesran' },
   { label: 'linkedin', href: 'https://www.linkedin.com/in/naufal-yusran' },
   { label: 'email', href: 'mailto:naufalyoesran@gmail.com' },
   { label: 'blog', href: BLOG_URL },

@@ -108,12 +108,19 @@ export function HeroBlock() {
       <div className="py-6">
         <h1
           ref={wordmarkRef}
+          // The per-letter spans (for the cursor-repel effect) would otherwise
+          // expose a garbled, letter-spaced accessible name — so name the
+          // heading explicitly and hide the decorative letters from a11y.
+          aria-label={NAME}
           className="text-5xl font-semibold tracking-tight sm:text-6xl"
         >
           {WORDS.map((chars, wi) => (
             <Fragment key={wi}>
               {wi > 0 && ' '}
-              <span className="inline-block whitespace-nowrap select-none">
+              <span
+                aria-hidden="true"
+                className="inline-block whitespace-nowrap select-none"
+              >
                 {chars.map(({ ch, i }) => (
                   <span
                     key={i}

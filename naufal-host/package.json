@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "format": "prettier --write src",
     "format:check": "prettier --check src",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.60.0",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/babel__core": "^7.20.5",
     "@types/node": "^24.12.4",

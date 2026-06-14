@@ -20,6 +20,7 @@ import {
 import type { Locale } from '@/lib/i18n/config'
 import type { Dictionary } from '@/lib/i18n/dictionaries'
 import { isPostDetailPath } from '@/lib/posts'
+import { HOST_URL } from '@/lib/site'
 import { useMediaQuery } from '@/lib/useMediaQuery'
 
 // Phone-only menu: collapses the nav links + language / theme / reading controls
@@ -62,6 +63,14 @@ export function MobileMenu({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         </SheetTitle>
 
         <nav className="mt-4 flex flex-col gap-1 font-mono text-sm">
+          {/* Back to the portfolio (the host) — external, so a plain anchor. */}
+          <a
+            href={HOST_URL}
+            onClick={() => setOpen(false)}
+            className="text-muted-foreground hover:text-foreground -mx-2 rounded-md px-2 py-1.5 transition-colors"
+          >
+            {dict.nav.portfolio}
+          </a>
           {links.map((item) => (
             <Link
               key={item.href}

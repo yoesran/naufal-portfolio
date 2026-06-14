@@ -69,7 +69,7 @@ The blog (`naufal-blog`) is a standalone static site, **internationalized (EN/ID
 | `vite.config.ts`            | Remote config: `exposes` the mount adapters as `remoteEntry.js`; pins server to `127.0.0.1` (IPv6); `cors` on; `shared: []`                                                    |
 | `src/lib/SpringToy.svelte`  | Draggable Svelte "lanyard ticket" (verlet swing physics) — drag it onto the React host to mount, tug to unmount; imports `../app.css` so Tailwind ships in the federated chunk |
 | `src/lib/mountSpringToy.ts` | Mount adapter for `./SpringToy`                                                                                                                                                |
-| `src/lib/Presence.svelte`   | Page-wide multiplayer cursor overlay — opens its own `PartySocket` connection; also imports `../app.css`                                                                       |
+| `src/lib/Presence.svelte`   | Page-wide multiplayer cursor overlay — opens its own `PartySocket` connection; replays the server's `echoes` as translucent ghost cursors when alone; also imports `../app.css`                                                                       |
 | `src/lib/mountPresence.ts`  | Mount adapter for `./Presence`                                                                                                                                                 |
 | `src/App.svelte`            | Standalone page showcasing both exposed components                                                                                                                             |
 | `src/app.css`               | Tailwind + shadcn theme — imported by the **Svelte components** (not the mount adapters) so CSS ships over federation                                                          |
@@ -81,7 +81,7 @@ The ticket carries the **Svelte** logo and the host node carries the **React** +
 
 | File            | Role                                                                                                                                              |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/server.ts` | Cursor relay: assigns each connection a color + name, broadcasts cursor positions (mouse arrows / touch trails) + tap-firework bursts to the room |
+| `src/server.ts` | Cursor relay: assigns each connection a color + name, broadcasts cursor positions (mouse arrows / touch trails) + tap-firework bursts to the room. Also records visitors' paths into a capped ring buffer of anonymous "ghosts" (seeded) and sends them as `echoes`, so a solo visitor sees translucent traces of recent visitors — see [features.md](./features.md) |
 | `partykit.json` | PartyKit config (`name`, `main`)                                                                                                                  |
 
 ---

@@ -50,7 +50,11 @@ export default async function PostPage({
   })
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-6 py-16">
+    <main
+      id="content"
+      tabIndex={-1}
+      className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-6 py-16 focus:outline-none"
+    >
       <Link
         href={`/${lang}/posts`}
         className="text-muted-foreground hover:text-foreground font-mono text-sm transition-colors"

@@ -34,3 +34,13 @@ npm run format:check  # verify only (the CI-gate form)
 ```
 
 Both scripts are scoped to `src`. The config sets `endOfLine: "auto"`, so Prettier respects whatever line endings are on disk (this repo has `core.autocrlf=true` and no `.gitattributes`) instead of rewriting every file to LF — without it, `format:check` flags every file on line endings alone. There's no pre-commit hook yet, so formatting is run by hand (or editor-on-save).
+
+## Testing
+
+`naufal-host` has a Playwright smoke suite ([`tests/smoke.spec.ts`](../naufal-host/tests/smoke.spec.ts)):
+
+```bash
+cd naufal-host && npm run test:e2e
+```
+
+It's **host-focused by design** — [`playwright.config.ts`](../naufal-host/playwright.config.ts)'s `webServer` boots only the host dev server (lab/party stay down), so it's self-contained (no manual setup) and stable. It covers the home render, the skip link, the canvas toggle, the locale switch (copy + `<html lang>`), theme persistence across reload, and — usefully — the **live-remote offline fallback** (with the lab down, `Run` exercises the MF resilience path). Serial single worker, since the dev server compiles on demand and parallel workers would race a cold start. The federation/presence happy-paths (which need all three servers) are a later opt-in spec. The CI branches (`reporter: 'github'`, retries) are wired but no workflow runs it yet.

@@ -48,7 +48,7 @@ export function CvDocument({ data, labels }: { data: CvData; labels: Labels }) {
   }, [])
 
   return (
-    <div className="cv-stage">
+    <div id="content" tabIndex={-1} className="cv-stage focus:outline-none">
       <div className="cv-actions mx-auto flex max-w-5xl justify-end px-6">
         <Button
           onClick={() => window.print()}

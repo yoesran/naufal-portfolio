@@ -1,4 +1,5 @@
 {
+  "skipToContent": "Lewati ke konten",
   "meta": {
     "siteTitle": "Naufal Yusran — Tulisan engineering & CV",
     "siteDescription": "Tulisan seputar frontend dan microfrontend engineering, plus CV saya. Oleh Naufal Yusran — pendamping portofolio microfrontend langsung.",
@@ -8,6 +9,7 @@
     "cvDescription": "Curriculum vitae Naufal Yusran — frontend & microfrontend engineer yang berbasis di Jakarta."
   },
   "nav": {
+    "portfolio": "portofolio",
     "posts": "tulisan",
     "cv": "cv",
     "menu": "Menu"

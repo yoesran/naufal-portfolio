@@ -6,5 +6,9 @@
 # The apex `/` is deliberately NOT redirected here — it serves app/page.tsx,
 # which detects the visitor's browser language client-side and routes to /en or
 # /id (the edge can't read Accept-Language on a static export). See that file.
-/cv        /en/cv       302
-/posts     /en/posts    302
+/cv        /en/cv           302
+/posts     /en/posts        302
+# /work/<slug> is the per-job story path the host's experience block links to
+# (locale-agnostic). The /work route itself ships with the experience stories;
+# until then this rule is harmless (no link renders without a `story` slug).
+/work/*    /en/work/:splat  302
