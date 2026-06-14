@@ -4,9 +4,10 @@ import { useSyncExternalStore } from 'react'
 
 // Shared store for the per-post reading prefs (font / size / background), applied
 // as CSS vars on <html> and surfaced on #reading by reading.css. A module store
-// (like theme.ts) rather than per-component state, so the desktop reading popover
-// and the mobile drawer's controls stay in sync — no desync when both are mounted
-// across the breakpoint. The no-FOUC prepaint.js mirrors this read for first paint.
+// (like theme.ts) rather than popover-local state, so the prefs survive the
+// reading popover unmounting when it closes and stay applied to <html>
+// independent of any control being mounted. The no-FOUC prepaint.js mirrors this
+// read for first paint.
 export type Font = 'sans' | 'serif' | 'mono'
 export type Bg = 'default' | 'paper' | 'sepia' | 'ink'
 

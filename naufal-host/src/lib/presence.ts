@@ -6,7 +6,6 @@ import { createToggleStore, useToggle } from './toggleStore'
 // visitor turns cursors on). See toggleStore.ts for the shape.
 const store = createToggleStore()
 
-export const setPresenceActive = store.set
 export const togglePresence = store.toggle
 
 export function usePresenceActive(): boolean {

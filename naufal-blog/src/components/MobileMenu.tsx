@@ -2,13 +2,10 @@
 
 import { useState } from 'react'
 
-import { usePathname } from 'next/navigation'
-
 import { Menu } from 'lucide-react'
 
 import { Link } from '@/components/Link'
 import { LocaleToggle } from '@/components/LocaleToggle'
-import { ReadingControls } from '@/components/ReadingControls'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,15 +16,16 @@ import {
 } from '@/components/ui/sheet'
 import type { Locale } from '@/lib/i18n/config'
 import type { Dictionary } from '@/lib/i18n/dictionaries'
-import { isPostDetailPath } from '@/lib/posts'
 import { HOST_URL } from '@/lib/site'
 import { useMediaQuery } from '@/lib/useMediaQuery'
 
-// Phone-only menu: collapses the nav links + language / theme / reading controls
-// into one hamburger drawer so the header doesn't overflow on small screens. On
-// >=sm the header shows those inline instead and this unmounts. Unmounted on
-// desktop in JS (not `sm:hidden`) because the drawer portals to <body> — see
-// gotchas #20; `sm:hidden` on the trigger only covers the pre-hydration frame.
+// Phone-only menu: collapses the nav links + language / theme controls into one
+// hamburger drawer so the header doesn't overflow on small screens. On >=sm the
+// header shows those inline instead and this unmounts. The reading customizer
+// sits outside this drawer (see SiteHeader) so it's reachable on a post page
+// without opening the menu. Unmounted on desktop in JS (not `sm:hidden`) because
+// the drawer portals to <body> — see gotchas #20; `sm:hidden` on the trigger
+// only covers the pre-hydration frame.
 //
 // Controlled (`open`) so a nav link can stay a real <a> (role=link) and close the
 // drawer via onClick — wrapping a link in Base UI's <Close> would force button
@@ -35,7 +33,6 @@ import { useMediaQuery } from '@/lib/useMediaQuery'
 export function MobileMenu({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const isDesktop = useMediaQuery('(min-width: 640px)')
   const [open, setOpen] = useState(false)
-  const isPostDetail = isPostDetailPath(usePathname() ?? '')
   if (isDesktop) return null
 
   const links = [
@@ -89,11 +86,6 @@ export function MobileMenu({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         <Section label={dict.theme.label}>
           <ThemeToggle labels={dict.theme} />
         </Section>
-        {isPostDetail && (
-          <Section label={dict.reading.label}>
-            <ReadingControls labels={dict.reading} />
-          </Section>
-        )}
       </SheetContent>
     </Sheet>
   )

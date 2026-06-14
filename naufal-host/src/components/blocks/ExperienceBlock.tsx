@@ -292,7 +292,7 @@ function CheckoutPrompt({
         return
       case 'whoami':
         setOutput([
-          `naufal · ${t('experience.roles.dbs')} @ ${EXPERIENCE[0].company}`,
+          `naufal · ${t(`experience.roles.${EXPERIENCE[0].slug}`)} @ ${EXPERIENCE[0].company}`,
         ])
         return
       case 'status':
@@ -646,7 +646,6 @@ export function ExperienceBlock() {
                 <button
                   key={row.sel}
                   type="button"
-                  data-exp={row.sel}
                   aria-pressed={selected}
                   onClick={() => {
                     setOutput([])

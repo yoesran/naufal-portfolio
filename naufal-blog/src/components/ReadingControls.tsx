@@ -18,8 +18,8 @@ import {
 } from '@/lib/reading'
 
 // The font / size / background controls, backed by the shared reading store.
-// Rendered both in the desktop ReadingPanel popover and the mobile drawer; the
-// store keeps them in sync. `labels` is the full reading dictionary slice.
+// Rendered inside the ReadingPanel popover (in the header on post pages, every
+// viewport). `labels` is the full reading dictionary slice.
 export function ReadingControls({ labels }: { labels: Dictionary['reading'] }) {
   const { font, size, bg } = useReading()
 

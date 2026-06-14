@@ -44,10 +44,12 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: Dictionary }) {
             </Link>
             <LocaleToggle current={lang} label={dict.locale.label} />
             <ThemeToggle labels={dict.theme} />
-            {/* Only renders on a post-detail route (gated inside) — the reading
-                customizer reachable mid-scroll. */}
-            <HeaderReading labels={dict.reading} />
           </div>
+          {/* Reading customizer — kept outside both the desktop cluster and the
+              mobile drawer so it's reachable on phones without opening the
+              hamburger. Self-gates to post-detail routes (renders null
+              elsewhere); icon-only on phones, icon + label from sm up. */}
+          <HeaderReading labels={dict.reading} />
           <MobileMenu lang={lang} dict={dict} />
         </nav>
       </div>

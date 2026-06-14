@@ -7,7 +7,6 @@ import { createToggleStore, useToggle } from './toggleStore'
 // default — the site is a site first, a canvas on demand. See toggleStore.ts.
 const store = createToggleStore()
 
-export const setCanvasMode = store.set
 export const toggleCanvas = store.toggle
 
 export function useCanvasMode(): boolean {
