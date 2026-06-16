@@ -1,20 +1,49 @@
 {
-  "generatedAt": "2026-06-16T05:29:01.698Z",
-  "commit": "f5bd12b",
+  "generatedAt": "2026-06-16T12:51:44.786Z",
+  "commit": "86a4bb9",
   "suites": {
     "unit": {
       "runner": "vitest",
       "total": 11,
       "passed": 11,
       "failed": 0,
-      "durationMs": 4449
+      "durationMs": 4257
     },
     "e2e": {
       "runner": "playwright",
       "total": 7,
       "passed": 7,
       "failed": 0,
-      "durationMs": 33947
+      "durationMs": 36293
     }
-  }
+  },
+  "workspace": [
+    {
+      "project": "naufal-lab",
+      "runner": "vitest",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "durationMs": 5260,
+      "report": "/naufal-lab/"
+    },
+    {
+      "project": "naufal-blog",
+      "runner": "vitest",
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "durationMs": 1964,
+      "report": "/naufal-blog/"
+    },
+    {
+      "project": "naufal-party",
+      "runner": "vitest",
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "durationMs": 1892,
+      "report": "/naufal-party/"
+    }
+  ]
 }

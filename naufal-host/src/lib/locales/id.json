@@ -108,7 +108,7 @@
     }
   },
   "quality": {
-    "description": "Tinjauan kesehatan rangkaian tes situs ini — hasil nyata yang bisa dibuka lengkap. Tes unit + komponen di Vitest, end-to-end di Playwright (dengan rekaman video).",
+    "description": "Tinjauan kesehatan rangkaian tes proyek — milik host bisa dibuka lengkap (Vitest unit + komponen, Playwright e2e dengan video), beserta rangkaian tes unit dari seluruh workspace.",
     "loading": "Memuat hasil terbaru…",
     "noRun": "Gagal memuat hasil terbaru.",
     "allPassing": "semua lolos",
@@ -118,7 +118,8 @@
     "e2eTitle": "End-to-end · Playwright",
     "passing": "{{passed}}/{{total}} lolos",
     "openReport": "buka laporan",
-    "openReportVideo": "buka laporan (dengan video)"
+    "openReportVideo": "buka laporan (dengan video)",
+    "workspaceTitle": "di seluruh workspace"
   },
   "presence": {
     "toggleLabel": "Aktifkan kursor live",

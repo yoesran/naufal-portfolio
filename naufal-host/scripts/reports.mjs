@@ -14,6 +14,7 @@ import {
   rmSync,
   writeFileSync,
 } from 'node:fs'
+import path from 'node:path'
 
 const OUT = '.reports'
 
@@ -22,11 +23,12 @@ mkdirSync(OUT, { recursive: true })
 
 // A non-zero exit just means a suite had failures — we still read its JSON and
 // report the numbers, so swallow the throw and rely on the output files.
-function softRun(cmd, args, env) {
+function softRun(cmd, args, { env, cwd } = {}) {
   try {
     execFileSync(cmd, args, {
       stdio: 'inherit',
       shell: true,
+      cwd,
       env: { ...process.env, ...env },
     })
   } catch {
@@ -67,10 +69,12 @@ const unit = {
 
 // --- End-to-end · Playwright → HTML report (with video) + JSON summary --------
 softRun('npx', ['playwright', 'test', '--reporter=html,json'], {
-  PW_MEDIA: '1', // records video + full trace (see playwright.config.ts)
-  PLAYWRIGHT_HTML_REPORT: `${OUT}/playwright`,
-  PLAYWRIGHT_JSON_OUTPUT_NAME: `${OUT}/e2e.json`,
-  PW_TEST_HTML_REPORT_OPEN: 'never',
+  env: {
+    PW_MEDIA: '1', // records video + full trace (see playwright.config.ts)
+    PLAYWRIGHT_HTML_REPORT: `${OUT}/playwright`,
+    PLAYWRIGHT_JSON_OUTPUT_NAME: `${OUT}/e2e.json`,
+    PW_TEST_HTML_REPORT_OPEN: 'never',
+  },
 })
 const e2eRaw = existsSync(`${OUT}/e2e.json`)
   ? JSON.parse(readFileSync(`${OUT}/e2e.json`, 'utf8'))
@@ -90,10 +94,48 @@ const e2e = {
 rmSync(`${OUT}/unit.json`, { force: true })
 rmSync(`${OUT}/e2e.json`, { force: true })
 
+// --- Rest of the workspace · each project's own Vitest ------------------------
+// Run from each sibling so it uses that project's own config + deps. Each emits
+// its own HTML report into .reports/<project>/ (published alongside the host's
+// vitest/ + playwright/), and we keep the pass/total/duration for the health row.
+const WORKSPACE = ['naufal-lab', 'naufal-blog', 'naufal-party']
+const workspace = []
+for (const project of WORKSPACE) {
+  const jsonPath = path.resolve(OUT, `${project}.json`)
+  const htmlIndex = path.resolve(OUT, project, 'index.html')
+  const t0 = Date.now()
+  softRun(
+    'npx',
+    [
+      'vitest',
+      'run',
+      '--reporter=html',
+      '--reporter=json',
+      `--outputFile.html=${htmlIndex}`,
+      `--outputFile.json=${jsonPath}`,
+    ],
+    { cwd: path.resolve('..', project) }
+  )
+  if (!existsSync(jsonPath)) continue // run produced no output — skip the card
+  const raw = JSON.parse(readFileSync(jsonPath, 'utf8'))
+  rmSync(jsonPath, { force: true })
+  workspace.push({
+    project,
+    runner: 'vitest',
+    total: raw.numTotalTests ?? 0,
+    passed: raw.numPassedTests ?? 0,
+    failed: raw.numFailedTests ?? 0,
+    durationMs: Date.now() - t0,
+    // Path on the reports site (REPORTS_BASE) — only when the HTML report landed.
+    report: existsSync(htmlIndex) ? `/${project}/` : undefined,
+  })
+}
+
 const health = {
   generatedAt: new Date().toISOString(),
   commit: gitSha(),
   suites: { unit, e2e },
+  workspace,
 }
 const json = JSON.stringify(health, null, 2) + '\n'
 writeFileSync(`${OUT}/health.json`, json)
@@ -122,9 +164,16 @@ writeFileSync(
   <body>
     <h1>naufal.dev — test reports</h1>
     <p>Live reports for the portfolio's own test suites.</p>
+    <p><strong>naufal-host</strong></p>
     <ul>
       <li><a href="/vitest/">Vitest</a> — unit + component (React Testing Library)</li>
       <li><a href="/playwright/">Playwright</a> — end-to-end, with video recordings</li>
+    </ul>
+    <p><strong>Across the workspace</strong> — each project's own Vitest</p>
+    <ul>
+      <li><a href="/naufal-lab/">naufal-lab</a> — Svelte remote (mount contract + i18n)</li>
+      <li><a href="/naufal-blog/">naufal-blog</a> — blog lib (posts, hreflang, sitemap)</li>
+      <li><a href="/naufal-party/">naufal-party</a> — presence server (colours, echoes)</li>
     </ul>
   </body>
 </html>
@@ -132,5 +181,9 @@ writeFileSync(
 )
 
 console.log(
-  `reports → ${OUT}/ : unit ${unit.passed}/${unit.total}, e2e ${e2e.passed}/${e2e.total}`
+  `reports → ${OUT}/ : unit ${unit.passed}/${unit.total}, e2e ${e2e.passed}/${e2e.total}` +
+    (workspace.length
+      ? ', ' +
+        workspace.map((w) => `${w.project} ${w.passed}/${w.total}`).join(', ')
+      : '')
 )

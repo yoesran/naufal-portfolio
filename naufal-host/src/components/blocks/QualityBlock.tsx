@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { FlaskConical, Terminal } from 'lucide-react'
+import { FlaskConical, Package, Terminal } from 'lucide-react'
 
 import { Cell } from '@/components/Cell'
 import { cn } from '@/lib/utils'
@@ -14,10 +14,15 @@ type SuiteHealth = {
   failed: number
   durationMs: number
 }
+// The host's two suites publish full HTML reports; each workspace project's own
+// Vitest also publishes one (`report` is its path on the reports site). See
+// scripts/reports.mjs.
+type WorkspaceHealth = SuiteHealth & { project: string; report?: string }
 type Health = {
   generatedAt: string
   commit?: string
   suites: { unit: SuiteHealth; e2e: SuiteHealth }
+  workspace?: WorkspaceHealth[]
 }
 
 // The reports site (naufal-reports Pages) holds the full HTML reports + the
@@ -33,10 +38,11 @@ const HEALTH_URL = import.meta.env.VITE_REPORTS_URL
 const fmtDur = (ms: number) =>
   ms < 1000 ? `${ms}ms` : `${(ms / 1000).toFixed(1)}s`
 
-// A host-native health view of this site's own test suites: the latest real run
-// of Vitest (unit + RTL component) and Playwright (e2e, with video), each linking
-// out to its full published HTML report. The counts come from the reports site's
-// health.json; the reports themselves are the substance.
+// A host-native health view of the whole project's test suites: the host's own
+// Vitest (unit + RTL component) and Playwright (e2e, with video) as full cards
+// linking to their published HTML reports, plus a card per sibling project's
+// Vitest (lab/blog/party). Counts come from the reports site's health.json; the
+// reports themselves are the substance.
 export function QualityBlock() {
   const { t, i18n } = useTranslation()
   const [health, setHealth] = useState<Health | null>(null)
@@ -73,10 +79,13 @@ export function QualityBlock() {
     return rtf.format(-Math.round(hr / 24), 'day')
   }
 
+  const workspace = health?.workspace ?? []
+  const wsFailed = workspace.reduce((n, s) => n + s.failed, 0)
   const allGreen =
     health !== null &&
     health.suites.unit.failed === 0 &&
-    health.suites.e2e.failed === 0
+    health.suites.e2e.failed === 0 &&
+    wsFailed === 0
 
   return (
     <Cell id="quality" label="// quality · host-native React">
@@ -104,7 +113,9 @@ export function QualityBlock() {
                 ? t('quality.allPassing')
                 : t('quality.failing', {
                     failed:
-                      health.suites.unit.failed + health.suites.e2e.failed,
+                      health.suites.unit.failed +
+                      health.suites.e2e.failed +
+                      wsFailed,
                   })}
             </span>
             <span className="text-muted-foreground/60">
@@ -142,6 +153,35 @@ export function QualityBlock() {
               reportLabel={t('quality.openReportVideo')}
             />
           </div>
+
+          {/* The rest of the workspace — each project's own Vitest as a full card
+              like the host's, linking to its published report. */}
+          {workspace.length > 0 && (
+            <div className="mt-4">
+              <div className="text-muted-foreground/70 mb-2 font-mono text-[11px]">
+                {t('quality.workspaceTitle')}
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {workspace.map((s) => (
+                  <SuiteCard
+                    key={s.project}
+                    icon={<Package className="size-3.5" />}
+                    title={`${s.project} · Vitest`}
+                    suite={s}
+                    passingLabel={t('quality.passing', {
+                      passed: s.passed,
+                      total: s.total,
+                    })}
+                    reportUrl={
+                      s.report ? `${REPORTS_BASE}${s.report}` : undefined
+                    }
+                    reportLabel={t('quality.openReport')}
+                    reportAriaLabel={`${s.project} — ${t('quality.openReport')}`}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </>
       ) : (
         <div className="border-border/60 bg-muted/20 mt-4 rounded-lg border border-dashed p-4 font-mono text-xs">
@@ -161,13 +201,17 @@ function SuiteCard({
   passingLabel,
   reportUrl,
   reportLabel,
+  reportAriaLabel,
 }: {
   icon: React.ReactNode
   title: string
   suite: SuiteHealth
   passingLabel: string
-  reportUrl: string
+  // Optional so a card can render even if its report didn't publish. A distinct
+  // aria-label keeps each "open report" link uniquely named (gotcha #34).
+  reportUrl?: string
   reportLabel: string
+  reportAriaLabel?: string
 }) {
   const green = suite.failed === 0
   return (
@@ -195,15 +239,18 @@ function SuiteCard({
           {fmtDur(suite.durationMs)}
         </span>
       </div>
-      <a
-        href={reportUrl}
-        target="_blank"
-        rel="noreferrer"
-        className="text-brand hover:text-brand/80 mt-3 inline-block font-mono text-xs transition-colors"
-      >
-        {reportLabel}
-        <span aria-hidden="true"> ↗</span>
-      </a>
+      {reportUrl && (
+        <a
+          href={reportUrl}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={reportAriaLabel}
+          className="text-brand hover:text-brand/80 mt-3 inline-block font-mono text-xs transition-colors"
+        >
+          {reportLabel}
+          <span aria-hidden="true"> ↗</span>
+        </a>
+      )}
     </div>
   )
 }

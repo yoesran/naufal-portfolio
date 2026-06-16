@@ -26,6 +26,26 @@ const HEALTH = {
       durationMs: 30000,
     },
   },
+  workspace: [
+    {
+      project: 'naufal-lab',
+      runner: 'vitest',
+      total: 9,
+      passed: 9,
+      failed: 0,
+      durationMs: 1200,
+      report: '/naufal-lab/',
+    },
+    {
+      project: 'naufal-blog',
+      runner: 'vitest',
+      total: 14,
+      passed: 14,
+      failed: 0,
+      durationMs: 400,
+      report: '/naufal-blog/',
+    },
+  ],
 }
 
 beforeEach(() => {
@@ -48,6 +68,16 @@ describe('QualityBlock', () => {
     expect(screen.getByText('End-to-end · Playwright')).toBeInTheDocument()
     expect(screen.getByText('11/11 passing')).toBeInTheDocument()
     expect(screen.getByText('7/7 passing')).toBeInTheDocument()
+
+    // The rest of the workspace shows as full cards, each linking to its report.
+    expect(screen.getByText('naufal-lab · Vitest')).toBeInTheDocument()
+    expect(screen.getByText('naufal-blog · Vitest')).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: /naufal-lab/ }).getAttribute('href')
+    ).toContain('/naufal-lab/')
+    expect(
+      screen.getByRole('link', { name: /naufal-blog/ }).getAttribute('href')
+    ).toContain('/naufal-blog/')
 
     // Each card links out to its full HTML report on the reports site.
     expect(

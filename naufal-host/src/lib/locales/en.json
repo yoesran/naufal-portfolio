@@ -108,7 +108,7 @@
     }
   },
   "quality": {
-    "description": "A health view of this site's own test suites — real runs you can open in full. Unit + component tests under Vitest, end-to-end under Playwright (with video recordings).",
+    "description": "A health view of the project's test suites — the host's open in full (Vitest unit + component, Playwright e2e with video), with the rest of the workspace's unit suites alongside.",
     "loading": "Loading the latest run…",
     "noRun": "Couldn't load the latest run.",
     "allPassing": "all passing",
@@ -118,7 +118,8 @@
     "e2eTitle": "End-to-end · Playwright",
     "passing": "{{passed}}/{{total}} passing",
     "openReport": "open report",
-    "openReportVideo": "open report (with video)"
+    "openReportVideo": "open report (with video)",
+    "workspaceTitle": "across the workspace"
   },
   "presence": {
     "toggleLabel": "Toggle live cursors",
