@@ -96,7 +96,13 @@ function apply(c: ThemeConfig) {
   root.setAttribute('data-surface', c.surface)
   root.style.setProperty('--radius', `${c.radius}rem`)
   root.style.setProperty('--font-app', FONT_STACKS[c.font])
-  root.style.backgroundColor = SURFACE_BG[c.surface][dark ? 1 : 0]
+  const bg = SURFACE_BG[c.surface][dark ? 1 : 0]
+  root.style.backgroundColor = bg
+  // Match the browser chrome (address bar / PWA) to the resolved surface, not
+  // just the OS preference. Mirrors the pre-paint script in theme-tokens.ts.
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute('content', bg)
 }
 
 function persist(c: ThemeConfig) {

@@ -32,7 +32,7 @@ Prod values live in committed `.env.production` files (both apps). These are `VI
 Both public-facing sites use **Cloudflare Web Analytics** — privacy-first (no cookies → no consent banner), free, and injected only when a token is configured (so local dev and forks ship no beacon). Get one token **per site** from the CF dashboard → Web Analytics → add site → copy the token, then:
 
 - **Host**: set `VITE_CF_BEACON_TOKEN` in [`naufal-host/.env.production`](../naufal-host/.env.production). The [`vite.config.ts`](../naufal-host/vite.config.ts) `cf-web-analytics` plugin injects the beacon at build; an empty value injects nothing.
-- **Blog**: set `NEXT_PUBLIC_CF_BEACON_TOKEN` in `naufal-blog/.env.production` (gitignored — copy [`.env.example`](../naufal-blog/.env.example)). [`app/layout.tsx`](../naufal-blog/src/app/layout.tsx) renders the beacon only when it's set.
+- **Blog**: set `NEXT_PUBLIC_CF_BEACON_TOKEN` in [`naufal-blog/.env.production`](../naufal-blog/.env.production) (committed — `NEXT_PUBLIC_*` is public, same convention as the host; only `*.local` overrides are gitignored). [`app/layout.tsx`](../naufal-blog/src/app/layout.tsx) renders the beacon only when it's set.
 
 Both sites also have an env-driven **canonical origin** so the custom-domain switch is a one-line flip, not a code edit:
 

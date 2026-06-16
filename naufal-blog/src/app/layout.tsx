@@ -21,7 +21,7 @@ export const viewport: Viewport = {
 // Cloudflare Web Analytics beacon token (public; embedded in the page). Inlined
 // at build time from NEXT_PUBLIC_CF_BEACON_TOKEN. Unset (local dev, or a fork) →
 // no beacon ships. Privacy-first: no cookies, so no consent banner. See
-// .env.example and ../../docs/deployment.md.
+// .env.production and ../../docs/deployment.md.
 const cfBeaconToken = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN
 
 // Root layout — sits ABOVE the dynamic [lang] segment, so it does NOT re-render

@@ -6,6 +6,7 @@ import { alternates } from '@/lib/i18n/alternates'
 import { type Locale, isLocale } from '@/lib/i18n/config'
 import { getDictionary } from '@/lib/i18n/dictionaries'
 import { getPost, posts } from '@/lib/posts'
+import { HOST_URL, SITE_URL } from '@/lib/site'
 
 import './reading.css'
 
@@ -24,10 +25,34 @@ export async function generateMetadata({
   if (!isLocale(lang)) return {}
   const post = getPost(slug)
   if (!post) return {}
+  // Per-post OpenGraph/Twitter. Without these the post page would inherit the
+  // [lang] layout's site-level card wholesale (Next merges metadata shallowly:
+  // a child that omits `openGraph` inherits the parent's), so a shared link
+  // would show the generic site title + `type: website` instead of the post.
+  const url = `${SITE_URL}/${lang}/posts/${slug}`
+  const title = post.title[lang]
+  const description = post.description[lang]
   return {
-    title: post.title[lang],
-    description: post.description[lang],
+    title,
+    description,
     alternates: alternates(lang, `posts/${slug}`),
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url,
+      siteName: 'Naufal Yusran',
+      locale: lang,
+      publishedTime: post.date,
+      authors: ['Naufal Yusran'],
+      images: [{ url: '/og.png', width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ['/og.png'],
+    },
   }
 }
 
@@ -49,12 +74,31 @@ export default async function PostPage({
     day: 'numeric',
   })
 
+  // BlogPosting structured data — lets search engines read the post as an
+  // article (title, date, author, language) rather than inferring it.
+  const url = `${SITE_URL}/${lang}/posts/${slug}`
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title[lang],
+    description: post.description[lang],
+    datePublished: post.date,
+    inLanguage: lang,
+    url,
+    mainEntityOfPage: url,
+    author: { '@type': 'Person', name: 'Naufal Yusran', url: HOST_URL },
+  }
+
   return (
     <main
       id="content"
       tabIndex={-1}
       className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-6 py-16 focus:outline-none"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Link
         href={`/${lang}/posts`}
         className="text-muted-foreground hover:text-foreground font-mono text-sm transition-colors"

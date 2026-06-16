@@ -1,6 +1,6 @@
 import type * as Party from 'partykit/server'
 
-const COLORS = [
+export const COLORS = [
   '#34d399', // emerald
   '#38bdf8', // sky
   '#f472b6', // pink
@@ -9,7 +9,7 @@ const COLORS = [
   '#fb7185', // rose
 ]
 
-const NAMES = [
+export const NAMES = [
   'Otter',
   'Fox',
   'Heron',
@@ -24,10 +24,18 @@ const NAMES = [
   'Newt',
 ]
 
-function colorFor(id: string) {
+// Deterministic colour per connection id (so a peer keeps one colour) — a small
+// string hash mod the palette. Exported for the unit suite.
+export function colorFor(id: string) {
   let h = 0
   for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0
   return COLORS[Math.abs(h) % COLORS.length]
+}
+
+// Keep every `step`-th point — the downsample applied when a live recording
+// becomes a stored ghost. Pure + exported so the suite asserts the real logic.
+export function downsample<T>(points: T[], step: number): T[] {
+  return points.filter((_, i) => i % step === 0)
 }
 
 function randomName() {
@@ -44,12 +52,12 @@ type ConnState = { color: string; name: string }
 // few synthetic drifts so even the very first visitor sees something.
 type Ghost = { color: string; name: string; path: { x: number; y: number }[] }
 
-const GHOST_MAX = 6
-const RECORD_MAX = 90 // rolling window of recent points per live connection
-const GHOST_STEP = 3 // downsample factor when storing (→ ~30 points)
-const GHOST_MIN_POINTS = 12 // ignore paths too short to read as movement
+export const GHOST_MAX = 6
+export const RECORD_MAX = 90 // rolling window of recent points per live connection
+export const GHOST_STEP = 3 // downsample factor when storing (→ ~30 points)
+export const GHOST_MIN_POINTS = 12 // ignore paths too short to read as movement
 
-function seedGhosts(): Ghost[] {
+export function seedGhosts(): Ghost[] {
   // Gentle left-to-right drifts at different heights — indistinguishable in form
   // from a recorded path, so the demo reads the same before any real visitor.
   return [0, 1, 2].map((i) => {
@@ -153,7 +161,7 @@ export default class CursorServer implements Party.Server {
     const rec = this.recordings.get(conn.id)
     this.recordings.delete(conn.id)
     if (rec && rec.length >= GHOST_MIN_POINTS) {
-      const path = rec.filter((_, i) => i % GHOST_STEP === 0)
+      const path = downsample(rec, GHOST_STEP)
       this.ghosts.unshift({
         color: conn.state?.color ?? colorFor(conn.id),
         name: conn.state?.name ?? 'Guest',

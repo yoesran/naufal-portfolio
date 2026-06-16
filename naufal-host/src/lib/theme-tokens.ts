@@ -105,7 +105,8 @@ var a=ls.getItem(d.keys.accent);if(a)root.setAttribute('data-accent',a);
 var s=ls.getItem(d.keys.surface)||'default';if(s!=='default')root.setAttribute('data-surface',s);
 var r=Number(ls.getItem(d.keys.radius)||NaN);if(r>=d.radius.min&&r<=d.radius.max)root.style.setProperty('--radius',r+'rem');
 var f=ls.getItem(d.keys.font);if(f&&d.fontStacks[f])root.style.setProperty('--font-app',d.fontStacks[f]);
-var pair=d.surfaceBg[s]||d.surfaceBg.default;root.style.backgroundColor=pair[dark?1:0];
+var pair=d.surfaceBg[s]||d.surfaceBg.default,bg=pair[dark?1:0];root.style.backgroundColor=bg;
+var mc=document.querySelector('meta[name="theme-color"]');if(mc)mc.setAttribute('content',bg);
 }catch(e){}})()`
 }
 

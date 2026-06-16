@@ -43,7 +43,7 @@ export function Header() {
           <div className="hidden items-center gap-5 sm:flex">
             {nav.map((item) => (
               <a
-                key={item.label}
+                key={item.href}
                 href={item.href}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
@@ -77,7 +77,7 @@ export function Header() {
               >
                 {nav.map((item) => (
                   <DropdownMenuItem
-                    key={item.label}
+                    key={item.href}
                     render={<a href={item.href} />}
                   >
                     {item.label}

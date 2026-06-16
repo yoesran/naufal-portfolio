@@ -3,7 +3,7 @@
 // so the custom-domain switch (e.g. https://blog.naufal.dev) is a one-line env
 // flip, not a code edit. NEXT_PUBLIC_* is inlined at build → public by design.
 // The default keeps dev and an unconfigured build on the Pages name. See
-// .env.example and ../../docs/deployment.md.
+// .env.production and ../../docs/deployment.md.
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://naufal-blog.pages.dev'
 

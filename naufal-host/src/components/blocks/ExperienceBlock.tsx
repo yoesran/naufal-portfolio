@@ -57,6 +57,11 @@ const LANES: Record<ExperienceSlug, 0 | 1> = {
 // per-node delay and the "entrance is over" timeout so they can't drift.
 const STAGGER_MS = 110
 
+// The session reflog ring: keep a little more history than `git reflog` prints,
+// so the listing is a stable window rather than the whole tail.
+const REFLOG_KEEP = 12
+const REFLOG_SHOW = 8
+
 const rowY = (row: number) => row * ROW_H + ROW_H / 2
 
 function branchPath([top, bottom]: [number, number]): string {
@@ -283,7 +288,7 @@ function CheckoutPrompt({
       case 'reflog':
         setOutput(
           reflogRef.current
-            .slice(0, 8)
+            .slice(0, REFLOG_SHOW)
             .map(
               (sel, i) =>
                 `${hashFor(sel)} HEAD@{${i}}: checkout: moving to ${sel}`
@@ -515,7 +520,7 @@ export function ExperienceBlock() {
   const reflogRef = useRef<ExperienceSelection[]>([active])
   const select = (sel: ExperienceSelection) => {
     if (sel !== active) {
-      reflogRef.current = [sel, ...reflogRef.current].slice(0, 12)
+      reflogRef.current = [sel, ...reflogRef.current].slice(0, REFLOG_KEEP)
     }
     setActive(sel)
   }

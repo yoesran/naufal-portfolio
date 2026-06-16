@@ -30,9 +30,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
-!.env.example
+# env files — local overrides only. The committed .env.production carries the
+# public NEXT_PUBLIC_* build values (same convention as naufal-host); .env.local
+# (and the other *.local variants) stay out so dev values never reach a deploy.
+.env*.local
 
 # vercel
 .vercel

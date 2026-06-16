@@ -10,16 +10,11 @@
       content="A live cross-framework Module Federation portfolio: a React host composing a Svelte remote at runtime, with realtime multiplayer presence. The architecture is the portfolio."
     />
     <meta name="author" content="Naufal Yusran" />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: light)"
-      content="oklch(1 0 0)"
-    />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: dark)"
-      content="oklch(0.145 0 0)"
-    />
+    <!-- Kept in sync with the resolved surface background by the theme-prepaint
+         script (before first paint) and theme.ts apply() (on every change), so
+         the browser chrome matches the chosen surface + mode — not just the OS
+         preference. This default covers the pre-script frame. -->
+    <meta name="theme-color" content="oklch(1 0 0)" />
 
     <!-- Open Graph / social share preview -->
     <meta property="og:type" content="website" />
