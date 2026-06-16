@@ -38,7 +38,9 @@ export {
 }
 export type { Accent, Font, Mode, Surface, ThemeConfig }
 
-function oneOf<T extends string>(
+// Exported (with loadRadius below) so the unit suite can assert the real
+// validation logic, not a copy. See lib/quality/units.test.ts.
+export function oneOf<T extends string>(
   options: readonly T[],
   value: string | null,
   fallback: T
@@ -64,7 +66,7 @@ function load(): ThemeConfig {
 // `radius` differs from the other axes: a stored "0" (slider at RADIUS_MIN) is a
 // valid value, not "unset", so we check for an absent key before coercing — and
 // clamp to the slider's range so a tampered value can't escape it.
-function loadRadius(raw: string | null): number {
+export function loadRadius(raw: string | null): number {
   if (raw === null) return DEFAULT_RADIUS
   const n = Number(raw)
   if (!Number.isFinite(n) || n < RADIUS_MIN || n > RADIUS_MAX)

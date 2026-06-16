@@ -26,5 +26,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "@mf-types"]
+  "include": ["src", "@mf-types", "vitest.setup.ts"]
 }

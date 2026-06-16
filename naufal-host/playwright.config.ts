@@ -20,7 +20,17 @@ export default defineConfig({
   expect: { timeout: 15_000 },
   use: {
     baseURL: 'http://localhost:5173',
-    trace: 'on-first-retry',
+    // Video + full trace are heavy, so they're opt-in via PW_MEDIA — the reports
+    // pipeline (npm run reports) sets it to capture the recordings embedded in the
+    // published HTML report; a normal `npm run test:e2e` stays light.
+    trace: process.env.PW_MEDIA ? 'on' : 'on-first-retry',
+    video: process.env.PW_MEDIA ? 'on' : 'off',
+    // Watch the run drive the browser: `npm run test:e2e:headed` (real window)
+    // or `npm run test:e2e:ui` (Playwright's UI, step-through + live pane). To
+    // slow the actions down so they're easy to follow, set PW_SLOWMO (ms per
+    // action), e.g. `PW_SLOWMO=600 npm run test:e2e:headed`. 0 (default) adds no
+    // delay, so this knob never affects a normal run.
+    launchOptions: { slowMo: Number(process.env.PW_SLOWMO) || 0 },
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {

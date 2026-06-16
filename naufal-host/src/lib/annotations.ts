@@ -22,4 +22,5 @@ export const ANNOTATIONS: Annotation[] = [
   { anchor: 'tech-stack', side: 'right', key: 'techStack' },
   { anchor: 'live-remote', side: 'left', key: 'liveRemote' },
   { anchor: 'experience', side: 'right', key: 'experience' },
+  { anchor: 'quality', side: 'left', key: 'quality' },
 ]

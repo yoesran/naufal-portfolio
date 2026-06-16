@@ -51,6 +51,22 @@ test('theme choice persists across reload', async ({ page }) => {
   await expect(page.locator('html')).toHaveClass(/dark/)
 })
 
+test('quality dashboard shows the suites and links to their reports', async ({
+  page,
+}) => {
+  // The published run loads from /health.json — both suite cards appear.
+  await expect(page.getByText('Unit + component · Vitest')).toBeVisible()
+  await expect(page.getByText('End-to-end · Playwright')).toBeVisible()
+  // Each card links out to its full HTML report (exact, since "open report" is a
+  // substring of the Playwright link's "open report (with video)").
+  await expect(
+    page.getByRole('link', { name: 'open report', exact: true })
+  ).toBeVisible()
+  await expect(
+    page.getByRole('link', { name: 'open report (with video)' })
+  ).toBeVisible()
+})
+
 test('live-remote falls back to its offline UI when the lab is unreachable', async ({
   page,
 }) => {

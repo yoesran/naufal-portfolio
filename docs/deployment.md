@@ -96,6 +96,16 @@ The `naufal-blog` Pages project was created once with `wrangler pages project cr
 
 **Redeploys** are just the relevant `vite build` + `wrangler pages deploy` again — each app independently. Because `remoteEntry.js` is `no-store`, a redeployed remote is picked up immediately by an already-loaded host. Remember env vars are **baked at build time**: after editing a `.env.production`, you must rebuild before redeploying or the old value ships (this is exactly the "stale bundle still points at localhost" symptom).
 
+## Quality dashboard
+
+The host's `// quality` block surfaces the host's own test suites — real **Vitest** (unit + RTL component) and **Playwright** (e2e, with video) runs — each linking to its full HTML report. Published **manually** (no CI, no secret — `wrangler` is already OAuth-authed locally) to a dedicated Pages project:
+
+- [`naufal-host/scripts/reports.mjs`](../naufal-host/scripts/reports.mjs) (`npm run reports`) runs both suites with their HTML reporters (Playwright with `PW_MEDIA=1` → video + full trace), distils the counts into `health.json`, and assembles `.reports/` — `vitest/`, `playwright/`, `health.json`, a `_headers` (CORS for `health.json`), and a landing page. It also refreshes `public/health.json`, the host's dev seed.
+- `npm run reports:deploy` direct-uploads `.reports/` to the **`naufal-reports`** Pages project → `https://naufal-reports.pages.dev` (`/vitest/`, `/playwright/`, `/health.json`).
+- The host reads the summary via `VITE_REPORTS_URL` (host `.env.production`; unset in dev → the block reads the same-origin `/health.json` seed, while the report links still point at the live site).
+
+To refresh after a meaningful change: `cd naufal-host && npm run reports && npm run reports:deploy`. The Pages project was created once with `wrangler pages project create naufal-reports --production-branch=main`.
+
 ## Verifying live
 
 Open `https://naufal-host.pages.dev`, then DevTools → Network:

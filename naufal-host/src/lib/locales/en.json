@@ -107,6 +107,19 @@
       "doubler": "Digital agency"
     }
   },
+  "quality": {
+    "description": "A health view of this site's own test suites — real runs you can open in full. Unit + component tests under Vitest, end-to-end under Playwright (with video recordings).",
+    "loading": "Loading the latest run…",
+    "noRun": "Couldn't load the latest run.",
+    "allPassing": "all passing",
+    "failing": "{{failed}} failing",
+    "updatedAgo": "updated {{ago}}",
+    "unitTitle": "Unit + component · Vitest",
+    "e2eTitle": "End-to-end · Playwright",
+    "passing": "{{passed}}/{{total}} passing",
+    "openReport": "open report",
+    "openReportVideo": "open report (with video)"
+  },
   "presence": {
     "toggleLabel": "Toggle live cursors",
     "unavailable": "Live cursors unavailable — try refreshing the page"
@@ -177,6 +190,10 @@
       "experience": {
         "title": "git terminal",
         "body": "The career as a git graph. The prompt is a working shell — type checkout, diff, log, or help."
+      },
+      "quality": {
+        "title": "test reports",
+        "body": "This site's own suites — Vitest (unit + component) and Playwright (e2e, with video) — published as full HTML reports you can open."
       }
     }
   }

@@ -28,6 +28,11 @@ const ExperienceBlock = lazy(() =>
     default: m.ExperienceBlock,
   }))
 )
+const QualityBlock = lazy(() =>
+  import('@/components/blocks/QualityBlock').then((m) => ({
+    default: m.QualityBlock,
+  }))
+)
 // Canvas mode is opt-in, so its stage (pan/zoom + annotations) is split out and
 // only fetched when the visitor toggles it on — play mode never ships it.
 const CanvasStage = lazy(() =>
@@ -68,6 +73,9 @@ export default function App() {
         </Suspense>
         <Suspense fallback={<BlockFallback />}>
           <ExperienceBlock />
+        </Suspense>
+        <Suspense fallback={<BlockFallback />}>
+          <QualityBlock />
         </Suspense>
       </div>
     </>

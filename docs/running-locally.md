@@ -37,10 +37,24 @@ Both scripts are scoped to `src`. The config sets `endOfLine: "auto"`, so Pretti
 
 ## Testing
 
-`naufal-host` has a Playwright smoke suite ([`tests/smoke.spec.ts`](../naufal-host/tests/smoke.spec.ts)):
+`naufal-host` has **two** suites, which also feed the `// quality` dashboard (see [deployment.md](./deployment.md) › Quality dashboard).
+
+**Unit + component (Vitest)** — pure-function checks ([`src/lib/quality`](../naufal-host/src/lib/quality)) plus React Testing Library component tests (`src/components/blocks/*.test.tsx`, jsdom — visual things like the orbit and canvas stay in Playwright):
 
 ```bash
-cd naufal-host && npm run test:e2e
+cd naufal-host
+npm run test         # run once
+npm run test:watch   # watch mode
 ```
+
+**End-to-end (Playwright)** — a smoke suite ([`tests/smoke.spec.ts`](../naufal-host/tests/smoke.spec.ts)):
+
+```bash
+npm run test:e2e         # headless
+npm run test:e2e:ui      # watch each step in a live browser pane
+npm run test:e2e:headed  # drive a real browser window (PW_SLOWMO=600 to slow it down)
+```
+
+`npm run reports` runs both suites with their HTML reporters (Playwright with video) and assembles the published reports; `npm run reports:deploy` uploads them to `naufal-reports.pages.dev`. See [deployment.md](./deployment.md) › Quality dashboard.
 
 It's **host-focused by design** — [`playwright.config.ts`](../naufal-host/playwright.config.ts)'s `webServer` boots only the host dev server (lab/party stay down), so it's self-contained (no manual setup) and stable. It covers the home render, the skip link, the canvas toggle, the locale switch (copy + `<html lang>`), theme persistence across reload, and — usefully — the **live-remote offline fallback** (with the lab down, `Run` exercises the MF resilience path). Serial single worker, since the dev server compiles on demand and parallel workers would race a cold start. The federation/presence happy-paths (which need all three servers) are a later opt-in spec. The CI branches (`reporter: 'github'`, retries) are wired but no workflow runs it yet.

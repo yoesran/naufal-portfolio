@@ -107,6 +107,19 @@
       "doubler": "Agensi digital"
     }
   },
+  "quality": {
+    "description": "Tinjauan kesehatan rangkaian tes situs ini — hasil nyata yang bisa dibuka lengkap. Tes unit + komponen di Vitest, end-to-end di Playwright (dengan rekaman video).",
+    "loading": "Memuat hasil terbaru…",
+    "noRun": "Gagal memuat hasil terbaru.",
+    "allPassing": "semua lolos",
+    "failing": "{{failed}} gagal",
+    "updatedAgo": "diperbarui {{ago}}",
+    "unitTitle": "Unit + komponen · Vitest",
+    "e2eTitle": "End-to-end · Playwright",
+    "passing": "{{passed}}/{{total}} lolos",
+    "openReport": "buka laporan",
+    "openReportVideo": "buka laporan (dengan video)"
+  },
   "presence": {
     "toggleLabel": "Aktifkan kursor live",
     "unavailable": "Kursor live tidak tersedia — coba muat ulang halaman"
@@ -177,6 +190,10 @@
       "experience": {
         "title": "terminal git",
         "body": "Karier sebagai graph git. Prompt-nya shell sungguhan — ketik checkout, diff, log, atau help."
+      },
+      "quality": {
+        "title": "laporan tes",
+        "body": "Rangkaian tes situs ini — Vitest (unit + komponen) dan Playwright (e2e, dengan video) — diterbitkan sebagai laporan HTML lengkap yang bisa dibuka."
       }
     }
   }

@@ -20,6 +20,10 @@ dist-ssr
 /blob-report
 /.playwright
 
+# Quality dashboard — generated test reports from scripts/reports.mjs
+# (public/health.json, the dev seed, IS committed)
+/.reports
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

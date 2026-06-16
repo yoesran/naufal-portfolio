@@ -1,0 +1,20 @@
+{
+  "generatedAt": "2026-06-16T05:29:01.698Z",
+  "commit": "f5bd12b",
+  "suites": {
+    "unit": {
+      "runner": "vitest",
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "durationMs": 4449
+    },
+    "e2e": {
+      "runner": "playwright",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "durationMs": 33947
+    }
+  }
+}
