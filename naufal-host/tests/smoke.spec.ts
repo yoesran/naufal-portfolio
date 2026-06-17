@@ -51,19 +51,28 @@ test('theme choice persists across reload', async ({ page }) => {
   await expect(page.locator('html')).toHaveClass(/dark/)
 })
 
-test('quality dashboard shows the suites and links to their reports', async ({
+test('quality cell maps the four apps; a node opens to visit + report', async ({
   page,
 }) => {
-  // The published run loads from /health.json — both suite cards appear.
-  await expect(page.getByText('Unit + component · Vitest')).toBeVisible()
-  await expect(page.getByText('End-to-end · Playwright')).toBeVisible()
-  // Each card links out to its full HTML report (exact, since "open report" is a
-  // substring of the Playwright link's "open report (with video)").
+  await page.locator('#quality').scrollIntoViewIfNeeded()
+  // One node per app, named by project + role.
   await expect(
-    page.getByRole('link', { name: 'open report', exact: true })
+    page.getByRole('button', { name: /host — React host/ })
   ).toBeVisible()
   await expect(
-    page.getByRole('link', { name: 'open report (with video)' })
+    page.getByRole('button', { name: /naufal-lab — Svelte remote/ })
+  ).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: /naufal-party — PartyKit presence/ })
+  ).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: /naufal-blog — Next.js content/ })
+  ).toBeVisible()
+  // Opening a node reveals its explanation popover with visit + report links.
+  await page.getByRole('button', { name: /naufal-lab — Svelte remote/ }).click()
+  await expect(page.getByRole('link', { name: 'visit' })).toBeVisible()
+  await expect(
+    page.getByRole('link', { name: 'naufal-lab Vitest — open report' })
   ).toBeVisible()
 })
 

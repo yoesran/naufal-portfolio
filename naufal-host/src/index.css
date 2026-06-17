@@ -259,3 +259,20 @@
     left: 100%;
   }
 }
+
+/* Quality map connectors (QualityBlock): a subtle, always-on "current" along the
+   live edges (federation / WebSocket) — the system really is connected, so the
+   flow is honest. Held still for reduced-motion. */
+@keyframes quality-flow {
+  to {
+    stroke-dashoffset: -8;
+  }
+}
+.quality-edge {
+  stroke-dasharray: 4 4;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .quality-edge {
+    animation: quality-flow 0.9s linear infinite;
+  }
+}

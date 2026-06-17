@@ -737,9 +737,11 @@ export function ExperienceBlock() {
                           main
                         </span>
                       )}
-                      <span className="text-muted-foreground/60 ml-auto shrink-0 pl-3 font-mono text-[10px]">
-                        {row.e ? yearRange(row.e) : '2022 – 25'}
-                      </span>
+                      {row.e && (
+                        <span className="text-muted-foreground/60 ml-auto shrink-0 pl-3 font-mono text-[10px]">
+                          {yearRange(row.e)}
+                        </span>
+                      )}
                     </span>
                     <span className="text-muted-foreground/60 truncate font-mono text-[10px]">
                       {row.e ? hashOf(row.sel) : 'init'} ·{' '}

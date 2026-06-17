@@ -8,7 +8,8 @@ export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://naufal-blog.pages.dev'
 
 // The sibling portfolio's origin — linked from the home page. Env-driven for the
-// same reason as SITE_URL (mirrors the host's VITE_BLOG_URL pointing back here);
-// flip to https://naufal.dev when the custom domain goes live.
+// same reason as SITE_URL; the reciprocal of the host's VITE_BLOG_URL (which
+// points host → here, while this points back host). Flip to https://naufal.dev
+// when the custom domain goes live.
 export const HOST_URL =
   process.env.NEXT_PUBLIC_HOST_URL ?? 'https://naufal-host.pages.dev'

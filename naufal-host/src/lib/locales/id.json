@@ -108,18 +108,33 @@
     }
   },
   "quality": {
-    "description": "Tinjauan kesehatan rangkaian tes proyek — milik host bisa dibuka lengkap (Vitest unit + komponen, Playwright e2e dengan video), beserta rangkaian tes unit dari seluruh workspace.",
+    "description": "Seluruh sistem sebagai peta langsung — host React, remote Svelte, server presence PartyKit, dan blog Next.js, terhubung sesuai cara mereka saling berkomunikasi. Klik aplikasi mana pun untuk membaca apa itu, mengunjunginya, atau membuka laporan tes terbarunya.",
     "loading": "Memuat hasil terbaru…",
     "noRun": "Gagal memuat hasil terbaru.",
     "allPassing": "semua lolos",
     "failing": "{{failed}} gagal",
-    "updatedAgo": "diperbarui {{ago}}",
-    "unitTitle": "Unit + komponen · Vitest",
-    "e2eTitle": "End-to-end · Playwright",
+    "lastRun": "run terakhir {{ago}}",
     "passing": "{{passed}}/{{total}} lolos",
     "openReport": "buka laporan",
-    "openReportVideo": "buka laporan (dengan video)",
-    "workspaceTitle": "di seluruh workspace"
+    "visit": "kunjungi",
+    "mapLabel": "Empat aplikasi dan keterhubungannya, masing-masing dengan status tes",
+    "roles": {
+      "host": "host React",
+      "lab": "remote Svelte",
+      "party": "presence PartyKit",
+      "blog": "konten Next.js"
+    },
+    "about": {
+      "host": "Host React tempat Anda berada — menyusun remote terfederasi saat runtime.",
+      "lab": "Remote Svelte, difederasikan ke host saat runtime — dan bisa berjalan sendiri.",
+      "party": "Server WebSocket PartyKit di balik kursor multiplayer — relay realtime, tanpa halaman web.",
+      "blog": "Situs konten Next.js mandiri — CV dan tulisan, diekspor statis untuk SEO."
+    },
+    "edges": {
+      "federation": "federasi",
+      "websocket": "websocket",
+      "standalone": "mandiri"
+    }
   },
   "presence": {
     "toggleLabel": "Aktifkan kursor live",
@@ -193,8 +208,8 @@
         "body": "Karier sebagai graph git. Prompt-nya shell sungguhan — ketik checkout, diff, log, atau help."
       },
       "quality": {
-        "title": "laporan tes",
-        "body": "Rangkaian tes situs ini — Vitest (unit + komponen) dan Playwright (e2e, dengan video) — diterbitkan sebagai laporan HTML lengkap yang bisa dibuka."
+        "title": "sistem, teruji",
+        "body": "Keempat aplikasi sebagai peta langsung, terhubung lewat edge aslinya. Tiap node menampilkan hasil tes terbarunya dan membuka laporan HTML lengkapnya."
       }
     }
   }

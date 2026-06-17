@@ -5,8 +5,8 @@ import '@/lib/i18n'
 
 import { QualityBlock } from './QualityBlock'
 
-// A published run for the dashboard to render. `fetch` is stubbed so the
-// component reads this instead of hitting the network.
+// A published run for the map to render. `fetch` is stubbed so the component
+// reads this instead of hitting the network.
 const HEALTH = {
   generatedAt: new Date().toISOString(),
   commit: 'abcdef0',
@@ -30,8 +30,8 @@ const HEALTH = {
     {
       project: 'naufal-lab',
       runner: 'vitest',
-      total: 9,
-      passed: 9,
+      total: 7,
+      passed: 7,
       failed: 0,
       durationMs: 1200,
       report: '/naufal-lab/',
@@ -44,6 +44,15 @@ const HEALTH = {
       failed: 0,
       durationMs: 400,
       report: '/naufal-blog/',
+    },
+    {
+      project: 'naufal-party',
+      runner: 'vitest',
+      total: 12,
+      passed: 12,
+      failed: 0,
+      durationMs: 330,
+      report: '/naufal-party/',
     },
   ],
 }
@@ -59,34 +68,28 @@ afterEach(() => {
 })
 
 describe('QualityBlock', () => {
-  it('renders both suites with counts and links to their reports', async () => {
+  it('maps the four apps, each with its role and status', async () => {
     render(<QualityBlock />)
 
+    // One node per app, named by project + role (this is what makes the
+    // workspace self-explanatory). Querying the trigger buttons avoids the
+    // role text that also appears in the block's description.
     expect(
-      await screen.findByText('Unit + component · Vitest')
+      await screen.findByRole('button', { name: /host — React host/ })
     ).toBeInTheDocument()
-    expect(screen.getByText('End-to-end · Playwright')).toBeInTheDocument()
-    expect(screen.getByText('11/11 passing')).toBeInTheDocument()
-    expect(screen.getByText('7/7 passing')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /naufal-lab — Svelte remote/ })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /naufal-party — PartyKit presence/ })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /naufal-blog — Next.js content/ })
+    ).toBeInTheDocument()
 
-    // The rest of the workspace shows as full cards, each linking to its report.
-    expect(screen.getByText('naufal-lab · Vitest')).toBeInTheDocument()
-    expect(screen.getByText('naufal-blog · Vitest')).toBeInTheDocument()
-    expect(
-      screen.getByRole('link', { name: /naufal-lab/ }).getAttribute('href')
-    ).toContain('/naufal-lab/')
-    expect(
-      screen.getByRole('link', { name: /naufal-blog/ }).getAttribute('href')
-    ).toContain('/naufal-blog/')
-
-    // Each card links out to its full HTML report on the reports site.
-    expect(
-      screen.getByRole('link', { name: 'open report' }).getAttribute('href')
-    ).toContain('/vitest/')
-    expect(
-      screen
-        .getByRole('link', { name: 'open report (with video)' })
-        .getAttribute('href')
-    ).toContain('/playwright/')
+    // Static counts from the published run (host aggregates unit + e2e).
+    expect(screen.getByText('18/18')).toBeInTheDocument()
+    expect(screen.getByText('7/7')).toBeInTheDocument()
+    expect(screen.getByText('all passing')).toBeInTheDocument()
   })
 })

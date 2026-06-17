@@ -108,18 +108,33 @@
     }
   },
   "quality": {
-    "description": "A health view of the project's test suites — the host's open in full (Vitest unit + component, Playwright e2e with video), with the rest of the workspace's unit suites alongside.",
+    "description": "The whole system as a live map — the React host, the Svelte remote, the PartyKit presence server, and the Next.js blog, wired by how they actually talk. Click any app to read what it is, visit it, or open its latest test report.",
     "loading": "Loading the latest run…",
     "noRun": "Couldn't load the latest run.",
     "allPassing": "all passing",
     "failing": "{{failed}} failing",
-    "updatedAgo": "updated {{ago}}",
-    "unitTitle": "Unit + component · Vitest",
-    "e2eTitle": "End-to-end · Playwright",
+    "lastRun": "last run {{ago}}",
     "passing": "{{passed}}/{{total}} passing",
     "openReport": "open report",
-    "openReportVideo": "open report (with video)",
-    "workspaceTitle": "across the workspace"
+    "visit": "visit",
+    "mapLabel": "The four apps and how they connect, each with its test status",
+    "roles": {
+      "host": "React host",
+      "lab": "Svelte remote",
+      "party": "PartyKit presence",
+      "blog": "Next.js content"
+    },
+    "about": {
+      "host": "The React host you're on — it composes the federated remotes at runtime.",
+      "lab": "The Svelte remote, federated into the host at runtime — and runnable on its own.",
+      "party": "The PartyKit WebSocket server behind the multiplayer cursors — a realtime relay, no web page.",
+      "blog": "The standalone Next.js content site — CV and posts, statically exported for SEO."
+    },
+    "edges": {
+      "federation": "federation",
+      "websocket": "websocket",
+      "standalone": "standalone"
+    }
   },
   "presence": {
     "toggleLabel": "Toggle live cursors",
@@ -193,8 +208,8 @@
         "body": "The career as a git graph. The prompt is a working shell — type checkout, diff, log, or help."
       },
       "quality": {
-        "title": "test reports",
-        "body": "This site's own suites — Vitest (unit + component) and Playwright (e2e, with video) — published as full HTML reports you can open."
+        "title": "the system, tested",
+        "body": "All four apps as a live map, wired by their real edges. Each node shows its latest test result and opens its full HTML report."
       }
     }
   }

@@ -61,7 +61,7 @@ It's **host-focused by design** — [`playwright.config.ts`](../naufal-host/play
 
 ### Unit suites in the other three projects
 
-The remotes and the realtime server each carry a small **Vitest** suite too — fast, dependency-free gates run with `npm run test` / `npm run test:watch` in their own folder (same as the host). These are local/CI checks only; unlike the host's, they're **not** published to the `naufal-reports` dashboard (which stays host-only by design).
+The remotes and the realtime server each carry a small **Vitest** suite too — fast, dependency-free gates run with `npm run test` / `npm run test:watch` in their own folder (same as the host). `npm run reports` also runs each one from its own folder and publishes its HTML report to the `naufal-reports` site (`/naufal-lab/`, `/naufal-blog/`, `/naufal-party/`), surfaced as the sibling nodes on the host's `// quality` map — see [deployment.md](./deployment.md) › Quality dashboard.
 
 - **`naufal-party`** — the cursor server's pure logic: deterministic colour hashing, the ghost-path downsample, and the seeded echoes ([`src/server.test.ts`](../naufal-party/src/server.test.ts)). The helpers are exported from [`server.ts`](../naufal-party/src/server.ts) so the suite asserts the real code (the test file isn't imported by the entry, so it stays out of the deploy bundle).
 - **`naufal-blog`** — the SEO/i18n lib: the post registry (locale parity, unique slugs, ISO dates), the hreflang `alternates`, and the `sitemap` shape ([`src/**/*.test.ts`](../naufal-blog/src), Vitest node env, `@` alias mirroring tsconfig).

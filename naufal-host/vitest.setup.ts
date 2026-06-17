@@ -28,17 +28,39 @@ if (!window.matchMedia) {
   })
 }
 
-class ObserverStub {
+// ResizeObserver: a no-op (measured-height reads offsetHeight = 0 in jsdom).
+class ResizeObserverStub {
   observe() {}
   unobserve() {}
   disconnect() {}
-  takeRecords() {
+}
+globalThis.ResizeObserver ??=
+  ResizeObserverStub as unknown as typeof ResizeObserver
+
+// IntersectionObserver: fire "intersecting" once on observe, so reveal-gated UI
+// (the scroll-reveal Cells) renders its in-view state in tests instead of
+// staying stuck hidden.
+class IntersectionObserverStub {
+  private cb: IntersectionObserverCallback
+  constructor(cb: IntersectionObserverCallback) {
+    this.cb = cb
+  }
+  observe(el: Element) {
+    this.cb(
+      [{ isIntersecting: true, target: el } as IntersectionObserverEntry],
+      this as unknown as IntersectionObserver
+    )
+  }
+  unobserve() {}
+  disconnect() {}
+  takeRecords(): IntersectionObserverEntry[] {
     return []
   }
 }
-globalThis.IntersectionObserver ??=
-  ObserverStub as unknown as typeof IntersectionObserver
-globalThis.ResizeObserver ??= ObserverStub as unknown as typeof ResizeObserver
+// Force (not ??=) so our firing stub wins even if the environment ships a
+// no-op IntersectionObserver — reveal-gated UI must actually reveal in tests.
+globalThis.IntersectionObserver =
+  IntersectionObserverStub as unknown as typeof IntersectionObserver
 globalThis.requestAnimationFrame ??= ((cb: FrameRequestCallback) =>
   setTimeout(
     () => cb(performance.now()),
