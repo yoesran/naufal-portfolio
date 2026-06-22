@@ -13,6 +13,18 @@ export type PostMeta = {
 
 export const posts: PostMeta[] = [
   {
+    slug: 'styling-across-module-federation',
+    date: '2026-06-22',
+    title: {
+      en: 'Styling across the Module Federation boundary',
+      id: 'Menata gaya melintasi batas Module Federation',
+    },
+    description: {
+      en: "A Svelte remote mounted in the React host came up half-styled. CSS variables cross the federation boundary for free; Tailwind's utility classes don't — here's why, and the one-line fix.",
+      id: 'Sebuah remote Svelte yang dipasang di host React tampil setengah jadi. Variabel CSS melintasi batas federation gratis; kelas utilitas Tailwind tidak — ini alasannya, dan perbaikan satu barisnya.',
+    },
+  },
+  {
     slug: 'writing-with-mdx',
     date: '2026-06-05',
     title: {

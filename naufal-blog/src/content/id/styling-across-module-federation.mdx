@@ -1,0 +1,61 @@
+Premis utama portofolio ini adalah sebuah komponen Svelte yang berjalan di dalam
+host React lewat Module Federation. Saat pertama kali saya memasangnya
+sungguhan, komponen itu tampil _setengah jadi_: warna dan border-nya benar, tapi
+beberapa kelas utilitas sama sekali tak berefek. Ini alasannya — dan perbaikan
+satu barisnya.
+
+## Variabel CSS melintasi batas; kelas utilitas tidak
+
+Remote terfederasi dirender ke dalam DOM **host**. Jadi apa pun yang digerakkan
+oleh CSS custom property langsung bekerja lewat cascade — token tema shadcn
+(`--background`, `--primary`, `--border`, …) didefinisikan di `<html>` milik
+host, dan node milik remote mewarisinya. Itu juga sebabnya theme drawer bisa
+mengganti tampilan remote yang tertanam secara langsung: ubah satu variabel di
+host, remote langsung mengecat ulang.
+
+**Kelas utilitas** Tailwind cerita yang berbeda. `bg-sky-400`, atau kelas
+`Button` shadcn, bukan variabel — itu aturan CSS konkret, dan aturan itu ada di
+**stylesheet entry** milik remote, yang ditautkan dari `index.html` remote saat
+berdiri sendiri. Chunk terfederasi yang ditarik host **tidak membawa CSS sama
+sekali**. Jadi saat tertanam, sebuah kelas utilitas hanya muncul jika host
+_kebetulan_ menghasilkan kelas yang sama.
+
+Itulah petunjuknya. Remote memakai emerald, dan emerald bekerja — karena host
+juga memakai emerald, jadi kelasnya sudah ada di bundle host. Remote juga memakai
+sky, dan sky diam-diam tak berefek — host tak pernah memakai sky, jadi aturan itu
+tak pernah dihasilkan di mana pun pada halaman.
+
+## Perbaikannya: kirim stylesheet bersama chunk
+
+Impor stylesheet remote _di dalam komponen_, agar Tailwind ikut bersama chunk
+terfederasi dan runtime MF menyuntikkannya saat dimuat:
+
+```svelte
+<script lang="ts">
+  import '../app.css' // mengirim Tailwind milik remote lewat federation
+  // …
+</script>
+```
+
+Kini remote membawa utilitasnya sendiri ke mana pun ia dipasang. Biayanya satu
+bundle Tailwind tambahan di host (plus preflight ganda) — tak masalah selama host
+dan remote berbagi tema, tapi tetap bobot nyata yang bertambah tiap remote.
+
+Satu hal yang perlu diketahui: impor harus ada di file `.svelte`, **bukan** di
+adapter mount `.ts`. Plugin dts federation mengompilasi adapter itu dengan
+tsconfig yang tak menyertakan `vite/client`, sehingga `import '../app.css'` polos
+di sana gagal type-check dengan `TS2882`. Blok `<script>` di `.svelte` diproses
+oleh Vite, tempat side-effect import-nya teratasi.
+
+## Patokannya
+
+| Melintasi batas                                 | Tidak                                    |
+| ----------------------------------------------- | ---------------------------------------- |
+| CSS custom property (token tema, lewat cascade) | Kelas utilitas Tailwind (aturan konkret) |
+| Inline style                                    | Apa pun di stylesheet entry remote       |
+
+Jadi ada dua cara bersih untuk menata remote terfederasi: bersandar pada variabel
+CSS + inline style (ringan, tanpa bundle tambahan), atau kirim stylesheet remote
+di dalam komponen (tetap pakai Tailwind, bayar sedikit bobot). Proyek ini memilih
+yang kedua — mainan Svelte mempertahankan gaya penuhnya, dan variabel tema host
+tetap mengalir di atasnya.

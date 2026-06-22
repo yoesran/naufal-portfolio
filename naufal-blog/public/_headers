@@ -1,0 +1,12 @@
+# Cloudflare Pages headers for the blog.
+#
+# knowledge.json is read CROSS-ORIGIN by the host's `// ask` assistant
+# (naufal-host.pages.dev fetches it at runtime, the same way the quality
+# dashboard reads health.json), so it needs permissive CORS. It's public,
+# non-credentialed static JSON, so `*` is safe.
+#
+# Set ACAO ONCE: Cloudflare Pages merges matching rules, so a duplicate
+# Access-Control-Allow-Origin becomes an invalid `*, *` that browsers reject
+# (see ../../docs/gotchas.md #21).
+/knowledge.json
+  Access-Control-Allow-Origin: *

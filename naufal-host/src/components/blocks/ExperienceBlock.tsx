@@ -18,6 +18,7 @@ import { BLOG_URL } from '@/lib/links'
 import { useInView } from '@/lib/useInView'
 import { useMeasuredHeight } from '@/lib/useMeasuredHeight'
 import { useMediaQuery } from '@/lib/useMediaQuery'
+import { useTypewriter } from '@/lib/useTypewriter'
 import { cn } from '@/lib/utils'
 
 type EarlierKey = keyof Translations['experience']['earlier']['roles']
@@ -105,26 +106,9 @@ function TypedLine({
   active?: boolean
   className?: string
 }) {
-  const reduce = useMediaQuery('(prefers-reduced-motion: reduce)')
-  // Progress is keyed to the text it was typed for, so a text change *derives*
-  // back to 0 instead of a synchronous setState in the effect (the
-  // react-hooks compiler rule forbids that — cascading renders).
-  const [typed, setTyped] = useState({ for: text, n: 0 })
-  const shown = reduce ? text.length : typed.for === text ? typed.n : 0
-  useEffect(() => {
-    if (!active || reduce) return
-    const id = setInterval(() => {
-      setTyped((prev) => {
-        const current = prev.for === text ? prev.n : 0
-        if (current >= text.length) {
-          clearInterval(id)
-          return prev
-        }
-        return { for: text, n: current + 1 }
-      })
-    }, 14)
-    return () => clearInterval(id)
-  }, [text, active, reduce])
+  // Shared typewriter (also drives the assistant block). sr-only gets the full
+  // line so screen readers don't hear the keystroke stream.
+  const { shown } = useTypewriter(text, { active, speedMs: 14 })
   return (
     // span (not p): this also renders inside the prompt's <button>, which only
     // permits phrasing content.
@@ -133,7 +117,7 @@ function TypedLine({
     >
       <span className="sr-only">$ {text}</span>
       <span aria-hidden="true">
-        <span className="text-brand">$</span> {text.slice(0, shown)}
+        <span className="text-brand">$</span> {shown}
         <span className="bg-muted-foreground/60 -mb-0.5 ml-px inline-block h-3.5 w-1.75 motion-safe:animate-pulse" />
       </span>
     </span>

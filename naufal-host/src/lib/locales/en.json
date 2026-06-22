@@ -136,6 +136,70 @@
       "standalone": "standalone"
     }
   },
+  "summary": {
+    "role": "Frontend & microfrontend engineer in Jakarta — I build interfaces and the architecture behind them.",
+    "workedAt": "Worked at",
+    "ask": "Ask about me",
+    "viewCv": "View CV",
+    "contact": "Get in touch"
+  },
+  "chat": {
+    "description": "Ask about my work — this assistant is a few hundred lines of JavaScript, no LLM. Type a question or tap one below.",
+    "disclaimer": "No AI model — just algorithms over Naufal's real data.",
+    "placeholder": "Ask about his experience, stack, or availability…",
+    "inputLabel": "Ask the assistant a question",
+    "sendLabel": "Send",
+    "transcriptLabel": "Assistant conversation",
+    "youLabel": "You",
+    "botLabel": "Assistant",
+    "suggest": {
+      "about": "Who is Naufal?",
+      "experience": "Where has he worked?",
+      "stack": "What's his tech stack?",
+      "available": "Is he available to hire?",
+      "posts": "What has he written?",
+      "education": "What did he study?",
+      "projects": "Any side projects?",
+      "compare": "Compare {{a}} and {{b}}"
+    },
+    "links": {
+      "cv": "View CV ↗",
+      "timeline": "See the timeline ↓",
+      "story": "Read the story ↗",
+      "email": "Email ↗",
+      "linkedin": "LinkedIn ↗",
+      "blog": "All posts ↗",
+      "readPost": "Read the post ↗"
+    },
+    "fallback": "I'm not sure about that one — I'm a small algorithmic assistant. Try asking about Naufal's experience, tech stack, education, writing, or how to reach him:",
+    "answers": {
+      "greeting": "Hi! I'm Naufal's assistant — pure JavaScript, no AI model. Ask about his experience, stack, or how to reach him.",
+      "about": "Naufal Yusran is a frontend & microfrontend engineer based in {{location}}. Right now he's {{role}} at {{company}}, and he's shipped across {{count}} companies in banking, fintech, SaaS, and agency work.",
+      "experienceOverall": "Naufal has worked across {{count}} companies (newest first):",
+      "experienceItem": "• {{company}} — {{role}} ({{period}})",
+      "earlierNote": "Earlier: {{roles}}.",
+      "experienceAt": "At {{company}} ({{period}}) Naufal was {{role}}. {{summary}}",
+      "highlight": "Highlight: {{highlight}}",
+      "stackLine": "Stack: {{stack}}.",
+      "compareHead": "{{a}} ({{aPeriod}}) vs {{b}} ({{bPeriod}}):",
+      "compareOnly": "• {{company}} leaned on {{tools}}",
+      "compareShared": "• Both used {{tools}}",
+      "stack": "Naufal works mainly with {{skills}}.",
+      "techWith": "Naufal used {{tech}} at {{companies}}.",
+      "techNone": "{{tech}} isn't in the highlighted roles — ask about his main stack instead.",
+      "availability": "Naufal is open to frontend / microfrontend roles. The best way to reach him is email ({{email}}) or LinkedIn.",
+      "education": "Naufal earned a {{degree}} from {{school}} ({{dates}}) — {{honors}}.",
+      "posts": "Naufal writes about how this system is built. Latest:",
+      "postItem": "• {{title}} — {{description}}",
+      "fromPost": "From \"{{title}}\":",
+      "postsEmpty": "No posts published yet — the first one is on the way. Check the blog.",
+      "projects": "A few things outside the day job:",
+      "projectItem": "• {{lead}} {{rest}}",
+      "isThisAI": "Nope — no LLM here. I'm a few hundred lines of hand-written JavaScript matching your question against Naufal's real data. The honesty is kind of the point on a frontend engineer's portfolio.",
+      "help": "Ask me about Naufal's experience (overall or at a specific company like DBS or Danamon), his tech stack, a tech he's used, his education, his writing, or how to hire him.",
+      "blogDown": "I can't reach the CV/blog data right now, so I can't answer that fully — but his CV has it. Try again in a moment."
+    }
+  },
   "presence": {
     "toggleLabel": "Toggle live cursors",
     "unavailable": "Live cursors unavailable — try refreshing the page"
@@ -194,6 +258,10 @@
       "hero": {
         "title": "cursor repel",
         "body": "Move your pointer across the name — each letter pushes away. Host-native React, no library."
+      },
+      "chat": {
+        "title": "ask me anything",
+        "body": "A hand-built assistant — no LLM, just JavaScript matching your question to Naufal's real data."
       },
       "techStack": {
         "title": "icon orbit",

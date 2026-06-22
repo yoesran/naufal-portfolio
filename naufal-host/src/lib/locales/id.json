@@ -136,6 +136,70 @@
       "standalone": "mandiri"
     }
   },
+  "summary": {
+    "role": "Frontend & microfrontend engineer di Jakarta — saya membangun antarmuka dan arsitektur di baliknya.",
+    "workedAt": "Pernah di",
+    "ask": "Tanya tentang saya",
+    "viewCv": "Lihat CV",
+    "contact": "Hubungi saya"
+  },
+  "chat": {
+    "description": "Tanya tentang karya saya — asisten ini hanya beberapa ratus baris JavaScript, tanpa LLM. Ketik pertanyaan atau pilih di bawah.",
+    "disclaimer": "Tanpa model AI — hanya algoritma atas data asli Naufal.",
+    "placeholder": "Tanya soal pengalaman, stack, atau ketersediaannya…",
+    "inputLabel": "Ajukan pertanyaan ke asisten",
+    "sendLabel": "Kirim",
+    "transcriptLabel": "Percakapan asisten",
+    "youLabel": "Anda",
+    "botLabel": "Asisten",
+    "suggest": {
+      "about": "Siapa Naufal?",
+      "experience": "Di mana saja dia pernah bekerja?",
+      "stack": "Apa tech stack-nya?",
+      "available": "Apakah dia tersedia untuk direkrut?",
+      "posts": "Apa yang sudah dia tulis?",
+      "education": "Apa pendidikannya?",
+      "projects": "Ada proyek sampingan?",
+      "compare": "Bandingkan {{a}} dan {{b}}"
+    },
+    "links": {
+      "cv": "Lihat CV ↗",
+      "timeline": "Lihat linimasa ↓",
+      "story": "Baca ceritanya ↗",
+      "email": "Email ↗",
+      "linkedin": "LinkedIn ↗",
+      "blog": "Semua tulisan ↗",
+      "readPost": "Baca tulisannya ↗"
+    },
+    "fallback": "Saya kurang yakin soal itu — saya asisten algoritmik kecil. Coba tanya tentang pengalaman, tech stack, pendidikan, tulisan, atau cara menghubungi Naufal:",
+    "answers": {
+      "greeting": "Hai! Saya asisten Naufal — murni JavaScript, tanpa model AI. Tanya soal pengalaman, stack, atau cara menghubunginya.",
+      "about": "Naufal Yusran adalah frontend & microfrontend engineer yang berbasis di {{location}}. Saat ini dia {{role}} di {{company}}, dan telah berkontribusi di {{count}} perusahaan di bidang perbankan, fintech, SaaS, dan agensi.",
+      "experienceOverall": "Naufal pernah bekerja di {{count}} perusahaan (terbaru lebih dulu):",
+      "experienceItem": "• {{company}} — {{role}} ({{period}})",
+      "earlierNote": "Sebelumnya: {{roles}}.",
+      "experienceAt": "Di {{company}} ({{period}}) Naufal menjabat sebagai {{role}}. {{summary}}",
+      "highlight": "Sorotan: {{highlight}}",
+      "stackLine": "Stack: {{stack}}.",
+      "compareHead": "{{a}} ({{aPeriod}}) vs {{b}} ({{bPeriod}}):",
+      "compareOnly": "• {{company}} banyak memakai {{tools}}",
+      "compareShared": "• Keduanya memakai {{tools}}",
+      "stack": "Naufal terutama bekerja dengan {{skills}}.",
+      "techWith": "Naufal memakai {{tech}} di {{companies}}.",
+      "techNone": "{{tech}} tidak ada di peran yang disorot — coba tanya stack utamanya.",
+      "availability": "Naufal terbuka untuk peran frontend / microfrontend. Cara terbaik menghubunginya lewat email ({{email}}) atau LinkedIn.",
+      "education": "Naufal meraih {{degree}} dari {{school}} ({{dates}}) — {{honors}}.",
+      "posts": "Naufal menulis tentang bagaimana sistem ini dibangun. Terbaru:",
+      "postItem": "• {{title}} — {{description}}",
+      "fromPost": "Dari \"{{title}}\":",
+      "postsEmpty": "Belum ada tulisan yang terbit — yang pertama sedang dalam perjalanan. Cek blognya.",
+      "projects": "Beberapa hal di luar pekerjaan utama:",
+      "projectItem": "• {{lead}} {{rest}}",
+      "isThisAI": "Bukan — tidak ada LLM di sini. Saya beberapa ratus baris JavaScript tulisan tangan yang mencocokkan pertanyaan Anda dengan data asli Naufal. Kejujuran ini justru inti dari portofolio seorang frontend engineer.",
+      "help": "Tanya saya tentang pengalaman Naufal (umum atau di perusahaan tertentu seperti DBS atau Danamon), tech stack-nya, teknologi yang pernah dipakai, pendidikan, tulisan, atau cara merekrutnya.",
+      "blogDown": "Saya tidak bisa mengakses data CV/blog saat ini, jadi belum bisa menjawab lengkap — tapi ada di CV-nya. Coba lagi sebentar."
+    }
+  },
   "presence": {
     "toggleLabel": "Aktifkan kursor live",
     "unavailable": "Kursor live tidak tersedia — coba muat ulang halaman"
@@ -194,6 +258,10 @@
       "hero": {
         "title": "tolak kursor",
         "body": "Gerakkan pointer melintasi nama — tiap huruf menjauh. React asli di host, tanpa library."
+      },
+      "chat": {
+        "title": "tanya apa saja",
+        "body": "Asisten buatan tangan — tanpa LLM, hanya JavaScript yang mencocokkan pertanyaan dengan data asli Naufal."
       },
       "techStack": {
         "title": "orbit ikon",

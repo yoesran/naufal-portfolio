@@ -1,0 +1,336 @@
+{
+  "version": 1,
+  "generatedAt": "2026-06-22T03:36:28.822Z",
+  "cv": {
+    "en": {
+      "contact": {
+        "location": "Jakarta, Indonesia",
+        "email": "naufalyoesran@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/naufal-yusran/"
+      },
+      "experience": [
+        {
+          "company": "DBS Bank Indonesia",
+          "industry": "Banking",
+          "location": "Hybrid, Jakarta",
+          "roles": [
+            {
+              "title": "React.js Developer (Direct Contract)",
+              "dates": "Feb 2026 – Present"
+            }
+          ],
+          "bullets": [
+            "Contributing to a webview-based application using React.js within a microfrontend architecture (Module Federation).",
+            "Collaborating with cross-functional teams to ensure seamless integration between microfrontends and backend services."
+          ]
+        },
+        {
+          "company": "eDOT",
+          "industry": "SaaS",
+          "location": "Remote",
+          "roles": [
+            {
+              "title": "Frontend Developer (Contract via Dikshatek)",
+              "dates": "Dec 2025 – Apr 2026"
+            }
+          ],
+          "bullets": [
+            "Worked on a dashboard application that tracks multiple business processes for client companies, shipping four production features end-to-end.",
+            "Built features using Next.js, React Query, Tailwind CSS, shadcn/ui, React Hook Form, and Zod, with unit-test coverage on core logic."
+          ]
+        },
+        {
+          "company": "Ajaib",
+          "industry": "Investment & Fintech Platform",
+          "location": "Hybrid, Jakarta",
+          "roles": [
+            {
+              "title": "Fullstack Developer (Contract via Binar)",
+              "dates": "Aug 2025 – Feb 2026"
+            }
+          ],
+          "bullets": [
+            "Migrated and revamped ajaib.co.id landing pages from WordPress to Next.js, improving maintainability and scalability.",
+            "Implemented SSR/SSG, SEO optimizations (metadata, sitemap, robots.txt), and responsive UI across multiple product pages (stocks, crypto, mutual funds, etc.).",
+            "Worked within the Growth Team, focusing on the public-facing website experience.",
+            "Contributed to the Onboarding Team, developing a dynamic webview-based form system driven by backend responses, enabling flexible onboarding flows per product.",
+            "Built and maintained features in Ajaib’s internal back-office application."
+          ]
+        },
+        {
+          "company": "Bank Danamon Indonesia",
+          "industry": "Banking",
+          "location": "Jakarta",
+          "roles": [
+            {
+              "title": "Web Developer (Contract via Infosys Solusi Terpadu)",
+              "dates": "Aug 2024 – Aug 2025"
+            }
+          ],
+          "bullets": [
+            "Developed DBankPro 2.0 Back Office Application using microfrontend architecture (Single-SPA → NX migration).",
+            "Worked with React (container) and Angular (feature modules).",
+            "Collaborated with international backend teams and cross-functional stakeholders (PO, BA, QA).",
+            "Led one sprint as task assigner and code reviewer.",
+            "Contributed to migration from Single-SPA to NX Microfrontend (latest Angular).",
+            "Built features for onboarding and back-office systems."
+          ]
+        },
+        {
+          "company": "Infosys Solusi Terpadu",
+          "industry": "IT Services",
+          "location": "Hybrid, Jakarta",
+          "roles": [
+            {
+              "title": "Front End Developer (Contract)",
+              "dates": "Apr 2024 – Aug 2025"
+            }
+          ],
+          "bullets": [
+            "Contributed to two back-office applications using Next.js and Angular.",
+            "Joined ongoing projects and delivered features aligned with established architecture and conventions.",
+            "Outsourced to the client and finished the project successfully."
+          ]
+        },
+        {
+          "company": "Doubler Studio",
+          "industry": "Digital Agency",
+          "location": "Remote",
+          "roles": [
+            {
+              "title": "Javascript Front End Developer (Freelance)",
+              "dates": "Apr 2024 – Aug 2025"
+            },
+            {
+              "title": "Javascript Front End Developer (Contract)",
+              "dates": "Oct 2023 – Mar 2024"
+            }
+          ],
+          "bullets": [
+            "Delivered multiple client projects (including BCA) using vanilla JS, jQuery, Nunjucks, React, Next.js.",
+            "Built interactive UI with animations and ensured backend integration compatibility.",
+            "Acted as sole developer on several projects and collaborated in team-based deliveries."
+          ]
+        }
+      ],
+      "compactRoles": [
+        {
+          "company": "GeekGarden Software House,",
+          "rest": "Flutter Developer (Contract) (Remote)",
+          "dates": "2022–2023"
+        },
+        {
+          "company": "Ehealth.co.id,",
+          "rest": "Junior Software Engineer (Contract) (Remote)",
+          "dates": "2022–2023"
+        },
+        {
+          "company": "Traveloka,",
+          "rest": "Web Engineer (Internship) (Remote)",
+          "dates": "2022"
+        }
+      ],
+      "education": {
+        "school": "Universitas Islam Indonesia",
+        "degree": "Bachelor of Informatics",
+        "dates": "2019 – 2023",
+        "bullets": [
+          "Cum Laude (GPA: 3.69 / 4.00)"
+        ]
+      },
+      "achievements": [
+        {
+          "lead": "Game Developer Bootcamp (Agate / Kampus Merdeka),",
+          "rest": "Completed Unity-based game development program."
+        },
+        {
+          "lead": "Funding Recipient – Pekan Kreativitas Mahasiswa,",
+          "rest": "Built a Flutter-based prototype as sole mobile developer in a multidisciplinary team."
+        }
+      ],
+      "skills": "React.js, Next.js, Angular, JavaScript, TypeScript, HTML, CSS, Tailwind, Bootstrap, Flutter, Microfrontend, React Query, React Hook Form, Zod, Playwright, Unit Testing, Git, REST API integration, jQuery, Drone CI, SonarQube, Nexus IQ, Agile/Scrum, Jira."
+    },
+    "id": {
+      "contact": {
+        "location": "Jakarta, Indonesia",
+        "email": "naufalyoesran@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/naufal-yusran/"
+      },
+      "experience": [
+        {
+          "company": "DBS Bank Indonesia",
+          "industry": "Perbankan",
+          "location": "Hybrid, Jakarta",
+          "roles": [
+            {
+              "title": "React.js Developer (Kontrak Langsung)",
+              "dates": "Feb 2026 – Sekarang"
+            }
+          ],
+          "bullets": [
+            "Berkontribusi pada aplikasi berbasis webview menggunakan React.js dalam arsitektur microfrontend (Module Federation).",
+            "Berkolaborasi dengan tim lintas fungsi untuk memastikan integrasi yang mulus antara microfrontend dan layanan backend."
+          ]
+        },
+        {
+          "company": "eDOT",
+          "industry": "SaaS",
+          "location": "Remote",
+          "roles": [
+            {
+              "title": "Frontend Developer (Kontrak via Dikshatek)",
+              "dates": "Des 2025 – Apr 2026"
+            }
+          ],
+          "bullets": [
+            "Mengerjakan aplikasi dashboard yang memantau berbagai proses bisnis perusahaan klien, merilis empat fitur produksi secara menyeluruh.",
+            "Membangun fitur menggunakan Next.js, React Query, Tailwind CSS, shadcn/ui, React Hook Form, dan Zod, dengan cakupan unit test pada logika inti."
+          ]
+        },
+        {
+          "company": "Ajaib",
+          "industry": "Platform Investasi & Fintech",
+          "location": "Hybrid, Jakarta",
+          "roles": [
+            {
+              "title": "Fullstack Developer (Kontrak via Binar)",
+              "dates": "Agu 2025 – Feb 2026"
+            }
+          ],
+          "bullets": [
+            "Memigrasikan dan merombak halaman landing ajaib.co.id dari WordPress ke Next.js, meningkatkan kemudahan pemeliharaan dan skalabilitas.",
+            "Menerapkan SSR/SSG, optimasi SEO (metadata, sitemap, robots.txt), dan UI responsif di berbagai halaman produk (saham, kripto, reksa dana, dll.).",
+            "Bekerja di dalam Growth Team, berfokus pada pengalaman situs yang menghadap publik.",
+            "Berkontribusi pada Onboarding Team, mengembangkan sistem formulir dinamis berbasis webview yang digerakkan oleh respons backend, memungkinkan alur onboarding yang fleksibel per produk.",
+            "Membangun dan memelihara fitur pada aplikasi back-office internal Ajaib."
+          ]
+        },
+        {
+          "company": "Bank Danamon Indonesia",
+          "industry": "Perbankan",
+          "location": "Jakarta",
+          "roles": [
+            {
+              "title": "Web Developer (Kontrak via Infosys Solusi Terpadu)",
+              "dates": "Agu 2024 – Agu 2025"
+            }
+          ],
+          "bullets": [
+            "Mengembangkan DBankPro 2.0 Back Office Application menggunakan arsitektur microfrontend (migrasi Single-SPA → NX).",
+            "Bekerja dengan React (container) dan Angular (feature module).",
+            "Berkolaborasi dengan tim backend internasional dan pemangku kepentingan lintas fungsi (PO, BA, QA).",
+            "Memimpin satu sprint sebagai pembagi tugas dan code reviewer.",
+            "Berkontribusi pada migrasi dari Single-SPA ke NX Microfrontend (Angular terbaru).",
+            "Membangun fitur untuk sistem onboarding dan back-office."
+          ]
+        },
+        {
+          "company": "Infosys Solusi Terpadu",
+          "industry": "Layanan TI",
+          "location": "Hybrid, Jakarta",
+          "roles": [
+            {
+              "title": "Front End Developer (Kontrak)",
+              "dates": "Apr 2024 – Agu 2025"
+            }
+          ],
+          "bullets": [
+            "Berkontribusi pada dua aplikasi back-office menggunakan Next.js dan Angular.",
+            "Bergabung dengan proyek berjalan dan merilis fitur sesuai arsitektur serta konvensi yang ada.",
+            "Ditugaskan ke klien dan menyelesaikan proyek dengan sukses."
+          ]
+        },
+        {
+          "company": "Doubler Studio",
+          "industry": "Agensi Digital",
+          "location": "Remote",
+          "roles": [
+            {
+              "title": "Javascript Front End Developer (Freelance)",
+              "dates": "Apr 2024 – Agu 2025"
+            },
+            {
+              "title": "Javascript Front End Developer (Kontrak)",
+              "dates": "Okt 2023 – Mar 2024"
+            }
+          ],
+          "bullets": [
+            "Menyelesaikan berbagai proyek klien (termasuk BCA) menggunakan vanilla JS, jQuery, Nunjucks, React, Next.js.",
+            "Membangun UI interaktif dengan animasi dan memastikan kompatibilitas integrasi backend.",
+            "Berperan sebagai satu-satunya developer di beberapa proyek dan berkolaborasi dalam pengerjaan berbasis tim."
+          ]
+        }
+      ],
+      "compactRoles": [
+        {
+          "company": "GeekGarden Software House,",
+          "rest": "Flutter Developer (Kontrak) (Remote)",
+          "dates": "2022–2023"
+        },
+        {
+          "company": "Ehealth.co.id,",
+          "rest": "Junior Software Engineer (Kontrak) (Remote)",
+          "dates": "2022–2023"
+        },
+        {
+          "company": "Traveloka,",
+          "rest": "Web Engineer (Magang) (Remote)",
+          "dates": "2022"
+        }
+      ],
+      "education": {
+        "school": "Universitas Islam Indonesia",
+        "degree": "Sarjana Informatika",
+        "dates": "2019 – 2023",
+        "bullets": [
+          "Cum Laude (IPK: 3.69 / 4.00)"
+        ]
+      },
+      "achievements": [
+        {
+          "lead": "Game Developer Bootcamp (Agate / Kampus Merdeka),",
+          "rest": "Menyelesaikan program pengembangan game berbasis Unity."
+        },
+        {
+          "lead": "Penerima Pendanaan – Pekan Kreativitas Mahasiswa,",
+          "rest": "Membangun prototipe berbasis Flutter sebagai satu-satunya developer mobile dalam tim multidisiplin."
+        }
+      ],
+      "skills": "React.js, Next.js, Angular, JavaScript, TypeScript, HTML, CSS, Tailwind, Bootstrap, Flutter, Microfrontend, React Query, React Hook Form, Zod, Playwright, Unit Testing, Git, integrasi REST API, jQuery, Drone CI, SonarQube, Nexus IQ, Agile/Scrum, Jira."
+    }
+  },
+  "posts": [
+    {
+      "slug": "styling-across-module-federation",
+      "date": "2026-06-22",
+      "title": {
+        "en": "Styling across the Module Federation boundary",
+        "id": "Menata gaya melintasi batas Module Federation"
+      },
+      "description": {
+        "en": "A Svelte remote mounted in the React host came up half-styled. CSS variables cross the federation boundary for free; Tailwind's utility classes don't — here's why, and the one-line fix.",
+        "id": "Sebuah remote Svelte yang dipasang di host React tampil setengah jadi. Variabel CSS melintasi batas federation gratis; kelas utilitas Tailwind tidak — ini alasannya, dan perbaikan satu barisnya."
+      },
+      "body": {
+        "en": "This whole portfolio's premise is a Svelte component running inside a React host\nover Module Federation. The first time I mounted one for real, it came up\nhalf-styled: the right colours and borders, but some utility classes did\nnothing at all. Here's why — and the one-line fix.\n\nCSS variables cross the boundary; utility classes don't\n\nA federated remote renders into the host's DOM. So anything driven by a CSS\ncustom property just works through the cascade — the shadcn theme tokens\n(--background, --primary, --border, …) are defined on the host's <html>,\nand the remote's nodes inherit them. That's also why the theme drawer re-skins\nthe embedded remote live: change a variable on the host and the remote repaints\nfor free.\n\nTailwind utility classes are a different story. bg-sky-400, or the shadcn\nButton classes, aren't variables — they're concrete CSS rules, and those rules\nlive in the remote's entry stylesheet, the one linked from the remote's\nstandalone index.html. The federated chunk the host pulls in ships no CSS at\nall. So when it's embedded, a utility class only renders if the host happens\nto generate the same one.\n\nThat was the tell. The remote used emerald, and emerald worked — because the host\nuses emerald too, so the class already existed in the host's bundle. The remote\nalso used sky, and sky silently did nothing — the host never uses sky, so that\nrule was never generated anywhere on the page.\n\nThe fix: ship the stylesheet with the chunk\n\nImport the remote's stylesheet inside the component, so Tailwind travels with\nthe federated chunk and the MF runtime injects it on load:\n\n \n\nNow the remote carries its own utilities wherever it's mounted. The cost is a\nsecond Tailwind bundle on the host (plus a duplicate preflight) — benign while\nhost and remote share a theme, but real weight that grows with every remote.\n\nOne wrinkle worth knowing: the import has to be in the .svelte file, not the\n.ts mount adapter. The federation dts plugin compiles that adapter with a\ntsconfig that doesn't pull in vite/client, so a bare import '../app.css' there\nfails type-checking with TS2882. The .svelte <script> is processed by Vite,\nwhere the side-effect import resolves fine.\n\nThe rule of thumb\n\n \n \n \n \n\nSo there are two clean ways to style a federated remote: lean on CSS variables +\ninline styles (lean, no extra bundle), or ship the remote's stylesheet inside the\ncomponent (keep Tailwind, pay a little weight). This project does the latter — the\nSvelte toy keeps its full styling, and the host's theme variables still flow in\non top of it.",
+        "id": "Premis utama portofolio ini adalah sebuah komponen Svelte yang berjalan di dalam\nhost React lewat Module Federation. Saat pertama kali saya memasangnya\nsungguhan, komponen itu tampil setengah jadi: warna dan border-nya benar, tapi\nbeberapa kelas utilitas sama sekali tak berefek. Ini alasannya — dan perbaikan\nsatu barisnya.\n\nVariabel CSS melintasi batas; kelas utilitas tidak\n\nRemote terfederasi dirender ke dalam DOM host. Jadi apa pun yang digerakkan\noleh CSS custom property langsung bekerja lewat cascade — token tema shadcn\n(--background, --primary, --border, …) didefinisikan di <html> milik\nhost, dan node milik remote mewarisinya. Itu juga sebabnya theme drawer bisa\nmengganti tampilan remote yang tertanam secara langsung: ubah satu variabel di\nhost, remote langsung mengecat ulang.\n\nKelas utilitas Tailwind cerita yang berbeda. bg-sky-400, atau kelas\nButton shadcn, bukan variabel — itu aturan CSS konkret, dan aturan itu ada di\nstylesheet entry milik remote, yang ditautkan dari index.html remote saat\nberdiri sendiri. Chunk terfederasi yang ditarik host tidak membawa CSS sama\nsekali. Jadi saat tertanam, sebuah kelas utilitas hanya muncul jika host\nkebetulan menghasilkan kelas yang sama.\n\nItulah petunjuknya. Remote memakai emerald, dan emerald bekerja — karena host\njuga memakai emerald, jadi kelasnya sudah ada di bundle host. Remote juga memakai\nsky, dan sky diam-diam tak berefek — host tak pernah memakai sky, jadi aturan itu\ntak pernah dihasilkan di mana pun pada halaman.\n\nPerbaikannya: kirim stylesheet bersama chunk\n\nImpor stylesheet remote di dalam komponen, agar Tailwind ikut bersama chunk\nterfederasi dan runtime MF menyuntikkannya saat dimuat:\n\n \n\nKini remote membawa utilitasnya sendiri ke mana pun ia dipasang. Biayanya satu\nbundle Tailwind tambahan di host (plus preflight ganda) — tak masalah selama host\ndan remote berbagi tema, tapi tetap bobot nyata yang bertambah tiap remote.\n\nSatu hal yang perlu diketahui: impor harus ada di file .svelte, bukan di\nadapter mount .ts. Plugin dts federation mengompilasi adapter itu dengan\ntsconfig yang tak menyertakan vite/client, sehingga import '../app.css' polos\ndi sana gagal type-check dengan TS2882. Blok <script> di .svelte diproses\noleh Vite, tempat side-effect import-nya teratasi.\n\nPatokannya\n\n \n \n \n \n\nJadi ada dua cara bersih untuk menata remote terfederasi: bersandar pada variabel\nCSS + inline style (ringan, tanpa bundle tambahan), atau kirim stylesheet remote\ndi dalam komponen (tetap pakai Tailwind, bayar sedikit bobot). Proyek ini memilih\nyang kedua — mainan Svelte mempertahankan gaya penuhnya, dan variabel tema host\ntetap mengalir di atasnya."
+      }
+    },
+    {
+      "slug": "writing-with-mdx",
+      "date": "2026-06-05",
+      "title": {
+        "en": "Writing posts with MDX",
+        "id": "Menulis dengan MDX"
+      },
+      "description": {
+        "en": "How this blog's posts are authored — MDX bodies in src/content, metadata in one registry, statically exported. Doubles as the template for the next post.",
+        "id": "Bagaimana tulisan di blog ini dibuat — isi MDX di src/content, metadata dalam satu registry, diekspor statis. Sekaligus jadi templat untuk tulisan berikutnya."
+      },
+      "body": {
+        "en": "This is a template post — replace it with the real first one (the cross-framework\nModule Federation build is the obvious candidate). It exists so the MDX pipeline\nis wired end-to-end and to show every element the styling handles.\n\nHow posts work\n\nEach post is two things:\n\n1. Bodies, one .mdx per language in src/content/<locale>/<slug>.mdx —\n plain Markdown, with JSX available when a post needs an interactive component.\n2. An entry in src/lib/posts.ts — the slug, date, and per-locale\n title / description. That registry drives the index and each post's SEO\n metadata.\n\nThe [lang]/posts/[slug] route prerenders one static page per locale × slug\n(dynamicParams is false, so unknown slugs 404), pulls the right body in with\na dynamic import, and wraps it in a prose container with the reader controls\n(font, size, background).\n\nWhat the styling covers\n\nStandard Markdown all renders through Tailwind's typography plugin:\n\n- bold, italic, and inline code\n- internal links and external ones (external get\n target=\"blank\" automatically)\n- lists, like this one\n\nBlockquotes for the asides worth pulling out of the flow.\n\nFenced code blocks are styled to match the site's card surface:\n\n \n\nGitHub-flavored Markdown is on via remark-gfm, so tables work too:\n\n \n \n \n \n \n\nAdding the next post\n\nDrop a new .mdx under each src/content/<locale>/, add its entry to\nsrc/lib/posts.ts (newest first), and next build picks it up. That's the whole\nloop.",
+        "id": "Ini tulisan templat — ganti dengan tulisan pertama yang sebenarnya (proses\nmembangun Module Federation lintas framework adalah kandidat yang paling pas).\nTulisan ini ada supaya pipeline MDX terpasang utuh dan untuk memperlihatkan\nsetiap elemen yang ditangani oleh penataan gaya.\n\nCara kerja tulisan\n\nSetiap tulisan terdiri dari dua hal:\n\n1. Isi, satu .mdx per bahasa di src/content/<locale>/<slug>.mdx —\n Markdown biasa, dengan JSX tersedia saat sebuah tulisan butuh komponen\n interaktif.\n2. Satu entri di src/lib/posts.ts — berisi slug, date, serta title /\n description per bahasa. Registry itu menggerakkan halaman indeks dan\n metadata SEO tiap tulisan.\n\nRoute [lang]/posts/[slug] membuat satu halaman statis per kombinasi bahasa ×\nslug (dynamicParams bernilai false, jadi slug tak dikenal akan 404),\nmengambil isi yang tepat lewat import dinamis, lalu membungkusnya dalam wadah\nprose beserta kontrol pembaca (font, ukuran, latar).\n\nApa saja yang ditangani penataan gaya\n\nMarkdown standar dirender lewat plugin typography Tailwind:\n\n- tebal, miring, dan kode sebaris\n- tautan internal dan tautan eksternal (yang\n eksternal otomatis mendapat target=\"blank\")\n- daftar, seperti ini\n\nKutipan untuk catatan sampingan yang layak dikeluarkan dari alur teks.\n\nBlok kode berpagar ditata agar selaras dengan permukaan kartu situs:\n\n \n\nGitHub-flavored Markdown aktif lewat remark-gfm, jadi tabel pun berfungsi:\n\n \n \n \n \n \n\nMenambah tulisan berikutnya\n\nTaruh .mdx baru di tiap src/content/<locale>/, tambahkan entrinya ke\nsrc/lib/posts.ts (terbaru di atas), dan next build akan memungutnya. Itu saja\nseluruh alurnya."
+      }
+    }
+  ]
+}

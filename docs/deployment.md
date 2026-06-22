@@ -106,6 +106,16 @@ The host's `// quality` block renders the **whole system as a live architecture 
 
 To refresh after a meaningful change: `cd naufal-host && npm run reports && npm run reports:deploy`. The Pages project was created once with `wrangler pages project create naufal-reports --production-branch=main`.
 
+## Assistant knowledge (blog → host)
+
+The host's `// ask` assistant reads a knowledge file the **blog publishes**, so it stays current without a host rebuild — the same cross-origin-JSON pattern as the quality dashboard:
+
+- [`naufal-blog/src/lib/knowledge.ts`](../naufal-blog/src/lib/knowledge.ts) defines the contract + builds it (post registry + cleaned post bodies + the CV per locale, **phone stripped** — it's print-only). [`naufal-blog/scripts/knowledge.ts`](../naufal-blog/scripts/knowledge.ts) (`npm run knowledge`, via `tsx`) writes `naufal-blog/public/knowledge.json` (deployed with the blog) and refreshes the host's same-origin dev seed `naufal-host/public/knowledge.json`. It runs on every blog build via a `prebuild` script, so each deploy republishes.
+- [`naufal-blog/public/_headers`](../naufal-blog/public/_headers) sets `Access-Control-Allow-Origin: *` on `/knowledge.json` so the host can fetch it cross-origin (single ACAO rule — [gotchas.md](./gotchas.md) #21).
+- The host reads `${VITE_BLOG_URL}/knowledge.json` in prod (the same-origin seed in dev) and **version-guards** it; on any failure the assistant degrades to its in-app experience knowledge (the `experience.ts` registry + i18n, which updates on the next host build with no blog involvement).
+
+To refresh: add a post (an entry in `naufal-blog/src/lib/posts.ts`) and redeploy the blog (`npm run build` runs the generator); the live host picks it up on the next load.
+
 ## Verifying live
 
 Open `https://naufal-host.pages.dev`, then DevTools → Network:

@@ -86,3 +86,18 @@ test('live-remote falls back to its offline UI when the lab is unreachable', asy
     timeout: 15_000,
   })
 })
+
+test('the ask assistant answers a suggested question', async ({ page }) => {
+  // Discoverable from the top: the comprehension-layer CTA launches the chat.
+  await expect(page.getByRole('link', { name: /ask about me/i })).toBeVisible()
+  await page.locator('#chat').scrollIntoViewIfNeeded()
+  // A cold-start chip → a grounded answer naming a real employer.
+  await page.getByRole('button', { name: 'Where has he worked?' }).click()
+  await expect(page.getByText(/DBS Bank Indonesia/).first()).toBeVisible()
+
+  // A content question retrieves a passage from a post body (not a canned reply).
+  const input = page.getByRole('textbox', { name: /ask the assistant/i })
+  await input.fill('how does css cross the boundary')
+  await input.press('Enter')
+  await expect(page.getByRole('link', { name: /read the post/i })).toBeVisible()
+})

@@ -66,3 +66,13 @@ The remotes and the realtime server each carry a small **Vitest** suite too — 
 - **`naufal-party`** — the cursor server's pure logic: deterministic colour hashing, the ghost-path downsample, and the seeded echoes ([`src/server.test.ts`](../naufal-party/src/server.test.ts)). The helpers are exported from [`server.ts`](../naufal-party/src/server.ts) so the suite asserts the real code (the test file isn't imported by the entry, so it stays out of the deploy bundle).
 - **`naufal-blog`** — the SEO/i18n lib: the post registry (locale parity, unique slugs, ISO dates), the hreflang `alternates`, and the `sitemap` shape ([`src/**/*.test.ts`](../naufal-blog/src), Vitest node env, `@` alias mirroring tsconfig).
 - **`naufal-lab`** — the framework-agnostic **mount contract** (`mountSpringToy` renders into its target and its cleanup empties it; context defaulting) plus the i18n formatter, under Vitest + jsdom. A [`vitest.setup.ts`](../naufal-lab/src/vitest.setup.ts) stubs `ResizeObserver`/`matchMedia` so the Svelte components mount (à la [gotchas.md](./gotchas.md) #33).
+
+## Assistant knowledge (the `// ask` block)
+
+The host's assistant reads the blog's CV + posts from a generated `knowledge.json`. The blog builds it automatically (a `prebuild` script runs before `next build`), so a normal deploy republishes it. To regenerate by hand (e.g. after editing a post or the CV):
+
+```bash
+cd naufal-blog && npm run knowledge   # writes public/knowledge.json + the host dev seed
+```
+
+In dev the host reads the same-origin seed (`naufal-host/public/knowledge.json`), so the assistant works with no blog server running; the experience half of its knowledge is in-app and needs nothing. See [deployment.md](./deployment.md) › Assistant knowledge.

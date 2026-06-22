@@ -1,0 +1,60 @@
+This whole portfolio's premise is a Svelte component running inside a React host
+over Module Federation. The first time I mounted one for real, it came up
+_half-styled_: the right colours and borders, but some utility classes did
+nothing at all. Here's why — and the one-line fix.
+
+## CSS variables cross the boundary; utility classes don't
+
+A federated remote renders into the **host's** DOM. So anything driven by a CSS
+custom property just works through the cascade — the shadcn theme tokens
+(`--background`, `--primary`, `--border`, …) are defined on the host's `<html>`,
+and the remote's nodes inherit them. That's also why the theme drawer re-skins
+the embedded remote live: change a variable on the host and the remote repaints
+for free.
+
+Tailwind **utility classes** are a different story. `bg-sky-400`, or the shadcn
+`Button` classes, aren't variables — they're concrete CSS rules, and those rules
+live in the remote's **entry stylesheet**, the one linked from the remote's
+standalone `index.html`. The federated chunk the host pulls in ships **no CSS at
+all**. So when it's embedded, a utility class only renders if the host _happens_
+to generate the same one.
+
+That was the tell. The remote used emerald, and emerald worked — because the host
+uses emerald too, so the class already existed in the host's bundle. The remote
+also used sky, and sky silently did nothing — the host never uses sky, so that
+rule was never generated anywhere on the page.
+
+## The fix: ship the stylesheet with the chunk
+
+Import the remote's stylesheet _inside the component_, so Tailwind travels with
+the federated chunk and the MF runtime injects it on load:
+
+```svelte
+<script lang="ts">
+  import '../app.css' // ships the remote's Tailwind over federation
+  // …
+</script>
+```
+
+Now the remote carries its own utilities wherever it's mounted. The cost is a
+second Tailwind bundle on the host (plus a duplicate preflight) — benign while
+host and remote share a theme, but real weight that grows with every remote.
+
+One wrinkle worth knowing: the import has to be in the `.svelte` file, **not** the
+`.ts` mount adapter. The federation dts plugin compiles that adapter with a
+tsconfig that doesn't pull in `vite/client`, so a bare `import '../app.css'` there
+fails type-checking with `TS2882`. The `.svelte` `<script>` is processed by Vite,
+where the side-effect import resolves fine.
+
+## The rule of thumb
+
+| Crosses the boundary                              | Doesn't                                   |
+| ------------------------------------------------- | ----------------------------------------- |
+| CSS custom properties (theme tokens, via cascade) | Tailwind utility classes (concrete rules) |
+| Inline styles                                     | Anything in the remote's entry stylesheet |
+
+So there are two clean ways to style a federated remote: lean on CSS variables +
+inline styles (lean, no extra bundle), or ship the remote's stylesheet inside the
+component (keep Tailwind, pay a little weight). This project does the latter — the
+Svelte toy keeps its full styling, and the host's theme variables still flow in
+on top of it.

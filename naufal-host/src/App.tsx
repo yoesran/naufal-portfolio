@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
+import { IntroSummary } from '@/components/IntroSummary'
 import { PresenceOverlay } from '@/components/PresenceOverlay'
 import { HeroBlock } from '@/components/blocks/HeroBlock'
 import { useCanvasMode } from '@/lib/canvas'
@@ -31,6 +32,11 @@ const ExperienceBlock = lazy(() =>
 const QualityBlock = lazy(() =>
   import('@/components/blocks/QualityBlock').then((m) => ({
     default: m.QualityBlock,
+  }))
+)
+const ChatBlock = lazy(() =>
+  import('@/components/blocks/ChatBlock').then((m) => ({
+    default: m.ChatBlock,
   }))
 )
 // Canvas mode is opt-in, so its stage (pan/zoom + annotations) is split out and
@@ -65,6 +71,10 @@ export default function App() {
       </p>
       <div className="space-y-6">
         <HeroBlock />
+        <IntroSummary />
+        <Suspense fallback={<BlockFallback />}>
+          <ChatBlock />
+        </Suspense>
         <Suspense fallback={<BlockFallback />}>
           <TechStackBlock />
         </Suspense>

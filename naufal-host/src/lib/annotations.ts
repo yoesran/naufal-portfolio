@@ -19,8 +19,9 @@ type Annotation = {
 
 export const ANNOTATIONS: Annotation[] = [
   { anchor: 'hero', side: 'left', key: 'hero' },
-  { anchor: 'tech-stack', side: 'right', key: 'techStack' },
-  { anchor: 'live-remote', side: 'left', key: 'liveRemote' },
-  { anchor: 'experience', side: 'right', key: 'experience' },
-  { anchor: 'quality', side: 'left', key: 'quality' },
+  { anchor: 'chat', side: 'right', key: 'chat' },
+  { anchor: 'tech-stack', side: 'left', key: 'techStack' },
+  { anchor: 'live-remote', side: 'right', key: 'liveRemote' },
+  { anchor: 'experience', side: 'left', key: 'experience' },
+  { anchor: 'quality', side: 'right', key: 'quality' },
 ]
