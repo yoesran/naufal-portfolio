@@ -18,16 +18,19 @@ The remote exposes **two** components today: `./SpringToy` (a draggable Svelte "
 
 ## Project / stack table
 
-| Project        | Stack                                             | Port | Status   |
-| -------------- | ------------------------------------------------- | ---- | -------- |
-| `naufal-host`  | React 19 + Vite + `@module-federation/vite`       | 5173 | Working  |
-| `naufal-lab`   | Plain Svelte 5 + Vite + `@module-federation/vite` | 5174 | Working  |
-| `naufal-party` | PartyKit (WebSocket) — multiplayer presence       | 1999 | Working  |
-| `naufal-blog`  | Next.js 16 · static export (standalone, not fed.) | —    | Deployed |
+| Project             | Stack                                             | Port | Status            |
+| ------------------- | ------------------------------------------------- | ---- | ----------------- |
+| `naufal-host`       | React 19 + Vite + `@module-federation/vite`       | 5173 | Working           |
+| `naufal-lab`        | Plain Svelte 5 + Vite + `@module-federation/vite` | 5174 | Working           |
+| `naufal-party`      | PartyKit (WebSocket) — multiplayer presence       | 1999 | Working           |
+| `naufal-blog`       | Next.js 16 · static export (standalone, not fed.) | —    | Deployed          |
+| `badriyatim-family` | Next.js 16 SSR + Supabase (standalone, not fed.)  | 3000 | WIP, not deployed |
 
-All three running projects are **separate processes** with no build-time coupling. The host fetches the remote's bundle at runtime from `http://127.0.0.1:5174/remoteEntry.js`; the federated `Presence` component opens a WebSocket to `127.0.0.1:1999`.
+The three federated projects are **separate processes** with no build-time coupling. The host fetches the remote's bundle at runtime from `http://127.0.0.1:5174/remoteEntry.js`; the federated `Presence` component opens a WebSocket to `127.0.0.1:1999`.
 
-The blog (`naufal-blog`) is a standalone static site, **internationalized (EN/ID) with locale-routed URLs** (`/en`, `/id`) for proper multilingual SEO (hreflang + per-locale `sitemap`) — a branded home, the CV page (data + content translated), and an MDX-driven `posts` section (`@next/mdx` + `remark-gfm`, a `[lang]/posts/[slug]` route prerendered per locale × slug, with one `.mdx` body per language). It has a **light/dark/system theme toggle** and a per-post **reading panel** (font family / size / background), both no-FOUC. A root `app/layout.tsx` owns `<html>`/`<body>` above the `[lang]` segment (so a locale switch never re-renders them — keeping the theme class and avoiding a React-19 script warning, see [gotchas.md](./gotchas.md) #24); unmatched URLs use a standard `app/not-found.tsx`. The locale-less section paths (`/cv`, `/posts`) are Cloudflare `_redirects` rules to the default locale, but the apex `/` serves a client stub that **detects the visitor's browser language** and routes to `/en` or `/id` (a static export has no edge to read Accept-Language; no middleware either). It's **deployed at `naufal-blog.pages.dev`** (its own Cloudflare Pages project, independent of the federated three); the first real post is pending.
+The blog (`naufal-blog`) is a standalone static site, **internationalized (EN/ID) with locale-routed URLs** (`/en`, `/id`) for proper multilingual SEO (hreflang + per-locale `sitemap`) — a branded home, the CV page (data + content translated), and an MDX-driven `posts` section (`@next/mdx` + `remark-gfm`, a `[lang]/posts/[slug]` route prerendered per locale × slug, with one `.mdx` body per language). It has a **light/dark/system theme toggle** and a per-post **reading panel** (font family / size / background), both no-FOUC. A root `app/layout.tsx` owns `<html>`/`<body>` above the `[lang]` segment (so a locale switch never re-renders them — keeping the theme class and avoiding a React-19 script warning, see [gotchas.md](./gotchas.md) #24); unmatched URLs use a standard `app/not-found.tsx`. The locale-less section paths (`/cv`, `/posts`) are Cloudflare `_redirects` rules to the default locale, but the apex `/` serves a client stub that **detects the visitor's browser language** and routes to `/en` or `/id` (a static export has no edge to read Accept-Language; no middleware either). It's **deployed at `naufal-blog.pages.dev`** (its own Cloudflare Pages project, independent of the federated three); the first real post — `styling-across-module-federation`, in both locales — is live.
+
+**`badriyatim-family`** is a separate product that shares the repo but nothing else: a private family app (silsilah/events/iuran for Naufal's extended family), deliberately **not** federated and outside the portfolio's design system — it has its own ("Songket & Rumah Gadang", Bahasa-only). It documents itself in `badriyatim-family/CLAUDE.md` + `README.md`; the one repo-level rule worth knowing is its **PII data split**: public pages import only `data/public.json` (names/tree), while the full seed `data/family.json` is gitignored and lives locally → Supabase only — the privacy guarantee is that split, not repo visibility.
 
 ---
 

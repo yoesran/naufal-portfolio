@@ -20,8 +20,11 @@ no i18n library** (YAGNI for one language; hardcoded ID strings are intentional,
 not a miss).
 
 **Privacy (non-negotiable):** public = names, tree, struktur, tentang only. Contact
-details, addresses, and **minors' birthdates** are members-only. This is a
-**private repo** — family PII must never be public.
+details, addresses, and **minors' birthdates** are members-only. The guarantee is
+the **data split, not repo visibility**: PII never enters git — the seed
+`data/family.json` is gitignored (local → Supabase only) and only the PII-free
+`data/public.json` is tracked, so the app survives the portfolio repo going
+public someday.
 
 **Phases:** P1 public site (done). P2 in progress — auth done (invite-only magic
 link, `proxy.ts` gates `/keluarga`); next members directory, then
