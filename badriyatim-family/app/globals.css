@@ -1,0 +1,253 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* ── Songket & Rumah Gadang ────────────────────────────────────────────────
+   shadcn semantic tokens mapped onto the family's Minangkabau palette, plus the
+   raw Songket tokens exposed as Tailwind colors (bg-marun, text-emas, …). */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-display);
+
+  /* Songket raw palette → Tailwind utilities */
+  --color-marun: var(--marun);
+  --color-marun-deep: var(--marun-deep);
+  --color-marun-soft: var(--marun-soft);
+  --color-emas: var(--emas);
+  --color-emas-light: var(--emas-light);
+  --color-emas-pale: var(--emas-pale);
+  --color-gading: var(--gading);
+  --color-gading-deep: var(--gading-deep);
+  --color-gading-warm: var(--gading-warm);
+  --color-tanah: var(--tanah);
+  --color-tanah-soft: var(--tanah-soft);
+  --color-indigo-malam: var(--indigo-malam);
+  --color-daun: var(--daun);
+
+  /* shadcn semantic tokens */
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  /* Songket raw palette (exact BUILD_SPEC hex) */
+  --marun: #74132a;
+  --marun-deep: #5a0e20;
+  --marun-soft: #8a2740;
+  --emas: #b8862f;
+  --emas-light: #d9b65e;
+  --emas-pale: #ead9a8;
+  --gading: #faf4e8;
+  --gading-deep: #f2e8d5;
+  --gading-warm: #fbf8f1;
+  --tanah: #2c2118;
+  --tanah-soft: #5c4f43;
+  --indigo-malam: #1e2a44;
+  --daun: #4e6b4f;
+
+  /* Base text size. Expressed in rem so it FOLLOWS the device/browser font-size
+     setting (1rem = the user's browser default), then the A / A+ / A++ control
+     scales further on top. ~1.06rem ≈ 17px at a default 16px, a touch roomier. */
+  --app-base: 1.0625rem;
+
+  --radius: 0.625rem;
+
+  /* shadcn semantic tokens, themed to Songket */
+  --background: var(--gading);
+  --foreground: var(--tanah);
+  --card: var(--gading-warm);
+  --card-foreground: var(--tanah);
+  --popover: var(--gading-warm);
+  --popover-foreground: var(--tanah);
+  --primary: var(--marun);
+  --primary-foreground: var(--gading);
+  --secondary: var(--gading-deep);
+  --secondary-foreground: var(--marun);
+  --muted: var(--gading-deep);
+  --muted-foreground: var(--tanah-soft);
+  --accent: var(--emas-pale);
+  --accent-foreground: var(--marun-deep);
+  --destructive: #9b2226;
+  --border: #e6d8bd;
+  --input: #e6d8bd;
+  --ring: var(--indigo-malam);
+  --chart-1: var(--marun);
+  --chart-2: var(--emas);
+  --chart-3: var(--daun);
+  --chart-4: var(--marun-soft);
+  --chart-5: var(--emas-light);
+  --sidebar: var(--gading-warm);
+  --sidebar-foreground: var(--tanah);
+  --sidebar-primary: var(--marun);
+  --sidebar-primary-foreground: var(--gading);
+  --sidebar-accent: var(--emas-pale);
+  --sidebar-accent-foreground: var(--marun-deep);
+  --sidebar-border: #e6d8bd;
+  --sidebar-ring: var(--indigo-malam);
+}
+
+/* Text-size levels — set data-textsize on <html>; persisted pre-paint. */
+html[data-textsize='lg'] {
+  --app-base: 1.25rem;
+}
+html[data-textsize='xl'] {
+  --app-base: 1.4375rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    font-size: var(--app-base);
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    line-height: 1.65;
+  }
+  /* Headings carry the display serif by default. */
+  h1,
+  h2,
+  h3 {
+    @apply font-heading;
+  }
+  /* Always-visible, generous keyboard focus (BUILD_SPEC requirement). */
+  :focus-visible {
+    outline: 3px solid var(--indigo-malam);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Gold hairline divider + faint songket ground (used sparingly per BUILD_SPEC). */
+@utility hairline-emas {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--emas) 20%,
+    var(--emas) 80%,
+    transparent
+  );
+}
+
+/* Struktur org chart — gold connectors. `.org-trunk` is the vertical line between
+   tiers; `.org-branch` lays a tier's cards in a row where each card drops from a
+   shared horizontal bus (the classic half-bar technique), so every card is wired
+   to the line. Rows never wrap (stay horizontal); the page scrolls on mobile. */
+.org-trunk {
+  width: 0;
+  height: 1.5rem;
+  margin: 0 auto;
+  border-left: 2px solid var(--emas);
+}
+.org-branch {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.org-branch > * {
+  position: relative;
+  padding: 1.5rem 0.5rem 0;
+}
+.org-branch > *::before,
+.org-branch > *::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  width: 50%;
+  height: 1.5rem;
+  border-top: 2px solid var(--emas);
+}
+.org-branch > *::after {
+  right: auto;
+  left: 50%;
+  border-left: 2px solid var(--emas);
+}
+.org-branch > *:only-child::before,
+.org-branch > *:only-child::after {
+  display: none;
+}
+.org-branch > *:first-child::before,
+.org-branch > *:last-child::after {
+  border: 0 none;
+}
+.org-branch > *:last-child::before {
+  border-right: 2px solid var(--emas);
+  border-radius: 0 6px 0 0;
+}
+.org-branch > *:first-child::after {
+  border-radius: 6px 0 0 0;
+}
+
+/* Interactive silsilah — songket gold threads weave in, nodes settle after.
+   The global prefers-reduced-motion rule collapses these to instant. */
+.songket-thread {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: thread-draw 1.1s ease forwards;
+}
+@keyframes thread-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.songket-node {
+  animation: node-settle 0.5s ease 0.55s backwards;
+}
+@keyframes node-settle {
+  from {
+    opacity: 0;
+  }
+}
+.songket-node:focus-visible rect {
+  stroke: var(--indigo-malam);
+  stroke-width: 3;
+}

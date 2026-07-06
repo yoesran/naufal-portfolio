@@ -1,0 +1,343 @@
+{
+  "meta": {
+    "nama_keluarga": "Badriyatim Family",
+    "judul_struktur": "STRUKTUR ORGANISASI & PERSONALIA — KELUARGA BADRIYATIM FAMILY",
+    "judul_silsila": "SILSILAH ANAK KETURUNAN BADRIYATIM & ANIZIR",
+    "judul_data": "DATA KELUARGA BESAR ANAK, CUCU NENEK MIAH CANIAGO",
+    "judul_program": "PROGRAM KERJA BADRIATIM FAMILY"
+  },
+  "struktur": {
+    "penasehat": "EVAEMITA, S.pd",
+    "wakil_penasehat": "SUKRIAL",
+    "ketua": "ERITA, S.pd",
+    "wakil_ketua_1": "Dra. MENIARTI",
+    "wakil_ketua_2": "SELAMAT YANUARDI, SE",
+    "sekretaris": "ALI ABRAR, ST M.si",
+    "wakil_sekretaris": "AHMED REZA FAHLEVI, ST",
+    "bendahara": "Dra. LETIZIAH",
+    "wakil_bendahara": "PRASETYA, ST MsI"
+  },
+  "silsila": {
+    "root": {
+      "ayah": "BADRIYATIM (Almarhum)",
+      "ibu": "ANIZIR (Almarhumah)"
+    },
+    "anak": [
+      {
+        "no": 1,
+        "nama": "EVAEMITA, S.Pd",
+        "pasangan": "YUNUS ABDUL, S.Pd",
+        "cucu": [
+          {
+            "no": 1,
+            "nama": "FAJRIN YUSAL, SP",
+            "pasangan": "",
+            "catatan": "MANTAN",
+            "cicit": [
+              "Keysha Aurelya Rahman"
+            ]
+          },
+          {
+            "no": 2,
+            "nama": "RINALDI YUSAL",
+            "pasangan": "",
+            "cicit": []
+          },
+          {
+            "no": 3,
+            "nama": "MOH. IKSAN YUSAL, S.STP",
+            "pasangan": "ANASTASIA, S.STP",
+            "cicit": [
+              "Alesha Myisha Ramadhani",
+              "Athalla Maheswara Rafif"
+            ]
+          }
+        ]
+      },
+      {
+        "no": 2,
+        "nama": "ERITA, S.Pd",
+        "pasangan": "EFFENDY, S.Pd (Alm)",
+        "cucu": [
+          {
+            "no": 1,
+            "nama": "DINA HOFTY, SP",
+            "pasangan": "",
+            "cicit": []
+          },
+          {
+            "no": 2,
+            "nama": "ANDI ARTHA, SE",
+            "pasangan": "HESNA SYAFRIANTI, SE",
+            "cicit": [
+              "Abiyyu Fatih Nakuarta",
+              "Yamina Arta Kinanti"
+            ]
+          },
+          {
+            "no": 3,
+            "nama": "DIAH ARTARINA, SP",
+            "pasangan": "NURHIDAYAT, SE",
+            "cicit": []
+          },
+          {
+            "no": 4,
+            "nama": "RAMADHAN BIMARTA, A.md BC",
+            "pasangan": "Drg. IRMAYANTI MEITRIKA AMRI",
+            "cicit": [
+              "Janarya Malik Amriarta"
+            ]
+          },
+          {
+            "no": 5,
+            "nama": "RIFA ARTANIA, S.Pd.Gr",
+            "pasangan": "",
+            "cicit": []
+          }
+        ]
+      },
+      {
+        "no": 3,
+        "nama": "SUKRIAL",
+        "pasangan": "JARNA HARTINI",
+        "cucu": [
+          {
+            "no": 1,
+            "nama": "NOVERA ELBA RORA, S.Si",
+            "pasangan": "M. FIKRI ISNAINI, S.Kom",
+            "cicit": [
+              "Shafa Shafira Ar Rayyan",
+              "Syamil Muhammad Sholih",
+              "Saqif Abdul Rahman"
+            ]
+          },
+          {
+            "no": 2,
+            "nama": "HANISA RENCANIWATI, SP",
+            "pasangan": "RICAD NETON PRIAGO, S.Pd",
+            "cicit": [
+              "Syabda Albi Tama",
+              "Adqa Bariq Azizan"
+            ]
+          },
+          {
+            "no": 3,
+            "nama": "CHAIRULLLAH MA'RUP, S.Pd",
+            "pasangan": "WIKKE ROSA LISA",
+            "cicit": [
+              "Abdurrahman Asy Syinqithi"
+            ]
+          }
+        ]
+      },
+      {
+        "no": 4,
+        "nama": "Dra. LETIZIAH",
+        "pasangan": "SURYONO",
+        "cucu": [
+          {
+            "no": 1,
+            "nama": "PRASETYA, M.si",
+            "pasangan": "SILVIA RIANI, M.si",
+            "cicit": [
+              "Afsheen Faiha Prisilia",
+              "Afiqa Kamila Prisila"
+            ]
+          },
+          {
+            "no": 2,
+            "nama": "MARTHA DEWA, ST",
+            "pasangan": "SYAFMITA OKTAVIANI, Amd",
+            "cicit": [
+              "Uwais Al Qarni",
+              "Asiya Hanifa"
+            ]
+          },
+          {
+            "no": 3,
+            "nama": "Ir. PRIMA HADI, STrT",
+            "pasangan": "",
+            "cicit": []
+          }
+        ]
+      },
+      {
+        "no": 5,
+        "nama": "Dra. MENIARTI",
+        "pasangan": "YENDRIZAL, BA",
+        "cucu": [
+          {
+            "no": 1,
+            "nama": "HIIDAYATI. M, M.Pd",
+            "pasangan": "MAULANA ISHAK, M.Pd.I",
+            "cicit": [
+              "Adzkiyah Maulida Rahmah",
+              "Shakila Maulida Wafa"
+            ]
+          },
+          {
+            "no": 2,
+            "nama": "ZATUS SYAWARI, S.Pd",
+            "pasangan": "AGUS HADI UTAMA, M.Pd",
+            "cicit": [
+              "Adiva Khairani Agza",
+              "Agus Hadi Utama"
+            ]
+          },
+          {
+            "no": 3,
+            "nama": "ANAF NABILA PUTRI",
+            "pasangan": "",
+            "cicit": []
+          },
+          {
+            "no": 4,
+            "nama": "MUH AMIN AKBAR, S.Sos",
+            "pasangan": "",
+            "cicit": []
+          },
+          {
+            "no": 4,
+            "nama": "MUH AMIN RAIS, S.Sos",
+            "pasangan": "",
+            "cicit": []
+          },
+          {
+            "no": 6,
+            "nama": "RAUDATUL ISLAMI",
+            "pasangan": "",
+            "cicit": []
+          }
+        ]
+      },
+      {
+        "no": 6,
+        "nama": "SELAMAT YANUARDI, SE",
+        "pasangan": "GUSTIATI, S.Pd",
+        "cucu": [
+          {
+            "no": 1,
+            "nama": "AHMED REZA FALEVI, ST",
+            "pasangan": "",
+            "cicit": []
+          },
+          {
+            "no": 2,
+            "nama": "NAUFAL YUSRAN, S.Kom",
+            "pasangan": "",
+            "cicit": []
+          },
+          {
+            "no": 3,
+            "nama": "VANIA AZALIA PUTRI",
+            "pasangan": "",
+            "cicit": []
+          }
+        ]
+      },
+      {
+        "no": 7,
+        "nama": "ALI ABRAR, ST Msi",
+        "pasangan": "NUR HASNAH",
+        "cucu": [
+          {
+            "no": 1,
+            "nama": "A. FAUZAN SALIM",
+            "pasangan": "",
+            "cicit": []
+          },
+          {
+            "no": 2,
+            "nama": "HANIF HUSNI. A. M",
+            "pasangan": "",
+            "cicit": []
+          },
+          {
+            "no": 3,
+            "nama": "YUSUF ATAYA. M",
+            "pasangan": "",
+            "cicit": []
+          }
+        ]
+      }
+    ],
+    "keterangan": [
+      "Anak Kandung",
+      "Menantu",
+      "Anak2 (Cucu/Cicit)"
+    ]
+  },
+  "program_kerja": [
+    {
+      "no": "1",
+      "nama_kegiatan": "PEMBUKAAN REKENING ATAS NAMA ORGANISASI",
+      "tujuan": "UNTUK MENGHIMPUN DANA IURAN ANGGOTA",
+      "waktu": "MINGGU KE 4 BULAN AGUSTUS 2024",
+      "penanggung_jawab": "BENDAHARA"
+    },
+    {
+      "no": "2",
+      "nama_kegiatan": "MENERIMA IURAN ANGGOTA",
+      "tujuan": "MENGUMPULKAN DANA UNTUK KEGIATAN ORGANISASI",
+      "waktu": "SETIAP BULAN",
+      "penanggung_jawab": "BENDAHARA"
+    },
+    {
+      "no": "3",
+      "nama_kegiatan": "MEMBUAT PERENCANAAN DAN ANGGARAN BIAYA ( RAB ) RENOVASI RUMAH DI KAMPUNG",
+      "tujuan": "UNTUK MENGETAHUI BERAPA UANG YANG DIPERLUKAN",
+      "waktu": "S/D BULAN NOVEMBER 2024",
+      "penanggung_jawab": "KETUA"
+    },
+    {
+      "no": "4",
+      "nama_kegiatan": "MELAKUKAN PEKERJAAN RENOVASI SESUAI ANGGARAN BIAYA YANG TERSEDIA",
+      "tujuan": "AGAR RUMAH DI KAMPUNG LAYAK UNTUK DITEMPATI",
+      "waktu": "BULAN DESEMBER 2024",
+      "penanggung_jawab": "BENDAHARA"
+    },
+    {
+      "no": "5",
+      "nama_kegiatan": "PULANG BASAMO SEKALIAN PERESMIAN RUMAH DI KAMPUNG",
+      "tujuan": "MEMPERKENALKAN TANAH LELUHUR KEPADA ANAK CUCU KHUSUSNYA YANG DIRANTAU",
+      "waktu": "AKHIR TAHUN 2026",
+      "penanggung_jawab": "PANITIA"
+    },
+    {
+      "no": "6",
+      "nama_kegiatan": "MELAKUKAN PENDATAAN JENIS DAN TINGKATAN PENDIDIKAN ANAK/ CUCU BADRIYATIM YANG MASIH SEKOLAH",
+      "tujuan": "MERENCANAKAN MEMBERIKAN BANTUAN PENDIDIKAN AWAL MASUK SD, SMP, SMA DAN KULIAH SESUAI KEUANGAN ORGANISASI",
+      "waktu": "SETIAP AWAL TAHUN AJARAN",
+      "penanggung_jawab": "SEKSI PENDIDIKAN (HIDAYATI MUNAWARAH)"
+    },
+    {
+      "no": "7",
+      "nama_kegiatan": "MELAKUKAN PENDATAAN JENIS PEKERJAAN ANAK CUCU BADRIYATIM",
+      "tujuan": "MERENCANAKAN PEMBERIAN KREDIT USAHA KEPADA  ANGGOTA YANG MEMBUTUHKAN SESUAI KEUANGAN ORGANISASI",
+      "waktu": "SEWAKTU-WAKTU",
+      "penanggung_jawab": "SEKSI PEREKONOMIAN ( ANDI ARTHA)"
+    },
+    {
+      "no": "8",
+      "nama_kegiatan": "PENGAJIAN BULANAN SECARA VIRTUAL",
+      "tujuan": "UNTUK MENINGKATKAN KEIMANAN SELURUH ANGGOTA ORGANISASI",
+      "waktu": "DUA BULAN SEKALI",
+      "penanggung_jawab": "SEKSI KEROHANIAN ( NOVERA ELBARORA)"
+    },
+    {
+      "no": "9",
+      "nama_kegiatan": "MENGUMPULKAN SETIAP PHOTO YANG DI SHARE ANGGOTA DI GROUP",
+      "tujuan": "MEMBUAT ALBUM DIGITAL YANG BISA DI AKSES SETIAP SAAT",
+      "waktu": "SEWAKTU-WAKTU",
+      "penanggung_jawab": "SEKSI SOSIAL BUDAYA ( MOH.IKSAN YUSAL)"
+    },
+    {
+      "no": "10",
+      "nama_kegiatan": "DEMO MASAK RESEP BUNDA ANIZIR SECARA VIRTUAL",
+      "tujuan": "MENGENALKAN KULINER KAMPUNG KE ANAK CUCU BADRIYATIM",
+      "waktu": "DUA BULAN SEKALI",
+      "penanggung_jawab": "SEKSI SOSIAL BUDAYA ( DINA HOFTY)"
+    }
+  ],
+  "anggotaCount": 91
+}

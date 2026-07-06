@@ -1,0 +1,9 @@
+# build output + lockfile + data seeds (public.json is generated; family.json is
+# the private seed and shouldn't be touched by tooling at all)
+.next
+out
+package-lock.json
+data
+node_modules
+test-results
+playwright-report

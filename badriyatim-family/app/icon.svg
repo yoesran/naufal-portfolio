@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Gonjong (rumah gadang roofline) on marun — the family's signature motif.
+       Same path as components/gonjong.tsx, scaled from its 120×40 viewBox. -->
+  <rect width="64" height="64" rx="14" fill="#74132a"/>
+  <g transform="translate(6,23) scale(0.4333)">
+    <path
+      d="M4 36 C16 36 20 14 26 5 C32 14 36 24 46 26 C54 24 56 11 60 3 C64 11 66 24 74 26 C84 24 88 14 94 5 C100 14 104 36 116 36"
+      fill="none" stroke="#d9b65e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+    />
+  </g>
+</svg>
