@@ -29,53 +29,65 @@ export default function StrukturPage() {
       </p>
 
       {/* Rows stay horizontal; the chart scrolls sideways on small screens and
-          starts centred on the trunk. */}
-      <CenterScroll className="overflow-x-auto pb-2">
-        <div className="mx-auto w-max px-2">
-          <div className="flex justify-center">
-            <Unit
-              role="Penasehat"
-              name={struktur.penasehat}
-              wakilRole="Wakil Penasehat"
-              wakil={struktur.wakil_penasehat}
-            />
-          </div>
+          starts centred on the trunk. The edge fades make the mid-word card
+          clipping read as "more this way", not breakage — worst at A++, where
+          a two-card row is wider than any phone. */}
+      <div className="relative">
+        <div
+          aria-hidden="true"
+          className="from-gading pointer-events-none absolute inset-y-0 left-0 z-10 w-6 bg-linear-to-r to-transparent sm:hidden"
+        />
+        <div
+          aria-hidden="true"
+          className="from-gading pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-linear-to-l to-transparent sm:hidden"
+        />
+        <CenterScroll className="overflow-x-auto pb-2">
+          <div className="mx-auto w-max px-2">
+            <div className="flex justify-center">
+              <Unit
+                role="Penasehat"
+                name={struktur.penasehat}
+                wakilRole="Wakil Penasehat"
+                wakil={struktur.wakil_penasehat}
+              />
+            </div>
 
-          <div className="org-trunk" aria-hidden="true" />
-          <div className="flex justify-center">
-            <Unit role="Ketua" name={struktur.ketua} highlight />
-          </div>
+            <div className="org-trunk" aria-hidden="true" />
+            <div className="flex justify-center">
+              <Unit role="Ketua" name={struktur.ketua} highlight />
+            </div>
 
-          <div className="org-trunk" aria-hidden="true" />
-          <div className="org-branch">
-            <Unit role="Wakil Ketua I" name={struktur.wakil_ketua_1} />
-            <Unit role="Wakil Ketua II" name={struktur.wakil_ketua_2} />
-          </div>
+            <div className="org-trunk" aria-hidden="true" />
+            <div className="org-branch">
+              <Unit role="Wakil Ketua I" name={struktur.wakil_ketua_1} />
+              <Unit role="Wakil Ketua II" name={struktur.wakil_ketua_2} />
+            </div>
 
-          <div className="org-trunk" aria-hidden="true" />
-          <div className="org-branch">
-            <Unit
-              role="Sekretaris"
-              name={struktur.sekretaris}
-              wakilRole="Wakil Sekretaris"
-              wakil={struktur.wakil_sekretaris}
-            />
-            <Unit
-              role="Bendahara"
-              name={struktur.bendahara}
-              wakilRole="Wakil Bendahara"
-              wakil={struktur.wakil_bendahara}
-            />
-          </div>
+            <div className="org-trunk" aria-hidden="true" />
+            <div className="org-branch">
+              <Unit
+                role="Sekretaris"
+                name={struktur.sekretaris}
+                wakilRole="Wakil Sekretaris"
+                wakil={struktur.wakil_sekretaris}
+              />
+              <Unit
+                role="Bendahara"
+                name={struktur.bendahara}
+                wakilRole="Wakil Bendahara"
+                wakil={struktur.wakil_bendahara}
+              />
+            </div>
 
-          <div className="org-trunk" aria-hidden="true" />
-          <div className="org-branch">
-            {seksi.map((s) => (
-              <SeksiCard key={s.role} role={s.role} members={s.members} />
-            ))}
+            <div className="org-trunk" aria-hidden="true" />
+            <div className="org-branch">
+              {seksi.map((s) => (
+                <SeksiCard key={s.role} role={s.role} members={s.members} />
+              ))}
+            </div>
           </div>
-        </div>
-      </CenterScroll>
+        </CenterScroll>
+      </div>
     </div>
   )
 }

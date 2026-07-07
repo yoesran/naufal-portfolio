@@ -3,8 +3,10 @@ import data from '@/data/public.json'
 // PUBLIC, PII-FREE dataset only: names / relationships / roles. The full member
 // directory (contacts, addresses, DOB) lives in Supabase, members-only, and is
 // NEVER imported here — so it can never reach the public client bundle.
-// Generated from the private seed: `node -e "...write data/public.json..."`
-// (silsila + struktur + program_kerja + a plain anggota count, no records).
+// Generated from the private seed `family.json`, which is kept OUTSIDE the
+// repo entirely (this repo is public); regenerate with `npm run build-public`
+// (scripts/build-public.mjs — copies silsila/struktur/program_kerja and
+// reduces the member records to a bare count).
 export interface Cucu {
   no: number
   nama: string

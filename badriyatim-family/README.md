@@ -22,8 +22,10 @@ saja sepi) — jadi bangun yang WhatsApp _tidak bisa_: **silsilah** interaktif,
 - **Publik** = nama, pohon silsilah, struktur, tentang. **Members-only** =
   kontak, alamat, tanggal lahir anak-anak.
 - Halaman publik hanya mengimpor `data/public.json` (bebas PII). Seed lengkap
-  `data/family.json` **di-gitignore** (lokal → Supabase saja) dan tidak boleh
-  diimpor kode klien mana pun — satu impor JSON membundel seluruh isinya.
+  `family.json` disimpan **di luar repo sepenuhnya** (dipegang pengurus →
+  langsung ke Supabase) dan tidak boleh diimpor kode klien mana pun — satu
+  impor JSON membundel seluruh isinya. Entri `.gitignore` untuk
+  `data/family.json` tetap ada sebagai pengaman kalau salinannya mampir.
 - Cek setelah perubahan: `npm run build`, lalu grep `.next` untuk satu nomor
   telepon yang dikenal — harus nol.
 

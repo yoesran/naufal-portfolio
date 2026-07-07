@@ -79,6 +79,25 @@ test('canvas: pinch zooms in around the midpoint', async ({
   expect(after).toBeGreaterThan(before * 1.2)
 })
 
+test('A++ text size also scales the tree’s default zoom', async ({ page }) => {
+  await page.goto('/silsilah')
+  await page.waitForTimeout(1900)
+  const svg = page.locator('.touch-none > svg')
+  const scaleOf = (transform: string) =>
+    parseFloat(/scale\(([\d.]+)\)/.exec(transform)?.[1] ?? 'NaN')
+  const base = scaleOf(await svg.evaluate((el) => el.style.transform))
+  // Same effect as the A++ control: the html attribute drives the font size,
+  // the rem-based canvas resizes, and the ResizeObserver re-derives the zoom.
+  await page.evaluate(() =>
+    document.documentElement.setAttribute('data-textsize', 'xl')
+  )
+  await page.waitForTimeout(500)
+  const xl = scaleOf(await svg.evaluate((el) => el.style.transform))
+  // xl is 23px/17px ≈ 1.35× — assert well past noise but below the full factor
+  // (the height cap can absorb a little of it).
+  expect(xl).toBeGreaterThan(base * 1.2)
+})
+
 test('canvas: keyboard Enter on a node opens its profile', async ({ page }) => {
   await page.goto('/silsilah')
   await page.waitForTimeout(1800)

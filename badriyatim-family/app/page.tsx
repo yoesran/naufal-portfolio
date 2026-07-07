@@ -102,9 +102,12 @@ function Stat({ n, label }: { n: number; label: string }) {
   )
 }
 
+// Separator dot between stats — desktop-only: when the pill wraps (mobile,
+// and always at A++) the dots orphan at line ends ("26 cucu ·"), so small
+// screens rely on the flex gap alone.
 function Dot() {
   return (
-    <span className="text-emas" aria-hidden>
+    <span className="text-emas hidden sm:inline" aria-hidden>
       ·
     </span>
   )

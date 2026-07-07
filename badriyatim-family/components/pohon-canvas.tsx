@@ -245,7 +245,13 @@ export function PohonCanvas({
   )
 
   const wrapRef = useRef<HTMLDivElement>(null)
-  const [size, setSize] = useState({ w: 0, h: 0 })
+  // `scale` is the A/A+/A++ text-size factor (html font-size ÷ the 17px base).
+  // The SVG's node labels are fixed-px, so without it the tree stays small
+  // while every other letter on the page grows — the default zoom multiplies
+  // by it so A++ users get readable labels immediately. Captured in the
+  // ResizeObserver callback: the container height is rem-based, so a text-size
+  // switch resizes it and re-fires the observer — no extra listener needed.
+  const [size, setSize] = useState({ w: 0, h: 0, scale: 1 })
   // Tagged with the mode it was computed for, so a mode switch falls back to the
   // home view without a setState-in-effect (React Compiler rule).
   const [userT, setUserT] = useState<Transform | null>(null)
@@ -257,7 +263,12 @@ export function PohonCanvas({
     const el = wrapRef.current
     if (!el) return
     const ro = new ResizeObserver(([e]) =>
-      setSize({ w: e.contentRect.width, h: e.contentRect.height })
+      setSize({
+        w: e.contentRect.width,
+        h: e.contentRect.height,
+        scale:
+          parseFloat(getComputedStyle(document.documentElement).fontSize) / 17,
+      })
     )
     ro.observe(el)
     return () => ro.disconnect()
@@ -333,7 +344,10 @@ export function PohonCanvas({
     <div>
       <div
         ref={wrapRef}
-        className="border-border bg-gading-warm relative h-136 cursor-grab touch-none overflow-hidden rounded-xl border active:cursor-grabbing"
+        // max-h keeps the canvas inside the viewport at A++ (34rem × the xl
+        // factor ≈ 780px — taller than a phone screen, which put an empty
+        // slice of pattern above the fold and the tree below it).
+        className="border-border bg-gading-warm relative h-136 max-h-[75svh] cursor-grab touch-none overflow-hidden rounded-xl border active:cursor-grabbing"
         onPointerDown={(e) => {
           pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
           ;(e.currentTarget as Element).setPointerCapture(e.pointerId)
@@ -527,7 +541,7 @@ export function PohonCanvas({
 }
 
 function defaultView(
-  size: { w: number; h: number },
+  size: { w: number; h: number; scale: number },
   width: number,
   height: number,
   rootX: number,
@@ -535,9 +549,16 @@ function defaultView(
   mode: TreeMode
 ): Transform {
   if (!size.w || !size.h) return { k: 0.5, tx: 40, ty: 16, mode }
+  // A/A+/A++ multiplies the default zoom so the fixed-px node labels track the
+  // chosen text size — at A++ the mandala no longer fully fits, which is the
+  // right trade: readable names beat overview (pan/pinch still reach the rest).
   if (mode === 'radial') {
-    // Whole mandala in view, centred.
-    const k = clamp(Math.min(size.w / width, size.h / height) * 0.94, 0.16, 1.2)
+    // Whole mandala in view, centred (at base text size).
+    const k = clamp(
+      Math.min(size.w / width, size.h / height) * 0.94 * size.scale,
+      0.16,
+      1.2 * size.scale
+    )
     return {
       k,
       tx: size.w / 2 - rootX * k,
@@ -546,7 +567,11 @@ function defaultView(
     }
   }
   // linear: fill vertically, root centred horizontally, top-anchored; pan sideways.
-  const k = clamp((size.h / height) * 0.86, 0.36, 0.95)
+  const k = clamp(
+    (size.h / height) * 0.86 * size.scale,
+    0.36,
+    0.95 * size.scale
+  )
   return { k, tx: size.w / 2 - rootX * k, ty: 14, mode }
 }
 
