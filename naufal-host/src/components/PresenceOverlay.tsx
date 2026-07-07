@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { loadRemote } from '@module-federation/runtime'
 
 import { RemoteMount } from '@/components/RemoteMount'
+import { ensureLabRemote } from '@/lib/lab-remote'
 import { usePresenceActive } from '@/lib/presence'
 
 const PARTY_HOST = import.meta.env.VITE_PARTY_HOST ?? '127.0.0.1:1999'
@@ -17,8 +18,10 @@ export function PresenceOverlay() {
   const active = usePresenceActive()
   if (!active) return null
 
-  const load = () =>
-    loadRemote('lab/Presence') as Promise<typeof import('lab/Presence')>
+  const load = () => {
+    ensureLabRemote()
+    return loadRemote('lab/Presence') as Promise<typeof import('lab/Presence')>
+  }
 
   return (
     <RemoteMount

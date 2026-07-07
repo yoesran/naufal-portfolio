@@ -22,9 +22,8 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "lab/*": ["./@mf-types/lab/*"],
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "@mf-types", "vitest.setup.ts"]
+  "include": ["src", "vitest.setup.ts"]
 }

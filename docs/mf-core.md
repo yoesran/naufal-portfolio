@@ -124,23 +124,15 @@ The mount signature's `opts` object is how the host hands data to a remote witho
 ```ts
 federation({
   name: "host",
-  remotes: {
-    lab: {
-      type: "module",
-      name: "lab",
-      entry: "http://127.0.0.1:5174/remoteEntry.js",
-    },
-  },
-  dts: {
-    generateTypes: false,
-    consumeTypes: command === "serve", // dev only; see note below
-    displayErrorInTerminal: true,
-  },
+  // NO `remotes` here — deliberate. A build-config remote gets its
+  // remoteEntry.js fetched inside the generated bootstrap, before the app
+  // entry executes (first-paint cost; a stall when the lab is down).
+  runtimePlugins: ["./src/lib/mf-fallback-plugin.ts"],
   shared: ["react", "react-dom"],
 });
 ```
 
-The host's `entry` is actually built from an env var (`VITE_LAB_URL`) via `loadEnv` for environment-aware deployment — see [mf-platform.md](./mf-platform.md). And `consumeTypes` is gated to `command === "serve"` so it only downloads the remote's `.d.ts` in dev: the production build doesn't need them for the runtime bundle, and consuming them would couple the build to the remote being reachable (see [deployment.md](./deployment.md)).
+The lab is instead **registered at runtime, on first use** — `src/lib/lab-remote.ts` exports `ensureLabRemote()`, a one-shot `registerRemotes()` of `{ name: 'lab', type: 'module', entry: LAB_URL + '/remoteEntry.js' }`, called by `LiveRemoteBlock` and `PresenceOverlay` right before their `loadRemote`. The entry URL comes from `VITE_LAB_URL` (env-aware deployment — see [mf-platform.md](./mf-platform.md) for the first-paint measurements behind this).
 
 **Remote** (`naufal-lab/vite.config.ts`):
 
@@ -172,10 +164,10 @@ preview: { port: 5174, host: '127.0.0.1' },
 
 Both sides set `build: { target: 'chrome89' }` — required by `@module-federation/vite` (native ES modules + top-level `await`).
 
-## 5. TypeScript types are generated, not hand-declared
+## 5. TypeScript types are hand-declared (the contract is the API)
 
-The remote emits `.d.ts` files at build time (into `dist/@mf-types/`, packaged as `dist/@mf-types.zip`); the host downloads them at startup into `naufal-host/@mf-types/`. The host's `tsconfig.app.json` maps `lab/*` (and `@/*` for local source) to the generated types. `@mf-types/` is **gitignored** — a regenerated artifact.
+`naufal-host/src/types/lab.d.ts` declares `lab/SpringToy` and `lab/Presence` by hand — two one-line `declare module` blocks with the mount signature. That's the whole typed surface, and it's deliberate: since the lab left the build-config `remotes` (§4), the dts-plugin's auto-download had no trigger, and a fresh clone must type-check without the lab ever running. The mount contract is tiny and stable, so a hand-written declaration is *less* machinery, not more risk — if the lab exposes a new module, add its line.
 
-The catch-all `"*": ["./@mf-types/*"]` path means new remotes work without further tsconfig edits. Tradeoff: typo'd imports may resolve to `any` instead of erroring. Acceptable at this scale.
+(The previous flow — remote `generateTypes` → host `consumeTypes` downloading `@mf-types/` in dev — still works if you temporarily restore `remotes` + `dts` in the host config; useful as a one-off cross-check that the hand-written contract hasn't drifted. The remote still emits `dist/@mf-types.zip` for any future consumer.)
 
 > **TS 6.0 gotcha (cost us hours):** TypeScript 6.0 turns the deprecated `baseUrl` option into a **hard error** (TS5101). The MF dts-plugin generates a tsconfig that `extends` the remote's `tsconfig.json`, so a `baseUrl` anywhere in the remote's config chain makes type generation crash silently — no types reach the host, with only a `#TYPE-001` in the build log. Fix: add `"ignoreDeprecations": "6.0"` (band-aid) or remove `baseUrl` (it stops working entirely in TS 7). See [gotchas.md](./gotchas.md).

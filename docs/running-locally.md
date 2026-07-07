@@ -17,12 +17,7 @@ Open `http://localhost:5173`. Open a second tab (or `http://127.0.0.1:5174` stan
 
 **Dev reload:** true HMR isn't possible across the MF boundary. A small plugin in the host's `vite.config.ts` watches `../naufal-lab/dist/` and triggers a host full-page reload when the remote rebuilds (~200–500ms). Requires `server.fs.allow` to permit watching the sibling folder.
 
-**Fresh clone:** because `@mf-types/` is gitignored, the host's TypeScript shows "cannot find module" until the remote has been built + served once and the host has fetched the types. Run the remote before the host on first setup:
-
-1. `cd naufal-lab && npm install && npx vite build`
-2. `npx vite preview --port 5174` (keep running)
-3. `cd naufal-host && npm install && npm run dev`
-4. `@mf-types/` populates, errors clear.
+**Fresh clone:** no type-download step anymore — the `lab/*` module types are a hand-written contract committed at [`naufal-host/src/types/lab.d.ts`](../naufal-host/src/types/lab.d.ts) (see [mf-core.md](./mf-core.md) §5), so `npm install` in each folder is all a fresh clone needs; the host type-checks and builds with the lab never having run.
 
 ## Formatting
 

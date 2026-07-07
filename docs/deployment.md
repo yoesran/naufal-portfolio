@@ -21,7 +21,7 @@ PartyKit is Cloudflare-owned (acquired Oct 2025); `partykit deploy` targets the 
 
 Each origin needs to know the others. The couplings are all **build-time env vars** (so changing one means a rebuild + redeploy of that app):
 
-- **Host → remote**: `VITE_LAB_URL` builds the federation `entry` (`${VITE_LAB_URL}/remoteEntry.js`) in [`naufal-host/vite.config.ts`](../naufal-host/vite.config.ts).
+- **Host → remote**: `VITE_LAB_URL` builds the federation `entry` (`${VITE_LAB_URL}/remoteEntry.js`) in [`naufal-host/src/lib/lab-remote.ts`](../naufal-host/src/lib/lab-remote.ts) — the lab is registered at **runtime** on first use, not in the vite config (first-paint cost; see [mf-platform.md](./mf-platform.md)). The config still preconnects to `VITE_LAB_URL`.
 - **Host → party**: `VITE_PARTY_HOST` flows through `import.meta.env` to `PresenceOverlay`, which passes it to the embedded remote as `opts.host`.
 - **Standalone remote → party**: the lab's _own_ page ([`App.svelte`](../naufal-lab/src/App.svelte)) reads `VITE_PARTY_HOST` and passes it to `<Presence>`. The embedded path gets the host from `opts`; the standalone page must supply its own, or it falls back to the component's `127.0.0.1:1999` default — see [gotchas.md](./gotchas.md) #22.
 
@@ -63,7 +63,7 @@ The host fetches `remoteEntry.js` and its lazy chunks from a _different origin_,
 
 The host gets a clean dev/prod split for free: `vite` (dev, `serve`) uses the code defaults (or a gitignored `.env.local` if present); `vite build` (prod) loads `.env.production`. The remote can't — it's _always_ built (`vite build --watch` for dev, `vite build` for deploy), so both would be production mode and pull prod env. Fix: the dev watcher runs `--mode development` (see `dev:mf` in [`naufal-lab/package.json`](../naufal-lab/package.json)), so local dev keeps the standalone page on the local party while the deploy build (`vite build`, production) uses `.env.production`. See [gotchas.md](./gotchas.md) #22.
 
-Also in the host config: `dts.consumeTypes` is on **only in `serve`** (dev). The prod build doesn't need the remote's `.d.ts` for the runtime bundle, and consuming them would couple the build to the remote being reachable.
+The host no longer consumes the remote's generated `.d.ts` at all — the `lab/*` types are a hand-written contract at `naufal-host/src/types/lab.d.ts` (see [mf-core.md](./mf-core.md) §5), so no build or dev flow depends on the remote being reachable.
 
 ## Deploy procedure (direct upload via Wrangler)
 

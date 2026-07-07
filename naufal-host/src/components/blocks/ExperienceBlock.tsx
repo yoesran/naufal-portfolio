@@ -14,6 +14,7 @@ import {
   isExperienceSelection,
 } from '@/lib/experience'
 import { DEFAULT_LOCALE, type Translations, isLocale } from '@/lib/i18n'
+import { LAB_URL } from '@/lib/lab-remote'
 import { BLOG_URL } from '@/lib/links'
 import { useInView } from '@/lib/useInView'
 import { useMeasuredHeight } from '@/lib/useMeasuredHeight'
@@ -125,8 +126,8 @@ function TypedLine({
 }
 
 // Real architecture endpoints for `git remote -v` — env-aware, so dev shows
-// localhost honestly and prod shows the deployed origins.
-const LAB_URL = import.meta.env.VITE_LAB_URL ?? 'http://127.0.0.1:5174'
+// localhost honestly and prod shows the deployed origins. LAB_URL comes from
+// lib/lab-remote (the one source).
 const PARTY_HOST = import.meta.env.VITE_PARTY_HOST ?? '127.0.0.1:1999'
 
 // Refs the prompt understands. `main`/`HEAD` are aliases for the newest role;

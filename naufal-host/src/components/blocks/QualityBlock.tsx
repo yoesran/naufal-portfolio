@@ -15,6 +15,7 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { LAB_URL } from '@/lib/lab-remote'
 import { BLOG_URL } from '@/lib/links'
 import { cn } from '@/lib/utils'
 
@@ -42,7 +43,6 @@ const REPORTS_BASE =
 const HEALTH_URL = import.meta.env.VITE_REPORTS_URL
   ? `${import.meta.env.VITE_REPORTS_URL}/health.json`
   : '/health.json'
-const LAB_URL = import.meta.env.VITE_LAB_URL ?? 'http://127.0.0.1:5174'
 
 // --- The system as a graph ---------------------------------------------------
 // The four apps as nodes on a 0–100 plane (SVG edges + absolutely-placed tiles

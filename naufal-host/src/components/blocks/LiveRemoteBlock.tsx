@@ -11,6 +11,7 @@ import { Cell } from '@/components/Cell'
 import { RemoteMount, type RemoteStatus } from '@/components/RemoteMount'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { LAB_URL, ensureLabRemote } from '@/lib/lab-remote'
 import { useMeasuredHeight } from '@/lib/useMeasuredHeight'
 import { cn } from '@/lib/utils'
 
@@ -22,7 +23,6 @@ import { cn } from '@/lib/utils'
 const MIN_FETCH_MS = 750
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-const LAB_URL = import.meta.env.VITE_LAB_URL ?? 'http://127.0.0.1:5174'
 // The page's own origin — truthful in every environment (dev, prod, future
 // custom domain), unlike a hardcoded deploy hostname next to the env-derived
 // labHost below.
@@ -79,6 +79,7 @@ export function LiveRemoteBlock() {
       return sleep(MIN_FETCH_MS).then(() =>
         Promise.reject(new Error('Simulated offline'))
       )
+    ensureLabRemote()
     if (retryResetRef.current) {
       retryResetRef.current = false
       registerRemotes(

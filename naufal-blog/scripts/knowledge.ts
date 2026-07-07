@@ -9,7 +9,7 @@
 // Run by `npm run knowledge`, and automatically via `prebuild` before `next
 // build` so every deploy republishes. The shape + phone-stripping live in
 // src/lib/knowledge.ts (type-checked + unit-tested); this is just the writer.
-import { writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -19,10 +19,28 @@ const here = dirname(fileURLToPath(import.meta.url))
 const knowledge = buildKnowledge()
 const json = JSON.stringify(knowledge, null, 2) + '\n'
 
+// Skip the write when nothing but the timestamp would change: both copies are
+// git-tracked, and `prebuild` runs on every `next build` — so a health-check
+// build used to dirty the repo with timestamp-only diffs. This also keeps
+// `generatedAt` honest: it moves only when the content does.
+// Normalize CRLF too: with core.autocrlf a fresh checkout hands us CRLF while
+// we generate LF — without this the very first build after a clone/checkout
+// would always "differ" and re-dirty the file.
+const stripStamp = (s: string) =>
+  s.replace(/\r\n/g, '\n').replace(/"generatedAt": "[^"]*"/, '')
+const writeIfChanged = (path: string) => {
+  try {
+    if (stripStamp(readFileSync(path, 'utf8')) === stripStamp(json)) return
+  } catch {
+    // missing/unreadable → fall through to write
+  }
+  writeFileSync(path, json)
+}
+
 // (1) Published with the blog → fetched cross-origin by the host assistant.
-writeFileSync(resolve(here, '../public/knowledge.json'), json)
+writeIfChanged(resolve(here, '../public/knowledge.json'))
 // (2) Host dev seed (same-origin) so the assistant works offline in dev + tests.
-writeFileSync(resolve(here, '../../naufal-host/public/knowledge.json'), json)
+writeIfChanged(resolve(here, '../../naufal-host/public/knowledge.json'))
 
 console.log(
   `knowledge.json → ${Object.keys(knowledge.cv).length} locales, ${knowledge.posts.length} post(s)`
