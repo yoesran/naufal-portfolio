@@ -1,51 +1,94 @@
-This is a template post — replace it with the real first one (the cross-framework
-Module Federation build is the obvious candidate). It exists so the MDX pipeline
-is wired end-to-end and to show every element the styling handles.
+Every post on this blog exists twice — once in English, once in Indonesian — and
+the site is a static export, so both versions are prerendered at build time and
+there's no server left running to fix anything afterwards. That constraint turns
+out to decide the whole design. Here's the shape it forced, and the one place the
+type system quietly stops helping.
 
-## How posts work
+## A post is one registry entry and two bodies
 
-Each post is two things:
-
-1. **Bodies**, one `.mdx` per language in `src/content/<locale>/<slug>.mdx` —
-   plain Markdown, with JSX available when a post needs an interactive component.
-2. **An entry** in `src/lib/posts.ts` — the `slug`, `date`, and per-locale
-   `title` / `description`. That registry drives the index and each post's SEO
-   metadata.
-
-The `[lang]/posts/[slug]` route prerenders one static page per locale × slug
-(`dynamicParams` is `false`, so unknown slugs 404), pulls the right body in with
-a dynamic `import`, and wraps it in a `prose` container with the reader controls
-(font, size, background).
-
-## What the styling covers
-
-Standard Markdown all renders through Tailwind's typography plugin:
-
-- **bold**, _italic_, and `inline code`
-- [internal links](/en/cv) and [external ones](https://nextjs.org) (external get
-  `target="_blank"` automatically)
-- lists, like this one
-
-> Blockquotes for the asides worth pulling out of the flow.
-
-Fenced code blocks are styled to match the site's card surface:
+The metadata lives in TypeScript, in a single ordered array:
 
 ```ts
-export function getPost(slug: string): PostMeta | undefined {
-  return posts.find((post) => post.slug === slug)
+export type PostMeta = {
+  slug: string
+  date: string // ISO 8601
+  title: Record<Locale, string>
+  description: Record<Locale, string>
 }
 ```
 
-GitHub-flavored Markdown is on via `remark-gfm`, so tables work too:
+The bodies live on disk as `src/content/<locale>/<slug>.mdx` — plain Markdown,
+with JSX available when a post needs a real component. The route prerenders one
+static page per locale × slug, pulling the right body in by name:
 
-| Piece           | Role                                 |
-| --------------- | ------------------------------------ |
-| `src/content`   | post bodies (`.mdx`, per locale)     |
-| `lib/posts`     | metadata registry + ordering         |
-| `[lang]/[slug]` | the static route that renders a post |
+```tsx
+export const dynamicParams = false
 
-## Adding the next post
+const { default: Body } = await import(`@/content/${lang}/${slug}.mdx`)
+```
 
-Drop a new `.mdx` under each `src/content/<locale>/`, add its entry to
-`src/lib/posts.ts` (newest first), and `next build` picks it up. That's the whole
-loop.
+`Record<Locale, string>` is doing more work than it looks. Add a locale to the
+project and every post stops compiling until it has a title and a description in
+that language. Forget the Indonesian title on a new post and `tsc` names the
+exact line. Translation of the _metadata_ is a compile-time obligation.
+
+## The bodies have no such guarantee
+
+Nothing in that type mentions the files. The body arrives through a
+template-literal dynamic import, which the bundler resolves by generating a
+module context over `src/content` — it matches paths at build time, not types at
+check time. So the registry can promise a post the filesystem doesn't have.
+
+I tried it: add an entry with no `.mdx` anywhere, then build.
+
+```text
+Running TypeScript ...
+Finished TypeScript in 4.7s ...
+Generating static pages using 11 workers (0/18) ...
+Error occurred prerendering page "/en/posts/probe-missing-body".
+Error: Cannot find module '@/content/en/probe-missing-body.mdx'
+    at moduleContext (...[turbopack]_runtime.js:332:19)
+Export encountered an error, exiting the build.
+```
+
+TypeScript passes, cleanly, and reports as much. Four seconds later prerendering
+dies on a module that was never there.
+
+## Failing at build is the feature
+
+That looks like a gap, and for about a minute I treated it as one. It isn't. The
+static export is what makes it safe: because `dynamicParams` is `false`, _every_
+locale × slug pair is enumerated from the registry and prerendered, so a body
+that doesn't exist is a build that doesn't finish. The broken page cannot reach
+production, because production is a folder of HTML files and that file was never
+written.
+
+Run the same code under SSR and the same mistake ships. `generateStaticParams`
+becomes a hint rather than an inventory, the import resolves lazily on first
+request, and the missing translation surfaces as a 500 for whoever happens to
+open the Indonesian link first — probably not me, and probably not soon.
+
+> The bug is identical. The rendering strategy decides whether it's caught by a
+> build or by a reader.
+
+So the two halves guard each other, at different times:
+
+| Mistake                                | Caught by  | When             |
+| -------------------------------------- | ---------- | ---------------- |
+| Missing per-locale title / description | TypeScript | `tsc`, in-editor |
+| Missing per-locale body                | Prerender  | `next build`     |
+| Slug not in the registry               | Router     | never renders    |
+
+The last row is the same principle once more: `dynamicParams = false` means an
+unknown slug has no page rather than a lazily-built one.
+
+## The loop
+
+Adding a post is a `.mdx` under each `src/content/<locale>/`, an entry in
+`src/lib/posts.ts`, and `next build`. If either half is missing, the build says
+so. That's the whole publishing pipeline, and it's the reason I never have to
+remember whether I translated something — I only have to remember to build.
+
+The cost is honest and small: a bilingual blog is two blogs, and no type can
+tell me whether the Indonesian body actually _says_ what the English one says.
+It only promises the file is there. The rest is my problem.

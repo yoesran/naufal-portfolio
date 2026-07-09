@@ -54,23 +54,11 @@ const cv: Record<Locale, CvData> = {
           },
         ],
         bullets: [
-          'Contributing to a webview-based application using React.js within a microfrontend architecture (Module Federation).',
-          'Collaborating with cross-functional teams to ensure seamless integration between microfrontends and backend services.',
-        ],
-      },
-      {
-        company: 'eDOT',
-        industry: 'SaaS',
-        location: 'Remote',
-        roles: [
-          {
-            title: 'Frontend Developer (Contract via Dikshatek)',
-            dates: 'Dec 2025 – Apr 2026',
-          },
-        ],
-        bullets: [
-          'Worked on a dashboard application that tracks multiple business processes for client companies, shipping four production features end-to-end.',
-          'Built features using Next.js, React Query, Tailwind CSS, shadcn/ui, React Hook Form, and Zod, with unit-test coverage on core logic.',
+          'React developer on Indonesia’s digibank app during its move onto DBS’s regional microfrontend platform — the Module Federation shell built by Singapore’s digibank-as-a-Service team.',
+          'Owned integration of Transaction Signing, an existing Singapore production microfrontend, working directly with the Singapore team.',
+          'Owned integration of centralised over-the-air localisation, letting copy update from a CMS without an app release.',
+          'Built share-transaction-history, passing a base64 payload from the React webview to the native app over the JS bridge.',
+          'Prepared Drone CI pipelines, deployed to production, and cleared UAT and post-release defects; completed captcha integration on the credit-card onboarding web app.',
         ],
       },
       {
@@ -117,13 +105,12 @@ const cv: Record<Locale, CvData> = {
         roles: [
           {
             title: 'Front End Developer (Contract)',
-            dates: 'Apr 2024 – Aug 2025',
+            dates: 'Apr 2024 – Aug 2024',
           },
         ],
         bullets: [
-          'Contributed to two back-office applications using Next.js and Angular.',
-          'Joined ongoing projects and delivered features aligned with established architecture and conventions.',
-          'Outsourced to the client and finished the project successfully.',
+          'Delivered two features into an ongoing Loan Origination System (LOS) for PT Sarana Multi Infrastruktur, a state-owned (BUMN) infrastructure financier — Next.js with Material UI, including a Syncfusion integration.',
+          'Joined an established codebase in-house with an all-Infosys project team, shipping within its existing components and conventions.',
         ],
       },
       {
@@ -141,9 +128,8 @@ const cv: Record<Locale, CvData> = {
           },
         ],
         bullets: [
-          'Delivered multiple client projects (including BCA) using vanilla JS, jQuery, Nunjucks, React, Next.js.',
-          'Built interactive UI with animations and ensured backend integration compatibility.',
-          'Acted as sole developer on several projects and collaborated in team-based deliveries.',
+          'Delivered public-facing web projects for BCA, Indonesia’s largest private bank — the News & Features section (Next.js, SSG/SSR), the developer portal (vanilla JS, Bootstrap), and the BCA × USS 2023 campaign microsite (React) — often as sole developer.',
+          'Built interactive, animated UI on a Nunjucks + Gulp toolchain, and ensured backend integration compatibility.',
         ],
       },
     ],
@@ -202,23 +188,11 @@ const cv: Record<Locale, CvData> = {
           },
         ],
         bullets: [
-          'Berkontribusi pada aplikasi berbasis webview menggunakan React.js dalam arsitektur microfrontend (Module Federation).',
-          'Berkolaborasi dengan tim lintas fungsi untuk memastikan integrasi yang mulus antara microfrontend dan layanan backend.',
-        ],
-      },
-      {
-        company: 'eDOT',
-        industry: 'SaaS',
-        location: 'Remote',
-        roles: [
-          {
-            title: 'Frontend Developer (Kontrak via Dikshatek)',
-            dates: 'Des 2025 – Apr 2026',
-          },
-        ],
-        bullets: [
-          'Mengerjakan aplikasi dashboard yang memantau berbagai proses bisnis perusahaan klien, merilis empat fitur produksi secara menyeluruh.',
-          'Membangun fitur menggunakan Next.js, React Query, Tailwind CSS, shadcn/ui, React Hook Form, dan Zod, dengan cakupan unit test pada logika inti.',
+          'React developer pada aplikasi digibank Indonesia saat migrasi ke platform microfrontend regional DBS — shell Module Federation buatan tim digibank-as-a-Service Singapura.',
+          'Memegang integrasi Transaction Signing, microfrontend yang sudah berjalan di produksi Singapura, bekerja langsung dengan tim Singapura.',
+          'Memegang integrasi lokalisasi over-the-air terpusat, sehingga teks dapat diperbarui dari CMS tanpa merilis ulang aplikasi.',
+          'Membangun fitur bagikan riwayat transaksi, mengirim payload base64 dari webview React ke aplikasi native melalui JS bridge.',
+          'Menyiapkan pipeline CI Drone, melakukan deploy ke produksi, dan menuntaskan defect UAT serta pascarilis; merampungkan integrasi captcha di aplikasi web onboarding kartu kredit.',
         ],
       },
       {
@@ -265,13 +239,12 @@ const cv: Record<Locale, CvData> = {
         roles: [
           {
             title: 'Front End Developer (Kontrak)',
-            dates: 'Apr 2024 – Agu 2025',
+            dates: 'Apr 2024 – Agu 2024',
           },
         ],
         bullets: [
-          'Berkontribusi pada dua aplikasi back-office menggunakan Next.js dan Angular.',
-          'Bergabung dengan proyek berjalan dan merilis fitur sesuai arsitektur serta konvensi yang ada.',
-          'Ditugaskan ke klien dan menyelesaikan proyek dengan sukses.',
+          'Merilis dua fitur pada Loan Origination System (LOS) yang sedang berjalan untuk PT Sarana Multi Infrastruktur, BUMN pembiayaan infrastruktur — Next.js dengan Material UI, termasuk integrasi Syncfusion.',
+          'Bergabung dengan basis kode yang sudah mapan, dikerjakan in-house bersama tim proyek Infosys, merilis sesuai komponen dan konvensi yang ada.',
         ],
       },
       {
@@ -289,9 +262,8 @@ const cv: Record<Locale, CvData> = {
           },
         ],
         bullets: [
-          'Menyelesaikan berbagai proyek klien (termasuk BCA) menggunakan vanilla JS, jQuery, Nunjucks, React, Next.js.',
-          'Membangun UI interaktif dengan animasi dan memastikan kompatibilitas integrasi backend.',
-          'Berperan sebagai satu-satunya developer di beberapa proyek dan berkolaborasi dalam pengerjaan berbasis tim.',
+          'Mengerjakan proyek web publik untuk BCA — bagian News & Features (Next.js, SSG/SSR), portal developer (vanilla JS, Bootstrap), dan microsite kampanye BCA × USS 2023 (React) — sering sebagai satu-satunya developer.',
+          'Membangun UI interaktif dan beranimasi di atas toolchain Nunjucks + Gulp, serta memastikan kompatibilitas integrasi backend.',
         ],
       },
     ],

@@ -15,8 +15,8 @@
   "techStack": {
     "prompt": "pick a tech to see how it shows up in my work →",
     "notes": {
-      "react": "Daily driver — currently at DBS (microfrontend webview), previously eDOT, Doubler Studio.",
-      "next": "Landing + onboarding webview at Ajaib, internal dashboards at eDOT.",
+      "react": "Daily driver — currently at DBS (microfrontend webview), previously Bank Danamon, Doubler Studio.",
+      "next": "Landing pages + onboarding webview at Ajaib, a loan origination system at Infosys, client projects at Doubler Studio.",
       "typescript": "Default for everything I write.",
       "svelte": "Powers the federated remote you've been interacting with on this page.",
       "angular": "Feature modules at Bank Danamon — DBankPro 2.0, Single-SPA → NX migration.",
@@ -59,23 +59,24 @@
     "present": "present",
     "roles": {
       "dbs": "React.js Developer",
-      "edot": "Frontend Developer",
       "ajaib": "Fullstack Developer",
       "danamon": "Web Developer",
-      "doubler": "Frontend Developer (freelance)"
+      "freelance": "Frontend Developer (freelance)",
+      "infosys": "Front End Developer",
+      "doubler": "Frontend Developer (contract)"
     },
     "summaries": {
       "dbs": "A webview banking app built on React inside a Module Federation microfrontend — the same architecture this portfolio runs on.",
-      "edot": "A dashboard tracking business processes for client companies — Next.js, React Query, shadcn/ui; shipped four production features end-to-end.",
       "ajaib": "Migrated ajaib.co.id landing pages from WordPress to Next.js with SSR/SSG + SEO, and built a backend-driven webview form system for onboarding.",
       "danamon": "DBankPro 2.0 back office: a React container mounting Angular feature modules over Single-SPA, later migrated to NX — the exact cross-framework pattern this playground demonstrates.",
-      "doubler": "Client projects (including BCA) in vanilla JS, jQuery, Nunjucks, React, and Next.js — often as the sole developer."
+      "infosys": "Two features shipped into an ongoing Loan Origination System for Sarana Multi Infrastruktur (a state-owned infrastructure financier) — Next.js and Material UI, including a Syncfusion integration.",
+      "freelance": "Kept building for BCA part-time while the Infosys and Danamon contracts ran — React and Next.js work, often as the sole developer.",
+      "doubler": "Where it started: public-facing work for BCA, Indonesia's largest private bank — vanilla JS, jQuery and a Nunjucks + Gulp toolchain, often as the sole developer."
     },
     "earlier": {
       "node": "earlier",
       "title": "Earlier roles",
       "roles": {
-        "infosys": "Infosys Solusi Terpadu (2024 – 25) — two back-office apps in Next.js + Angular; the vendor behind the Danamon contract",
         "geekgarden": "GeekGarden (2022 – 23) — sole Flutter developer on two shipped client apps, Figma to QA-passed builds",
         "ehealth": "Ehealth.co.id (2022 – 23) — Junior Software Engineer, Polymer UI on a healthcare product",
         "traveloka": "Traveloka (2022) — Web Engineer intern: browser-automation research, web infra, UI-library components"
@@ -89,11 +90,12 @@
     "demoUnavailable": "demo unavailable — try refreshing the page",
     "commits": {
       "dbs": "feat: react + module federation webview",
-      "edot": "feat: business-process dashboard (next.js)",
       "ajaib": "feat: wordpress → next.js + webview onboarding",
       "danamon": "feat: react container + angular modules",
-      "doubler": "feat: bca client projects, vanilla js → next",
-      "earlier": "traveloka · ehealth · geekgarden · infosys"
+      "freelance": "feat: bca microsites, react + next.js",
+      "infosys": "feat: loan origination system (next.js)",
+      "doubler": "init: bca client projects, vanilla js + jquery",
+      "earlier": "traveloka · ehealth · geekgarden"
     },
     "promptLabel": "Type a git command — try: git checkout danamon",
     "promptCta": "type",
@@ -101,9 +103,10 @@
     "clearOutput": "Clear terminal output",
     "industries": {
       "dbs": "Banking",
-      "edot": "SaaS",
       "ajaib": "Fintech",
       "danamon": "Banking",
+      "freelance": "Digital agency",
+      "infosys": "IT services",
       "doubler": "Digital agency"
     }
   },
@@ -174,7 +177,7 @@
     "fallback": "I'm not sure about that one — I'm a small algorithmic assistant. Try asking about Naufal's experience, tech stack, education, writing, or how to reach him:",
     "answers": {
       "greeting": "Hi! I'm Naufal's assistant — pure JavaScript, no AI model. Ask about his experience, stack, or how to reach him.",
-      "about": "Naufal Yusran is a frontend & microfrontend engineer based in {{location}}. Right now he's {{role}} at {{company}}, and he's shipped across {{count}} companies in banking, fintech, SaaS, and agency work.",
+      "about": "Naufal Yusran is a frontend & microfrontend engineer based in {{location}}. Right now he's {{role}} at {{company}}, and he's shipped across {{count}} companies in banking, fintech, IT services, and agency work.",
       "experienceOverall": "Naufal has worked across {{count}} companies (newest first):",
       "experienceItem": "• {{company}} — {{role}} ({{period}})",
       "earlierNote": "Earlier: {{roles}}.",

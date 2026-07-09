@@ -1,13 +1,10 @@
 import type { TFunction } from 'i18next'
 
-import { EXPERIENCE } from '@/lib/experience'
+import { EARLIER_KEYS, EXPERIENCE } from '@/lib/experience'
 import type { Locale } from '@/lib/i18n'
 import { BLOG_URL } from '@/lib/links'
 
 import type { BlogKnowledge, KB } from './types'
-
-// The collapsed early roles, keyed to the host locale (experience.earlier.roles.*).
-const EARLIER_KEYS = ['infosys', 'geekgarden', 'ehealth', 'traveloka'] as const
 
 // Where the assistant reads the blog's published knowledge. In dev (no
 // VITE_BLOG_URL) it reads the same-origin seed (host public/knowledge.json) so

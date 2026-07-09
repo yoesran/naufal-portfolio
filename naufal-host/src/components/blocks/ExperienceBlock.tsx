@@ -7,6 +7,7 @@ import { Cell } from '@/components/Cell'
 import { RemoteMount } from '@/components/RemoteMount'
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
+  EARLIER_KEYS,
   EXPERIENCE,
   type ExperienceEntry,
   type ExperienceSelection,
@@ -23,36 +24,35 @@ import { useTypewriter } from '@/lib/useTypewriter'
 import { cn } from '@/lib/utils'
 
 type EarlierKey = keyof Translations['experience']['earlier']['roles']
-const EARLIER_KEYS: readonly EarlierKey[] = [
-  'infosys',
-  'geekgarden',
-  'ehealth',
-  'traveloka',
-]
 
-// Sites for the collapsed earlier roles. Infosys Solusi Terpadu is omitted —
-// its domain isn't confidently known, and a wrong link is worse than none.
-const EARLIER_URL: Partial<Record<EarlierKey, string>> = {
+// Sites for the collapsed earlier roles, exhaustive by type. lib/experience.ts
+// owns the key list (the assistant reads it too), so indexing this with those
+// keys is the parity guard: add an earlier role and the build fails until it has
+// both a translation and a site. Every one of them has a live site today — the
+// `url`-less case belongs to full entries (Infosys), not here.
+const EARLIER_URL = {
   geekgarden: 'geekgarden.id',
   ehealth: 'ehealth.co.id',
   traveloka: 'traveloka.com',
-}
+} satisfies Record<EarlierKey, string>
 
 // ---- Graph geometry -------------------------------------------------------
 // The career rendered as a `git log --graph`: newest commit on top, the main
-// rail in lane 0, parallel gigs in lane 1. The lanes are honest — eDOT ran
-// alongside Ajaib and into the DBS era; Doubler's freelance ran alongside
-// Danamon — so the branch/merge points anchor at the true neighbours.
+// rail in lane 0, parallel gigs in lane 1. The lanes are honest — the 2023–24
+// Doubler contract was the only job at the time so it sits on main, while the
+// 2024–25 Doubler freelance ran alongside Infosys and Danamon, so it branches.
+// The branch/merge points anchor at the true neighbours.
 const ROW_H = 56
 const LANE_X = [18, 58] // commit-centre x per lane (gap > node ⌀ so lanes read)
 const GRAPH_W = 80 // svg width; row labels start right of this
 
 const LANES: Record<ExperienceSlug, 0 | 1> = {
   dbs: 0,
-  edot: 1,
   ajaib: 0,
   danamon: 0,
-  doubler: 1,
+  freelance: 1,
+  infosys: 0,
+  doubler: 0,
 }
 
 // Per-row pop-in stagger (ms) during the entrance — referenced by both the
@@ -560,7 +560,7 @@ export function ExperienceBlock() {
   const graphH = rows.length * ROW_H
 
   // The selected commit lights its rail: main rail for lane-0 commits, the
-  // branch arc for the parallel gigs — checking out eDOT lights its branch.
+  // branch arc for the parallel gigs — checking out `freelance` lights its branch.
   const activeLane = rows.find((r) => r.sel === active)?.lane ?? 0
   // Each lane-1 entry is an isolated parallel gig; its branch arc merges at the
   // commit above and forks at the one below. Derived from row positions (not a
@@ -794,14 +794,16 @@ export function ExperienceBlock() {
                     </p>
                   )}
                   <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
-                    <a
-                      href={`https://${entry.url}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-muted-foreground hover:text-foreground font-mono text-xs transition-colors"
-                    >
-                      {entry.url} ↗
-                    </a>
+                    {entry.url && (
+                      <a
+                        href={`https://${entry.url}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-muted-foreground hover:text-foreground font-mono text-xs transition-colors"
+                      >
+                        {entry.url} ↗
+                      </a>
+                    )}
                     {entry.story && (
                       <a
                         href={`${BLOG_URL}/work/${entry.story}`}
@@ -847,21 +849,16 @@ export function ExperienceBlock() {
                   <ul className="text-muted-foreground mt-2 space-y-1.5 text-sm leading-relaxed">
                     {EARLIER_KEYS.map((key) => (
                       <li key={key}>
-                        {t(`experience.earlier.roles.${key}`)}
-                        {EARLIER_URL[key] && (
-                          <>
-                            {' '}
-                            <a
-                              href={`https://${EARLIER_URL[key]}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              aria-label={`${EARLIER_URL[key]} ↗`}
-                              className="text-muted-foreground/60 hover:text-foreground transition-colors"
-                            >
-                              ↗
-                            </a>
-                          </>
-                        )}
+                        {t(`experience.earlier.roles.${key}`)}{' '}
+                        <a
+                          href={`https://${EARLIER_URL[key]}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`${EARLIER_URL[key]} ↗`}
+                          className="text-muted-foreground/60 hover:text-foreground transition-colors"
+                        >
+                          ↗
+                        </a>
                       </li>
                     ))}
                   </ul>

@@ -1,53 +1,100 @@
-Ini tulisan templat — ganti dengan tulisan pertama yang sebenarnya (proses
-membangun Module Federation lintas framework adalah kandidat yang paling pas).
-Tulisan ini ada supaya pipeline MDX terpasang utuh dan untuk memperlihatkan
-setiap elemen yang ditangani oleh penataan gaya.
+Setiap tulisan di blog ini ada dua kali — sekali dalam bahasa Inggris, sekali
+dalam bahasa Indonesia — dan situs ini adalah static export, jadi kedua versinya
+dirender saat build dan tak ada server yang tersisa untuk membetulkan apa pun
+sesudahnya. Batasan itu ternyata menentukan seluruh desainnya. Ini bentuk yang
+dipaksakannya, dan satu titik di mana sistem tipe diam-diam berhenti menolong.
 
-## Cara kerja tulisan
+## Satu tulisan adalah satu entri registry dan dua isi
 
-Setiap tulisan terdiri dari dua hal:
-
-1. **Isi**, satu `.mdx` per bahasa di `src/content/<locale>/<slug>.mdx` —
-   Markdown biasa, dengan JSX tersedia saat sebuah tulisan butuh komponen
-   interaktif.
-2. **Satu entri** di `src/lib/posts.ts` — berisi `slug`, `date`, serta `title` /
-   `description` per bahasa. Registry itu menggerakkan halaman indeks dan
-   metadata SEO tiap tulisan.
-
-Route `[lang]/posts/[slug]` membuat satu halaman statis per kombinasi bahasa ×
-slug (`dynamicParams` bernilai `false`, jadi slug tak dikenal akan 404),
-mengambil isi yang tepat lewat `import` dinamis, lalu membungkusnya dalam wadah
-`prose` beserta kontrol pembaca (font, ukuran, latar).
-
-## Apa saja yang ditangani penataan gaya
-
-Markdown standar dirender lewat plugin typography Tailwind:
-
-- **tebal**, _miring_, dan `kode sebaris`
-- [tautan internal](/id/cv) dan [tautan eksternal](https://nextjs.org) (yang
-  eksternal otomatis mendapat `target="_blank"`)
-- daftar, seperti ini
-
-> Kutipan untuk catatan sampingan yang layak dikeluarkan dari alur teks.
-
-Blok kode berpagar ditata agar selaras dengan permukaan kartu situs:
+Metadata-nya hidup di TypeScript, dalam satu array terurut:
 
 ```ts
-export function getPost(slug: string): PostMeta | undefined {
-  return posts.find((post) => post.slug === slug)
+export type PostMeta = {
+  slug: string
+  date: string // ISO 8601
+  title: Record<Locale, string>
+  description: Record<Locale, string>
 }
 ```
 
-GitHub-flavored Markdown aktif lewat `remark-gfm`, jadi tabel pun berfungsi:
+Isinya hidup sebagai berkas `src/content/<locale>/<slug>.mdx` — Markdown biasa,
+dengan JSX tersedia kalau sebuah tulisan butuh komponen sungguhan. Route-nya
+merender satu halaman statis per locale × slug, menarik isi yang tepat lewat
+namanya:
 
-| Bagian          | Peran                              |
-| --------------- | ---------------------------------- |
-| `src/content`   | isi tulisan (`.mdx`, per bahasa)   |
-| `lib/posts`     | registry metadata + urutan         |
-| `[lang]/[slug]` | route statis yang merender tulisan |
+```tsx
+export const dynamicParams = false
 
-## Menambah tulisan berikutnya
+const { default: Body } = await import(`@/content/${lang}/${slug}.mdx`)
+```
 
-Taruh `.mdx` baru di tiap `src/content/<locale>/`, tambahkan entrinya ke
-`src/lib/posts.ts` (terbaru di atas), dan `next build` akan memungutnya. Itu saja
-seluruh alurnya.
+`Record<Locale, string>` bekerja lebih keras daripada tampaknya. Tambahkan satu
+locale ke proyek ini dan semua tulisan berhenti dikompilasi sampai masing-masing
+punya judul dan deskripsi dalam bahasa itu. Lupa judul bahasa Indonesia pada
+tulisan baru, dan `tsc` menyebut barisnya persis. Menerjemahkan _metadata_ adalah
+kewajiban saat kompilasi.
+
+## Isi tulisan tak punya jaminan serupa
+
+Tak ada bagian dari tipe itu yang menyebut berkas. Isi tulisan datang lewat
+dynamic import bertemplat, yang diselesaikan bundler dengan membangkitkan sebuah
+module context di atas `src/content` — ia mencocokkan path saat build, bukan tipe
+saat pengecekan. Jadi registry bisa menjanjikan tulisan yang tak dimiliki
+filesystem.
+
+Saya coba: tambahkan satu entri tanpa `.mdx` di mana pun, lalu build.
+
+```text
+Running TypeScript ...
+Finished TypeScript in 4.7s ...
+Generating static pages using 11 workers (0/18) ...
+Error occurred prerendering page "/en/posts/probe-missing-body".
+Error: Cannot find module '@/content/en/probe-missing-body.mdx'
+    at moduleContext (...[turbopack]_runtime.js:332:19)
+Export encountered an error, exiting the build.
+```
+
+TypeScript lolos, bersih, dan melaporkannya begitu. Empat detik kemudian
+prerender mati pada modul yang memang tak pernah ada.
+
+## Gagal saat build justru fiturnya
+
+Itu terlihat seperti lubang, dan selama semenit saya memperlakukannya begitu.
+Bukan. Justru static export yang membuatnya aman: karena `dynamicParams` bernilai
+`false`, _setiap_ pasangan locale × slug didaftar dari registry lalu dirender,
+sehingga isi yang tak ada berarti build yang tak selesai. Halaman rusak itu tak
+mungkin sampai ke produksi, sebab produksi adalah sekumpulan berkas HTML dan
+berkas tadi tak pernah ditulis.
+
+Jalankan kode yang sama di atas SSR, dan kesalahan yang sama akan terkirim.
+`generateStaticParams` berubah jadi petunjuk, bukan daftar; import-nya
+diselesaikan saat permintaan pertama; dan terjemahan yang hilang muncul sebagai
+500 bagi siapa pun yang kebetulan membuka tautan Indonesia lebih dulu — mungkin
+bukan saya, dan mungkin tidak segera.
+
+> Bug-nya sama persis. Strategi rendering-lah yang menentukan apakah ia
+> tertangkap oleh sebuah build atau oleh seorang pembaca.
+
+Jadi kedua bagian itu saling menjaga, pada waktu yang berbeda:
+
+| Kesalahan                           | Ditangkap oleh | Kapan             |
+| ----------------------------------- | -------------- | ----------------- |
+| Judul / deskripsi per-locale hilang | TypeScript     | `tsc`, di editor  |
+| Isi per-locale hilang               | Prerender      | `next build`      |
+| Slug tak ada di registry            | Router         | tak pernah render |
+
+Baris terakhir adalah asas yang sama sekali lagi: `dynamicParams = false` berarti
+slug tak dikenal tidak punya halaman, alih-alih halaman yang dibangun belakangan.
+
+## Alurnya
+
+Menambah tulisan berarti satu `.mdx` di tiap `src/content/<locale>/`, satu entri
+di `src/lib/posts.ts`, lalu `next build`. Kalau salah satu bagiannya hilang,
+build-lah yang memberi tahu. Itu seluruh pipeline penerbitannya, dan itu sebabnya
+saya tak pernah perlu mengingat apakah sesuatu sudah diterjemahkan — saya hanya
+perlu ingat untuk build.
+
+Ongkosnya jujur dan kecil: blog dwibahasa adalah dua blog, dan tak ada tipe yang
+bisa memberi tahu apakah isi bahasa Indonesia benar-benar _mengatakan_ apa yang
+dikatakan versi Inggrisnya. Ia hanya menjanjikan berkasnya ada. Sisanya urusan
+saya.

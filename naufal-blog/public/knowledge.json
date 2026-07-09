@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-22T03:36:28.822Z",
+  "generatedAt": "2026-07-09T09:18:11.391Z",
   "cv": {
     "en": {
       "contact": {
@@ -20,23 +20,11 @@
             }
           ],
           "bullets": [
-            "Contributing to a webview-based application using React.js within a microfrontend architecture (Module Federation).",
-            "Collaborating with cross-functional teams to ensure seamless integration between microfrontends and backend services."
-          ]
-        },
-        {
-          "company": "eDOT",
-          "industry": "SaaS",
-          "location": "Remote",
-          "roles": [
-            {
-              "title": "Frontend Developer (Contract via Dikshatek)",
-              "dates": "Dec 2025 – Apr 2026"
-            }
-          ],
-          "bullets": [
-            "Worked on a dashboard application that tracks multiple business processes for client companies, shipping four production features end-to-end.",
-            "Built features using Next.js, React Query, Tailwind CSS, shadcn/ui, React Hook Form, and Zod, with unit-test coverage on core logic."
+            "React developer on Indonesia’s digibank app during its move onto DBS’s regional microfrontend platform — the Module Federation shell built by Singapore’s digibank-as-a-Service team.",
+            "Owned integration of Transaction Signing, an existing Singapore production microfrontend, working directly with the Singapore team.",
+            "Owned integration of centralised over-the-air localisation, letting copy update from a CMS without an app release.",
+            "Built share-transaction-history, passing a base64 payload from the React webview to the native app over the JS bridge.",
+            "Prepared Drone CI pipelines, deployed to production, and cleared UAT and post-release defects; completed captcha integration on the credit-card onboarding web app."
           ]
         },
         {
@@ -83,13 +71,12 @@
           "roles": [
             {
               "title": "Front End Developer (Contract)",
-              "dates": "Apr 2024 – Aug 2025"
+              "dates": "Apr 2024 – Aug 2024"
             }
           ],
           "bullets": [
-            "Contributed to two back-office applications using Next.js and Angular.",
-            "Joined ongoing projects and delivered features aligned with established architecture and conventions.",
-            "Outsourced to the client and finished the project successfully."
+            "Delivered two features into an ongoing Loan Origination System (LOS) for PT Sarana Multi Infrastruktur, a state-owned (BUMN) infrastructure financier — Next.js with Material UI, including a Syncfusion integration.",
+            "Joined an established codebase in-house with an all-Infosys project team, shipping within its existing components and conventions."
           ]
         },
         {
@@ -107,9 +94,8 @@
             }
           ],
           "bullets": [
-            "Delivered multiple client projects (including BCA) using vanilla JS, jQuery, Nunjucks, React, Next.js.",
-            "Built interactive UI with animations and ensured backend integration compatibility.",
-            "Acted as sole developer on several projects and collaborated in team-based deliveries."
+            "Delivered public-facing web projects for BCA, Indonesia’s largest private bank — the News & Features section (Next.js, SSG/SSR), the developer portal (vanilla JS, Bootstrap), and the BCA × USS 2023 campaign microsite (React) — often as sole developer.",
+            "Built interactive, animated UI on a Nunjucks + Gulp toolchain, and ensured backend integration compatibility."
           ]
         }
       ],
@@ -168,23 +154,11 @@
             }
           ],
           "bullets": [
-            "Berkontribusi pada aplikasi berbasis webview menggunakan React.js dalam arsitektur microfrontend (Module Federation).",
-            "Berkolaborasi dengan tim lintas fungsi untuk memastikan integrasi yang mulus antara microfrontend dan layanan backend."
-          ]
-        },
-        {
-          "company": "eDOT",
-          "industry": "SaaS",
-          "location": "Remote",
-          "roles": [
-            {
-              "title": "Frontend Developer (Kontrak via Dikshatek)",
-              "dates": "Des 2025 – Apr 2026"
-            }
-          ],
-          "bullets": [
-            "Mengerjakan aplikasi dashboard yang memantau berbagai proses bisnis perusahaan klien, merilis empat fitur produksi secara menyeluruh.",
-            "Membangun fitur menggunakan Next.js, React Query, Tailwind CSS, shadcn/ui, React Hook Form, dan Zod, dengan cakupan unit test pada logika inti."
+            "React developer pada aplikasi digibank Indonesia saat migrasi ke platform microfrontend regional DBS — shell Module Federation buatan tim digibank-as-a-Service Singapura.",
+            "Memegang integrasi Transaction Signing, microfrontend yang sudah berjalan di produksi Singapura, bekerja langsung dengan tim Singapura.",
+            "Memegang integrasi lokalisasi over-the-air terpusat, sehingga teks dapat diperbarui dari CMS tanpa merilis ulang aplikasi.",
+            "Membangun fitur bagikan riwayat transaksi, mengirim payload base64 dari webview React ke aplikasi native melalui JS bridge.",
+            "Menyiapkan pipeline CI Drone, melakukan deploy ke produksi, dan menuntaskan defect UAT serta pascarilis; merampungkan integrasi captcha di aplikasi web onboarding kartu kredit."
           ]
         },
         {
@@ -231,13 +205,12 @@
           "roles": [
             {
               "title": "Front End Developer (Kontrak)",
-              "dates": "Apr 2024 – Agu 2025"
+              "dates": "Apr 2024 – Agu 2024"
             }
           ],
           "bullets": [
-            "Berkontribusi pada dua aplikasi back-office menggunakan Next.js dan Angular.",
-            "Bergabung dengan proyek berjalan dan merilis fitur sesuai arsitektur serta konvensi yang ada.",
-            "Ditugaskan ke klien dan menyelesaikan proyek dengan sukses."
+            "Merilis dua fitur pada Loan Origination System (LOS) yang sedang berjalan untuk PT Sarana Multi Infrastruktur, BUMN pembiayaan infrastruktur — Next.js dengan Material UI, termasuk integrasi Syncfusion.",
+            "Bergabung dengan basis kode yang sudah mapan, dikerjakan in-house bersama tim proyek Infosys, merilis sesuai komponen dan konvensi yang ada."
           ]
         },
         {
@@ -255,9 +228,8 @@
             }
           ],
           "bullets": [
-            "Menyelesaikan berbagai proyek klien (termasuk BCA) menggunakan vanilla JS, jQuery, Nunjucks, React, Next.js.",
-            "Membangun UI interaktif dengan animasi dan memastikan kompatibilitas integrasi backend.",
-            "Berperan sebagai satu-satunya developer di beberapa proyek dan berkolaborasi dalam pengerjaan berbasis tim."
+            "Mengerjakan proyek web publik untuk BCA — bagian News & Features (Next.js, SSG/SSR), portal developer (vanilla JS, Bootstrap), dan microsite kampanye BCA × USS 2023 (React) — sering sebagai satu-satunya developer.",
+            "Membangun UI interaktif dan beranimasi di atas toolchain Nunjucks + Gulp, serta memastikan kompatibilitas integrasi backend."
           ]
         }
       ],
@@ -320,16 +292,16 @@
       "slug": "writing-with-mdx",
       "date": "2026-06-05",
       "title": {
-        "en": "Writing posts with MDX",
-        "id": "Menulis dengan MDX"
+        "en": "Publishing a bilingual blog from a static export",
+        "id": "Menerbitkan blog dwibahasa dari static export"
       },
       "description": {
-        "en": "How this blog's posts are authored — MDX bodies in src/content, metadata in one registry, statically exported. Doubles as the template for the next post.",
-        "id": "Bagaimana tulisan di blog ini dibuat — isi MDX di src/content, metadata dalam satu registry, diekspor statis. Sekaligus jadi templat untuk tulisan berikutnya."
+        "en": "Typed metadata makes a missing translation a compile error; the MDX bodies get no such guarantee. Why the build catches it anyway — and why SSR wouldn’t.",
+        "id": "Metadata bertipe membuat terjemahan yang hilang jadi galat kompilasi; isi MDX tak dapat jaminan itu. Mengapa build tetap menangkapnya — dan mengapa SSR tidak."
       },
       "body": {
-        "en": "This is a template post — replace it with the real first one (the cross-framework\nModule Federation build is the obvious candidate). It exists so the MDX pipeline\nis wired end-to-end and to show every element the styling handles.\n\nHow posts work\n\nEach post is two things:\n\n1. Bodies, one .mdx per language in src/content/<locale>/<slug>.mdx —\n plain Markdown, with JSX available when a post needs an interactive component.\n2. An entry in src/lib/posts.ts — the slug, date, and per-locale\n title / description. That registry drives the index and each post's SEO\n metadata.\n\nThe [lang]/posts/[slug] route prerenders one static page per locale × slug\n(dynamicParams is false, so unknown slugs 404), pulls the right body in with\na dynamic import, and wraps it in a prose container with the reader controls\n(font, size, background).\n\nWhat the styling covers\n\nStandard Markdown all renders through Tailwind's typography plugin:\n\n- bold, italic, and inline code\n- internal links and external ones (external get\n target=\"blank\" automatically)\n- lists, like this one\n\nBlockquotes for the asides worth pulling out of the flow.\n\nFenced code blocks are styled to match the site's card surface:\n\n \n\nGitHub-flavored Markdown is on via remark-gfm, so tables work too:\n\n \n \n \n \n \n\nAdding the next post\n\nDrop a new .mdx under each src/content/<locale>/, add its entry to\nsrc/lib/posts.ts (newest first), and next build picks it up. That's the whole\nloop.",
-        "id": "Ini tulisan templat — ganti dengan tulisan pertama yang sebenarnya (proses\nmembangun Module Federation lintas framework adalah kandidat yang paling pas).\nTulisan ini ada supaya pipeline MDX terpasang utuh dan untuk memperlihatkan\nsetiap elemen yang ditangani oleh penataan gaya.\n\nCara kerja tulisan\n\nSetiap tulisan terdiri dari dua hal:\n\n1. Isi, satu .mdx per bahasa di src/content/<locale>/<slug>.mdx —\n Markdown biasa, dengan JSX tersedia saat sebuah tulisan butuh komponen\n interaktif.\n2. Satu entri di src/lib/posts.ts — berisi slug, date, serta title /\n description per bahasa. Registry itu menggerakkan halaman indeks dan\n metadata SEO tiap tulisan.\n\nRoute [lang]/posts/[slug] membuat satu halaman statis per kombinasi bahasa ×\nslug (dynamicParams bernilai false, jadi slug tak dikenal akan 404),\nmengambil isi yang tepat lewat import dinamis, lalu membungkusnya dalam wadah\nprose beserta kontrol pembaca (font, ukuran, latar).\n\nApa saja yang ditangani penataan gaya\n\nMarkdown standar dirender lewat plugin typography Tailwind:\n\n- tebal, miring, dan kode sebaris\n- tautan internal dan tautan eksternal (yang\n eksternal otomatis mendapat target=\"blank\")\n- daftar, seperti ini\n\nKutipan untuk catatan sampingan yang layak dikeluarkan dari alur teks.\n\nBlok kode berpagar ditata agar selaras dengan permukaan kartu situs:\n\n \n\nGitHub-flavored Markdown aktif lewat remark-gfm, jadi tabel pun berfungsi:\n\n \n \n \n \n \n\nMenambah tulisan berikutnya\n\nTaruh .mdx baru di tiap src/content/<locale>/, tambahkan entrinya ke\nsrc/lib/posts.ts (terbaru di atas), dan next build akan memungutnya. Itu saja\nseluruh alurnya."
+        "en": "Every post on this blog exists twice — once in English, once in Indonesian — and\nthe site is a static export, so both versions are prerendered at build time and\nthere's no server left running to fix anything afterwards. That constraint turns\nout to decide the whole design. Here's the shape it forced, and the one place the\ntype system quietly stops helping.\n\nA post is one registry entry and two bodies\n\nThe metadata lives in TypeScript, in a single ordered array:\n\n \n\nThe bodies live on disk as src/content/<locale>/<slug>.mdx — plain Markdown,\nwith JSX available when a post needs a real component. The route prerenders one\nstatic page per locale × slug, pulling the right body in by name:\n\n \n\nRecord<Locale, string> is doing more work than it looks. Add a locale to the\nproject and every post stops compiling until it has a title and a description in\nthat language. Forget the Indonesian title on a new post and tsc names the\nexact line. Translation of the metadata is a compile-time obligation.\n\nThe bodies have no such guarantee\n\nNothing in that type mentions the files. The body arrives through a\ntemplate-literal dynamic import, which the bundler resolves by generating a\nmodule context over src/content — it matches paths at build time, not types at\ncheck time. So the registry can promise a post the filesystem doesn't have.\n\nI tried it: add an entry with no .mdx anywhere, then build.\n\n \n\nTypeScript passes, cleanly, and reports as much. Four seconds later prerendering\ndies on a module that was never there.\n\nFailing at build is the feature\n\nThat looks like a gap, and for about a minute I treated it as one. It isn't. The\nstatic export is what makes it safe: because dynamicParams is false, every\nlocale × slug pair is enumerated from the registry and prerendered, so a body\nthat doesn't exist is a build that doesn't finish. The broken page cannot reach\nproduction, because production is a folder of HTML files and that file was never\nwritten.\n\nRun the same code under SSR and the same mistake ships. generateStaticParams\nbecomes a hint rather than an inventory, the import resolves lazily on first\nrequest, and the missing translation surfaces as a 500 for whoever happens to\nopen the Indonesian link first — probably not me, and probably not soon.\n\nThe bug is identical. The rendering strategy decides whether it's caught by a\nbuild or by a reader.\n\nSo the two halves guard each other, at different times:\n\n \n \n \n \n \n\nThe last row is the same principle once more: dynamicParams = false means an\nunknown slug has no page rather than a lazily-built one.\n\nThe loop\n\nAdding a post is a .mdx under each src/content/<locale>/, an entry in\nsrc/lib/posts.ts, and next build. If either half is missing, the build says\nso. That's the whole publishing pipeline, and it's the reason I never have to\nremember whether I translated something — I only have to remember to build.\n\nThe cost is honest and small: a bilingual blog is two blogs, and no type can\ntell me whether the Indonesian body actually says what the English one says.\nIt only promises the file is there. The rest is my problem.",
+        "id": "Setiap tulisan di blog ini ada dua kali — sekali dalam bahasa Inggris, sekali\ndalam bahasa Indonesia — dan situs ini adalah static export, jadi kedua versinya\ndirender saat build dan tak ada server yang tersisa untuk membetulkan apa pun\nsesudahnya. Batasan itu ternyata menentukan seluruh desainnya. Ini bentuk yang\ndipaksakannya, dan satu titik di mana sistem tipe diam-diam berhenti menolong.\n\nSatu tulisan adalah satu entri registry dan dua isi\n\nMetadata-nya hidup di TypeScript, dalam satu array terurut:\n\n \n\nIsinya hidup sebagai berkas src/content/<locale>/<slug>.mdx — Markdown biasa,\ndengan JSX tersedia kalau sebuah tulisan butuh komponen sungguhan. Route-nya\nmerender satu halaman statis per locale × slug, menarik isi yang tepat lewat\nnamanya:\n\n \n\nRecord<Locale, string> bekerja lebih keras daripada tampaknya. Tambahkan satu\nlocale ke proyek ini dan semua tulisan berhenti dikompilasi sampai masing-masing\npunya judul dan deskripsi dalam bahasa itu. Lupa judul bahasa Indonesia pada\ntulisan baru, dan tsc menyebut barisnya persis. Menerjemahkan metadata adalah\nkewajiban saat kompilasi.\n\nIsi tulisan tak punya jaminan serupa\n\nTak ada bagian dari tipe itu yang menyebut berkas. Isi tulisan datang lewat\ndynamic import bertemplat, yang diselesaikan bundler dengan membangkitkan sebuah\nmodule context di atas src/content — ia mencocokkan path saat build, bukan tipe\nsaat pengecekan. Jadi registry bisa menjanjikan tulisan yang tak dimiliki\nfilesystem.\n\nSaya coba: tambahkan satu entri tanpa .mdx di mana pun, lalu build.\n\n \n\nTypeScript lolos, bersih, dan melaporkannya begitu. Empat detik kemudian\nprerender mati pada modul yang memang tak pernah ada.\n\nGagal saat build justru fiturnya\n\nItu terlihat seperti lubang, dan selama semenit saya memperlakukannya begitu.\nBukan. Justru static export yang membuatnya aman: karena dynamicParams bernilai\nfalse, setiap pasangan locale × slug didaftar dari registry lalu dirender,\nsehingga isi yang tak ada berarti build yang tak selesai. Halaman rusak itu tak\nmungkin sampai ke produksi, sebab produksi adalah sekumpulan berkas HTML dan\nberkas tadi tak pernah ditulis.\n\nJalankan kode yang sama di atas SSR, dan kesalahan yang sama akan terkirim.\ngenerateStaticParams berubah jadi petunjuk, bukan daftar; import-nya\ndiselesaikan saat permintaan pertama; dan terjemahan yang hilang muncul sebagai\n500 bagi siapa pun yang kebetulan membuka tautan Indonesia lebih dulu — mungkin\nbukan saya, dan mungkin tidak segera.\n\nBug-nya sama persis. Strategi rendering-lah yang menentukan apakah ia\ntertangkap oleh sebuah build atau oleh seorang pembaca.\n\nJadi kedua bagian itu saling menjaga, pada waktu yang berbeda:\n\n \n \n \n \n \n\nBaris terakhir adalah asas yang sama sekali lagi: dynamicParams = false berarti\nslug tak dikenal tidak punya halaman, alih-alih halaman yang dibangun belakangan.\n\nAlurnya\n\nMenambah tulisan berarti satu .mdx di tiap src/content/<locale>/, satu entri\ndi src/lib/posts.ts, lalu next build. Kalau salah satu bagiannya hilang,\nbuild-lah yang memberi tahu. Itu seluruh pipeline penerbitannya, dan itu sebabnya\nsaya tak pernah perlu mengingat apakah sesuatu sudah diterjemahkan — saya hanya\nperlu ingat untuk build.\n\nOngkosnya jujur dan kecil: blog dwibahasa adalah dua blog, dan tak ada tipe yang\nbisa memberi tahu apakah isi bahasa Indonesia benar-benar mengatakan apa yang\ndikatakan versi Inggrisnya. Ia hanya menjanjikan berkasnya ada. Sisanya urusan\nsaya."
       }
     }
   ]

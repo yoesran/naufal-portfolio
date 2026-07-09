@@ -1,3 +1,4 @@
+import { EARLIER_KEYS } from '@/lib/experience'
 import type { Locale } from '@/lib/i18n'
 
 import type { Intent } from './types'
@@ -27,16 +28,22 @@ export const TECH: { id: string; match: string[] }[] = [
   },
   { id: 'jQuery', match: ['jquery'] },
   { id: 'React Query', match: ['reactquery'] },
+  // `jobsUsing` matches a tech id as a substring of an entry's stack/adds, so an
+  // id here has to read exactly as it's spelled in experience.ts. These four are
+  // the Infosys + Doubler toolchains; without them the bot falls through to
+  // "I'm not sure" on a tech its own CV bullets name.
+  { id: 'Material UI', match: ['materialui', 'mui', 'material'] },
+  { id: 'Syncfusion', match: ['syncfusion'] },
+  { id: 'Nunjucks', match: ['nunjucks'] },
+  { id: 'Gulp', match: ['gulp'] },
 ]
 
 // Companies that collapse into the "earlier roles" group (not first-class jobs in
 // the experience registry). A query naming one routes to the earlier-roles answer.
-export const EARLIER_COMPANIES = [
-  'infosys',
-  'traveloka',
-  'geekgarden',
-  'ehealth',
-]
+// The locale keys double as the query tokens, so this reuses the registry's list
+// rather than keeping a copy — a hand-copied one already drifted once (it still
+// held `infosys` after Infosys was promoted to a first-class node).
+export const EARLIER_COMPANIES: readonly string[] = EARLIER_KEYS
 
 // Per-locale trigger keywords per intent. Scored by overlap with the query
 // tokens. `experienceAt` / `techWith` / `compare` are entity-driven (see engine),

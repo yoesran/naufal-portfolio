@@ -112,6 +112,20 @@ describe('extractEntities', () => {
     ).toBe(true)
   })
 
+  // Doubler Studio holds two entries (contract, then freelance). Naming it once
+  // must resolve to one job — otherwise classifyIntent sees two and answers with
+  // `compare`, i.e. Doubler Studio vs Doubler Studio.
+  it('resolves a two-entry company to its newest entry only', () => {
+    const { jobs } = extractEntities(tokenize('tell me about doubler'), kbEn)
+    expect(jobs).toEqual(['freelance'])
+  })
+
+  // Infosys was promoted from a collapsed earlier role to a first-class node;
+  // the earlier-roles vocabulary must not still claim it.
+  it('does not treat a first-class job as an earlier role', () => {
+    expect(extractEntities(tokenize('infosys'), kbEn).earlier).toBe(false)
+  })
+
   it('resolves a space-typed multi-word tech via adjacent-token joining', () => {
     // "react query" tokenizes to ['react','query']; the bigram join matches the
     // 'reactquery' alias and front-loads the specific match over plain React.
@@ -139,6 +153,9 @@ describe('classifyIntent (EN + ID)', () => {
     expect(intentOf('is he available to hire')).toBe('availability')
     expect(intentOf('are you a real AI')).toBe('isThisAI')
     expect(intentOf('asdf qwerty zxcv')).toBe('fallback')
+    // A named earlier-role company must outrank the "tell"+"about" keywords,
+    // exactly as a first-class company does.
+    expect(intentOf('tell me about ehealth')).toBe('experienceOverall')
   })
 
   it('routes Indonesian questions via keywords + entities', () => {
@@ -163,6 +180,18 @@ describe('respond', () => {
     const { answer } = respond('tell me about DBS', kbEn, tEn)
     expect(answer.text).toContain('DBS Bank Indonesia')
     expect(answer.links?.some((l) => l.href.includes('exp=dbs'))).toBe(true)
+  })
+
+  // The registry has more rows than he has employers (Doubler Studio is two) and
+  // fewer than his real total (the earlier roles are collapsed out of it), so the
+  // headline count can be neither `jobs.length` nor `jobs.length + earlier`.
+  it('counts distinct companies, not registry rows', () => {
+    const companies = new Set(kbEn.jobs.map((j) => j.company)).size
+    expect(companies).toBeLessThan(kbEn.jobs.length) // the fixture exercises the two-entry company
+    const expected = companies + kbEn.earlier.length
+    expect(respond('who is he', kbEn, tEn).answer.text).toContain(
+      `${expected} companies`
+    )
   })
 
   it('answers which jobs used a technology', () => {

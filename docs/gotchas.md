@@ -1,6 +1,6 @@
 # Gotchas Already Solved (don't re-discover)
 
-The single consolidated list — previously duplicated across the MF-setup and handoff docs (which let them drift), now one copy. Also the raw material for the first blog post (the MF build, the TS6/baseUrl trap, the Tailwind-across-the-boundary lesson, and the eager-preload / `loadRemote` pattern are all strong material).
+The single consolidated list — previously duplicated across the MF-setup and handoff docs (which let them drift), now one copy. Also the raw material for the blog posts — the Tailwind-across-the-boundary lesson has already shipped as one; the MF build, the TS6/baseUrl trap, and the eager-preload / `loadRemote` pattern remain strong candidates.
 
 Cross-references point at [mf-core.md](./mf-core.md), [mf-platform.md](./mf-platform.md), and [features.md](./features.md) for the full treatment.
 

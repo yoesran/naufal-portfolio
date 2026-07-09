@@ -15,13 +15,24 @@ import type { MountFn } from '@/components/RemoteMount'
 //   - `demo` (a federated mount loader) lights up the "run the demo" button
 // Both are optional so the block ships before any story/demo exists and each
 // later addition is a one-field change here.
-export type ExperienceSlug = 'dbs' | 'edot' | 'ajaib' | 'danamon' | 'doubler'
+// Doubler appears twice on purpose: the 2023–24 contract was his only job (main
+// rail), while the 2024–25 freelance ran alongside Infosys and Danamon (branch).
+export type ExperienceSlug =
+  | 'dbs'
+  | 'ajaib'
+  | 'danamon'
+  | 'freelance'
+  | 'infosys'
+  | 'doubler'
 
 export type ExperienceEntry = {
   slug: ExperienceSlug
   company: string
   short: string // node label on the career line
-  url: string // company site (no protocol; linked out from the panel)
+  // Company site (no protocol; linked out from the panel). Optional: Infosys
+  // Solusi Terpadu's domain isn't confidently known, and a wrong link is worse
+  // than none — the panel just omits the link.
+  url?: string
   start: string // ISO yyyy-mm; formatted per locale in the block
   end?: string // absent = present
   stack: string[] // literal tech identifiers
@@ -50,18 +61,6 @@ export const EXPERIENCE: ExperienceEntry[] = [
     badge: mfSvg,
   },
   {
-    slug: 'edot',
-    company: 'eDOT',
-    short: 'eDOT',
-    url: 'edot.id',
-    start: '2025-12',
-    end: '2026-04',
-    stack: ['Next.js', 'React Query', 'shadcn/ui'],
-    adds: ['react query', 'shadcn/ui', 'react hook form', 'zod'],
-    glyph: nextSvg,
-    glyphColor: 'var(--foreground)',
-  },
-  {
     slug: 'ajaib',
     company: 'Ajaib',
     short: 'Ajaib',
@@ -88,21 +87,49 @@ export const EXPERIENCE: ExperienceEntry[] = [
     badgeColor: '#61DAFB',
   },
   {
+    slug: 'freelance',
+    company: 'Doubler Studio',
+    short: 'Doubler',
+    url: 'doubler.studio',
+    start: '2024-04',
+    end: '2025-08',
+    stack: ['React', 'Next.js'],
+    // Nothing new to the toolbox — the same client, carried on part-time.
+    adds: [],
+    glyph: nextSvg,
+    glyphColor: 'var(--foreground)',
+  },
+  {
+    slug: 'infosys',
+    company: 'Infosys Solusi Terpadu',
+    short: 'Infosys',
+    start: '2024-04',
+    end: '2024-08',
+    stack: ['Next.js', 'Material UI', 'Syncfusion'],
+    adds: ['material ui', 'syncfusion'],
+    glyph: nextSvg,
+    glyphColor: 'var(--foreground)',
+  },
+  {
     slug: 'doubler',
     company: 'Doubler Studio',
     short: 'Doubler',
     url: 'doubler.studio',
     start: '2023-10',
-    end: '2025-08',
-    stack: ['vanilla JS', 'jQuery', 'React', 'Next.js'],
-    adds: ['jquery', 'nunjucks', 'tailwind', 'bootstrap'],
+    end: '2024-03',
+    stack: ['vanilla JS', 'jQuery', 'Nunjucks'],
+    adds: ['jquery', 'nunjucks', 'gulp', 'tailwind', 'bootstrap'],
     glyph: jsSvg,
     glyphColor: '#F7DF1E',
   },
 ]
 
 // The compact "earlier" node collapses the remaining roles (the full list lives
-// on the CV). Selection type for the block: an entry slug or this group.
+// on the CV). Single source of truth: the block renders these and the `// ask`
+// assistant reads them, so a second copy would silently drift.
+export const EARLIER_KEYS = ['geekgarden', 'ehealth', 'traveloka'] as const
+
+// Selection type for the block: an entry slug or this group.
 export type ExperienceSelection = ExperienceSlug | 'earlier'
 
 export function isExperienceSelection(

@@ -28,12 +28,12 @@ export const posts: PostMeta[] = [
     slug: 'writing-with-mdx',
     date: '2026-06-05',
     title: {
-      en: 'Writing posts with MDX',
-      id: 'Menulis dengan MDX',
+      en: 'Publishing a bilingual blog from a static export',
+      id: 'Menerbitkan blog dwibahasa dari static export',
     },
     description: {
-      en: "How this blog's posts are authored — MDX bodies in src/content, metadata in one registry, statically exported. Doubles as the template for the next post.",
-      id: 'Bagaimana tulisan di blog ini dibuat — isi MDX di src/content, metadata dalam satu registry, diekspor statis. Sekaligus jadi templat untuk tulisan berikutnya.',
+      en: 'Typed metadata makes a missing translation a compile error; the MDX bodies get no such guarantee. Why the build catches it anyway — and why SSR wouldn’t.',
+      id: 'Metadata bertipe membuat terjemahan yang hilang jadi galat kompilasi; isi MDX tak dapat jaminan itu. Mengapa build tetap menangkapnya — dan mengapa SSR tidak.',
     },
   },
 ]

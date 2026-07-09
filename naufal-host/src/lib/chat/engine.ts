@@ -53,13 +53,23 @@ export function extractEntities(tokens: string[], kb: KB): Entities {
     set.add(joined)
   }
   const jobs: string[] = []
+  // One company can hold two entries (Doubler Studio: contract, then freelance),
+  // and every alias that resolves them — "doubler", the company words, even the
+  // older entry's slug — is shared. Matching both would read as "two jobs named"
+  // and route a plain "tell me about doubler" to `compare`, i.e. Doubler vs
+  // Doubler. Newest entry per company wins (kb.jobs is newest-first); the older
+  // era still reaches the panel via the timeline's ?exp= deep link.
+  const seenCompanies = new Set<string>()
   for (const job of kb.jobs) {
     const aliases = [
       job.slug,
       job.short.toLowerCase(),
       ...companyWords(job.company),
     ]
-    if (aliases.some((a) => set.has(a))) jobs.push(job.slug)
+    if (!aliases.some((a) => set.has(a))) continue
+    if (seenCompanies.has(job.company)) continue
+    seenCompanies.add(job.company)
+    jobs.push(job.slug)
   }
   const earlier = EARLIER_COMPANIES.some((c) => set.has(c))
   const techs: string[] = []
@@ -130,8 +140,11 @@ export function classifyIntent(
   // 2 that "tell"+"about" score for the `about` intent).
   if (entities.jobs.length >= 2) add('compare', 3)
   if (entities.jobs.length >= 1) add('experienceAt', 3)
+  // An earlier-role company is a named company too, so it takes the same boost —
+  // at 2 it merely tied "tell"+"about", and "tell me about ehealth" answered with
+  // the generic bio instead of the roles.
   if (entities.earlier && entities.jobs.length === 0)
-    add('experienceOverall', 2)
+    add('experienceOverall', 3)
   if (entities.techs.length >= 1) add('techWith', 2)
 
   let best: Intent = 'fallback'
@@ -151,6 +164,12 @@ const list = (locale: string, items: string[]) =>
   new Intl.ListFormat(locale, { type: 'conjunction' }).format(items)
 
 const jobOf = (kb: KB, slug?: string) => kb.jobs.find((j) => j.slug === slug)
+
+// How many *companies* he worked for — not how many rows the registry holds.
+// Doubler Studio is two entries (contract, then freelance), and the collapsed
+// earlier roles are real employers the highlight list leaves out.
+const companyCount = (kb: KB) =>
+  uniq(kb.jobs.map((j) => j.company)).length + kb.earlier.length
 
 type SuggestKey =
   | 'about'
@@ -232,7 +251,7 @@ export function compose(
             location: kb.location,
             role: top.role,
             company: top.company,
-            count: kb.jobs.length,
+            count: companyCount(kb),
           }),
           links: [cvLink, timelineLink],
           suggestions: suggestions(t, ['experience', 'stack', 'available']),
@@ -248,7 +267,7 @@ export function compose(
       return {
         answer: {
           text:
-            t('chat.answers.experienceOverall', { count: kb.jobs.length }) +
+            t('chat.answers.experienceOverall', { count: companyCount(kb) }) +
             '\n' +
             experienceList(kb, t) +
             '\n\n' +

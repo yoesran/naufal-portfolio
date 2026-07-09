@@ -15,8 +15,8 @@
   "techStack": {
     "prompt": "pilih sebuah tech untuk melihat penggunaannya dalam pengalaman saya →",
     "notes": {
-      "react": "Pilihan utama — saat ini di DBS (microfrontend webview), sebelumnya di eDOT, Doubler Studio.",
-      "next": "Landing + onboarding webview di Ajaib, dashboard internal di eDOT.",
+      "react": "Pilihan utama — saat ini di DBS (microfrontend webview), sebelumnya di Bank Danamon, Doubler Studio.",
+      "next": "Landing page + onboarding webview di Ajaib, loan origination system di Infosys, proyek klien di Doubler Studio.",
       "typescript": "Default untuk semua yang saya tulis.",
       "svelte": "Menggerakkan remote terfederasi yang sedang Anda interaksikan di halaman ini.",
       "angular": "Feature module di Bank Danamon — DBankPro 2.0, migrasi Single-SPA → NX.",
@@ -59,23 +59,24 @@
     "present": "sekarang",
     "roles": {
       "dbs": "React.js Developer",
-      "edot": "Frontend Developer",
       "ajaib": "Fullstack Developer",
       "danamon": "Web Developer",
-      "doubler": "Frontend Developer (freelance)"
+      "freelance": "Frontend Developer (freelance)",
+      "infosys": "Front End Developer",
+      "doubler": "Frontend Developer (kontrak)"
     },
     "summaries": {
       "dbs": "Aplikasi perbankan berbasis webview di atas React dalam microfrontend Module Federation — arsitektur yang sama dengan portofolio ini.",
-      "edot": "Dashboard pemantau proses bisnis perusahaan klien — Next.js, React Query, shadcn/ui; merilis empat fitur produksi secara menyeluruh.",
       "ajaib": "Memigrasikan halaman landing ajaib.co.id dari WordPress ke Next.js dengan SSR/SSG + SEO, serta membangun sistem formulir webview yang digerakkan backend untuk onboarding.",
       "danamon": "Back office DBankPro 2.0: container React yang memasang feature module Angular lewat Single-SPA, lalu dimigrasikan ke NX — pola lintas framework yang persis didemokan playground ini.",
-      "doubler": "Proyek klien (termasuk BCA) dengan vanilla JS, jQuery, Nunjucks, React, dan Next.js — sering sebagai satu-satunya developer."
+      "infosys": "Dua fitur dirilis pada Loan Origination System yang sedang berjalan untuk Sarana Multi Infrastruktur (BUMN pembiayaan infrastruktur) — Next.js dan Material UI, termasuk integrasi Syncfusion.",
+      "freelance": "Tetap mengerjakan BCA secara paruh waktu sementara kontrak Infosys dan Danamon berjalan — pekerjaan React dan Next.js, sering sebagai satu-satunya developer.",
+      "doubler": "Tempat semuanya bermula: pekerjaan publik untuk BCA — vanilla JS, jQuery, dan toolchain Nunjucks + Gulp, sering sebagai satu-satunya developer."
     },
     "earlier": {
       "node": "sebelumnya",
       "title": "Peran sebelumnya",
       "roles": {
-        "infosys": "Infosys Solusi Terpadu (2024 – 25) — dua aplikasi back-office dengan Next.js + Angular; vendor di balik kontrak Danamon",
         "geekgarden": "GeekGarden (2022 – 23) — satu-satunya developer Flutter untuk dua aplikasi klien yang rilis, dari Figma sampai lolos QA",
         "ehealth": "Ehealth.co.id (2022 – 23) — Junior Software Engineer, UI Polymer pada produk kesehatan",
         "traveloka": "Traveloka (2022) — magang Web Engineer: riset browser automation, infrastruktur web, komponen UI library"
@@ -89,11 +90,12 @@
     "demoUnavailable": "demo tidak tersedia — coba muat ulang halaman",
     "commits": {
       "dbs": "feat: webview react + module federation",
-      "edot": "feat: dashboard proses bisnis (next.js)",
       "ajaib": "feat: wordpress → next.js + onboarding webview",
       "danamon": "feat: container react + module angular",
-      "doubler": "feat: proyek klien bca, vanilla js → next",
-      "earlier": "traveloka · ehealth · geekgarden · infosys"
+      "freelance": "feat: microsite bca, react + next.js",
+      "infosys": "feat: loan origination system (next.js)",
+      "doubler": "init: proyek klien bca, vanilla js + jquery",
+      "earlier": "traveloka · ehealth · geekgarden"
     },
     "promptLabel": "Ketik perintah git — coba: git checkout danamon",
     "promptCta": "ketik",
@@ -101,9 +103,10 @@
     "clearOutput": "Bersihkan output terminal",
     "industries": {
       "dbs": "Perbankan",
-      "edot": "SaaS",
       "ajaib": "Fintech",
       "danamon": "Perbankan",
+      "freelance": "Agensi digital",
+      "infosys": "Layanan TI",
       "doubler": "Agensi digital"
     }
   },
@@ -174,7 +177,7 @@
     "fallback": "Saya kurang yakin soal itu — saya asisten algoritmik kecil. Coba tanya tentang pengalaman, tech stack, pendidikan, tulisan, atau cara menghubungi Naufal:",
     "answers": {
       "greeting": "Hai! Saya asisten Naufal — murni JavaScript, tanpa model AI. Tanya soal pengalaman, stack, atau cara menghubunginya.",
-      "about": "Naufal Yusran adalah frontend & microfrontend engineer yang berbasis di {{location}}. Saat ini dia {{role}} di {{company}}, dan telah berkontribusi di {{count}} perusahaan di bidang perbankan, fintech, SaaS, dan agensi.",
+      "about": "Naufal Yusran adalah frontend & microfrontend engineer yang berbasis di {{location}}. Saat ini dia {{role}} di {{company}}, dan telah berkontribusi di {{count}} perusahaan di bidang perbankan, fintech, layanan TI, dan agensi.",
       "experienceOverall": "Naufal pernah bekerja di {{count}} perusahaan (terbaru lebih dulu):",
       "experienceItem": "• {{company}} — {{role}} ({{period}})",
       "earlierNote": "Sebelumnya: {{roles}}.",
