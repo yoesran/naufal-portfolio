@@ -96,4 +96,4 @@ export default defineConfig(({ mode }) => {
 
 The lab's `preview` and `server` configs set `cors: true` and `allowedHosts: true` so the host's cross-origin script fetches work in dev. (For production, tighten `cors` to the actual host origin and enumerate `allowedHosts`.)
 
-This section is the _mechanism_. The actual live setup — Cloudflare Pages × 2 + PartyKit, the prod env wiring, CORS via the remote's `_headers`, the build-mode separation, and the direct-upload deploy procedure — is in [deployment.md](./deployment.md).
+This section is the _mechanism_. The actual live setup — Cloudflare Pages + PartyKit, the prod env wiring, CORS via the remote's `_headers`, the build-mode separation, and the direct-upload deploy procedure — is in [deployment.md](./deployment.md).

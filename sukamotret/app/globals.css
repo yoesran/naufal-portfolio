@@ -1,0 +1,324 @@
+@import 'tailwindcss';
+
+/* Sukamotret — brand tokens (from the approved sketch). Palette = the
+   studio's two working lights: golden-hour amber and blue-hour teal on a
+   darkroom near-black; warm neutrals, never pure grey.
+
+   TWO COLOUR ROLES — never merge them:
+   • --amber / --blue are SEMANTIC and FIXED. They're the legend's key (amber =
+     golden hour, blue = blue hour) and the arc's bands. If they tracked the
+     clock, the page would contradict its own key at midday.
+   • The AMBIENT palette (--paper/--surface/--sunk + --accent) follows the real
+     sun: `light-today` stamps data-phase on <html>, and the blocks below tint
+     the grounds toward amber at golden hour and toward blue at night. The page
+     is lit by the same sun as the visitor. */
+:root {
+  /* untinted grounds — the phase blocks derive from these */
+  --paper-0: #e9e5de;
+  --surface-0: #f3f0ea;
+  --sunk-0: #ded8ce;
+  --ink: #1b1613;
+  --ink-soft: #5a534c;
+  --ink-faint: #8b8279;
+  --line: #cfc8be;
+  --amber: #b06f17;
+  --blue: #275764;
+
+  /* pre-hydration default: neutral grounds, amber accent */
+  --paper: var(--paper-0);
+  --surface: var(--surface-0);
+  --sunk: var(--sunk-0);
+  --accent: var(--amber);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper-0: #14100e;
+    --surface-0: #1d1815;
+    --sunk-0: #0e0b0a;
+    --ink: #ede7de;
+    --ink-soft: #a79d92;
+    --ink-faint: #6f665e;
+    --line: #332c27;
+    --amber: #e9a542;
+    --blue: #4e8a9b;
+  }
+}
+
+/* The sun's tint on the page. One set of blocks serves both themes: the mixes
+   derive from theme-aware tokens, so dark mode warms/cools too. Kept light
+   (≤10%) — the ink never moves, so contrast holds. */
+:root[data-phase='golden'] {
+  --accent: var(--amber);
+  --paper: color-mix(in srgb, var(--paper-0) 92%, var(--amber));
+  --surface: color-mix(in srgb, var(--surface-0) 92%, var(--amber));
+  --sunk: color-mix(in srgb, var(--sunk-0) 90%, var(--amber));
+}
+:root[data-phase='day'] {
+  /* midday: neutral grounds — the light itself is neutral and harsh */
+  --accent: var(--blue);
+}
+:root[data-phase='blue'] {
+  --accent: var(--blue);
+  --paper: color-mix(in srgb, var(--paper-0) 93%, var(--blue));
+  --surface: color-mix(in srgb, var(--surface-0) 93%, var(--blue));
+  --sunk: color-mix(in srgb, var(--sunk-0) 91%, var(--blue));
+}
+:root[data-phase='night'] {
+  --accent: var(--blue);
+  --paper: color-mix(in srgb, var(--paper-0) 90%, var(--blue));
+  --surface: color-mix(in srgb, var(--surface-0) 90%, var(--blue));
+  --sunk: color-mix(in srgb, var(--sunk-0) 88%, var(--blue));
+}
+
+@theme inline {
+  /* brand names for direct use (bg-paper, text-ink-soft, border-line, …) */
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-sunk: var(--sunk);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-amber: var(--amber);
+  --color-blue: var(--blue);
+  --color-accent: var(--accent);
+
+  /* shadcn semantic tokens mapped onto the brand, so ui/ primitives skin
+     themselves without edits */
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-primary: var(--ink);
+  --color-primary-foreground: var(--paper);
+  --color-muted: var(--sunk);
+  --color-muted-foreground: var(--ink-faint);
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--accent);
+  --color-destructive: #b91c1c;
+
+  --font-display:
+    'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia,
+    serif;
+  --font-sans:
+    ui-sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+
+  /* the sketch's type scale */
+  --text-s-1: 0.82rem;
+  --text-s0: 1rem;
+  --text-s1: 1.3rem;
+  --text-s2: 1.85rem;
+  --text-s3: 2.6rem;
+  --text-s4: clamp(2.8rem, 7vw, 5rem);
+
+  --animate-iris: iris 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  @keyframes iris {
+    from {
+      clip-path: circle(0% at 50% 50%);
+    }
+    to {
+      clip-path: circle(75% at 50% 50%);
+    }
+  }
+
+  /* contact-sheet tiles pop in with a stagger (delay set inline per tile) */
+  --animate-tile-in: tile-in 0.45s ease-out backwards;
+  @keyframes tile-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* lightbox image change: a big swipe with motion blur — reads like flicking
+     through prints, not like a CSS demo */
+  --animate-lb-next: lb-next 0.42s cubic-bezier(0.2, 0.7, 0.2, 1);
+  @keyframes lb-next {
+    from {
+      opacity: 0;
+      transform: translateX(56%);
+      filter: blur(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+      filter: blur(0);
+    }
+  }
+  --animate-lb-prev: lb-prev 0.42s cubic-bezier(0.2, 0.7, 0.2, 1);
+  @keyframes lb-prev {
+    from {
+      opacity: 0;
+      transform: translateX(-56%);
+      filter: blur(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+      filter: blur(0);
+    }
+  }
+  /* the caption ticks over with the image */
+  --animate-lb-cap: lb-cap 0.35s ease-out;
+  @keyframes lb-cap {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* pose card cross-fades up when the pose changes */
+  --animate-pose-in: pose-in 0.35s ease-out;
+  @keyframes pose-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* one-time hint that the wipe divider is draggable */
+  --animate-nudge: nudge 1.4s ease-in-out 1s 2;
+  @keyframes nudge {
+    0%,
+    100% {
+      transform: translateX(-1px);
+    }
+    35% {
+      transform: translateX(14px);
+    }
+    70% {
+      transform: translateX(-14px);
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-paper font-sans text-s0 text-ink antialiased;
+    line-height: 1.65;
+    /* the page eases into the new light rather than snapping (the phase only
+       flips a few times a day, but a visitor can be watching when it does) */
+    transition: background-color 1.2s ease;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display font-normal tracking-[-0.02em];
+    text-wrap: balance;
+  }
+  /* :not([data-slot]) — shadcn primitives bring their own focus ring; the
+     accent outline would stack a second indicator on top of it */
+  :where(a, button, input, summary):not([data-slot]):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@layer components {
+  /* page gutter — used by every section */
+  .wrap {
+    @apply mx-auto max-w-272 px-[clamp(1.25rem,4vw,3rem)];
+  }
+
+  .eyebrow {
+    @apply m-0 font-sans text-s-1 tracking-[0.16em] text-ink-faint uppercase;
+  }
+
+  /* anchor jumps (nav, the Booking buttons) must clear the sticky header —
+     which is ~81px tall on mobile where the wordmark wraps */
+  section {
+    scroll-margin-top: 5.5rem;
+  }
+
+  /* native range skin (the scrubber + the wipe) — kept native for touch and
+     keyboard semantics; only the skin is custom */
+  input[type='range'] {
+    width: 100%;
+    appearance: none;
+    height: 44px;
+    background: transparent;
+    cursor: pointer;
+  }
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+  }
+  input[type='range']::-moz-range-track {
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+  }
+  input[type='range']::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    margin-top: -8px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--paper);
+  }
+  input[type='range']::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--paper);
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  dialog.lb::backdrop {
+    background: rgba(10, 8, 7, 0.86);
+  }
+  /* Aperture-iris reveal, once per OPEN. It lives on .lb-frame (the un-keyed
+     wrapper), NOT on .lb-img: the [open] descendant rule out-specifies any
+     utility animation on the same element, so putting it on .lb-img silently
+     killed the next/prev slide — the keyed child must own its own animation. */
+  dialog.lb[open] .lb-frame {
+    animation: var(--animate-iris);
+  }
+  /* JS-driven exit (~280ms, then dialog.close()): the disappear mirrors the
+     appear — the iris closes back down while the chrome fades. */
+  dialog.lb.closing {
+    animation: lb-fade-out 0.28s ease-in forwards;
+  }
+  dialog.lb.closing .lb-frame {
+    animation: iris-out 0.28s cubic-bezier(0.5, 0, 0.85, 0.4) forwards;
+  }
+  @keyframes lb-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes iris-out {
+    from {
+      clip-path: circle(75% at 50% 50%);
+    }
+    to {
+      clip-path: circle(0% at 50% 50%);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -12,7 +12,7 @@ Documentation for the polyglot microfrontend portfolio (React host + Svelte remo
 | [features.md](./features.md)               | Block- and host-level features: realtime presence (the global PartyKit cursor overlay), the React Compiler integration, theming (the drawer + dark mode), i18n, and scroll-reveal.       |
 | [gotchas.md](./gotchas.md)                 | The single consolidated list of gotchas already solved — don't re-discover them. Raw material for the blog posts.                                                                        |
 | [running-locally.md](./running-locally.md) | How to run the three processes locally, dev-reload behaviour, and the fresh-clone workflow.                                                                                              |
-| [deployment.md](./deployment.md)           | How the three apps go live: Cloudflare Pages × 2 + PartyKit, the cross-origin env wiring, CORS via `_headers`, build-mode separation, and the direct-upload deploy procedure.            |
+| [deployment.md](./deployment.md)           | How everything goes live: Cloudflare Pages (host/lab/blog/reports) + PartyKit, the cross-origin env wiring, CORS via `_headers`, build-mode separation, and the deploy procedure.        |
 | [handoff.md](./handoff.md)                 | Planning context: about the author, project goals, locked-in decisions, design approach, the roadmap, working preferences, and open issues. The "why," kept separate from the "how."     |
 
 ## How the docs relate
