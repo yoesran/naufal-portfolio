@@ -1,0 +1,340 @@
+@import 'tailwindcss';
+
+/* Kopi Lima — V6 "THE BLUE WALL" (his approved taste, sketsa v6):
+   their feed IS a blue wall, so the page ground is the brand ultramarine and
+   everything informational sits on it as paper stickers — hard offset
+   shadows, sharp corners, slight rotations, checkered ribbons, marquee
+   ticker. ONE deliberate visual world: no light/dark split — malam just
+   pulls the wall toward night navy (data-fase, stamped pre-paint by
+   lib/fase-boot.ts and kept live by <Interactive>).
+
+   TOKEN TRICK — the sticker context: components use semantic utilities
+   (text-ink, bg-panel, border-line…). At :root those mean "on the wall"
+   (white/lilac on blue); the .sticker class re-declares the same variables
+   for "on paper", so card innards restyle themselves without edits. */
+:root {
+  --lima: #3300f8;
+  --night: #0b0433;
+  --amber: #ffb52e;
+  /* amber that MEANS something in text ON CREAM — darkened until it clears
+     4.5:1 (the poster amber is 2.6:1 there; contrast checked, not eyeballed) */
+  --amber-deep: #8a5a08;
+  --cream: #f7f3ea;
+  --cream-dim: #ece6d6;
+
+  /* the wall */
+  --paper: var(--lima);
+  --sunk: rgba(255, 255, 255, 0.08);
+  --panel: var(--cream);
+  --ink: #ffffff;
+  --ink-soft: #dcd7ff;
+  --ink-faint: #c3bbff;
+  --line: rgba(255, 255, 255, 0.32);
+  --biru: #ffffff;
+  --buka: #2fe081;
+  --tutup: rgba(255, 255, 255, 0.45);
+}
+
+/* malam: same street, lights on */
+:root[data-fase='malam'] {
+  --paper: color-mix(in srgb, var(--lima) 32%, var(--night));
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-sunk: var(--sunk);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-lima: var(--lima);
+  --color-night: var(--night);
+  /* tinta = the FIXED dark ink (badge/frame ink on any ground) — unlike
+     --ink, which flips white↔dark with the sticker context */
+  --color-tinta: #161129;
+  --color-biru: var(--biru);
+  --color-amber: var(--amber);
+  --color-amber-deep: var(--amber-deep);
+  --color-buka: var(--buka);
+  --color-tutup: var(--tutup);
+
+  /* shadcn semantic tokens mapped onto the brand */
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-primary: var(--amber);
+  --color-primary-foreground: #161129;
+  --color-muted: var(--sunk);
+  --color-muted-foreground: var(--ink-faint);
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--amber);
+  --color-destructive: #b91c1c;
+
+  --font-display:
+    'Haettenschweiler', 'Arial Narrow', Impact, 'Franklin Gothic Medium',
+    sans-serif;
+  --font-script: 'Segoe Script', 'Brush Script MT', cursive;
+  --font-sans:
+    ui-sans-serif, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+
+  --text-s-1: 0.82rem;
+  --text-s0: 1rem;
+  --text-s1: 1.3rem;
+  --text-s2: 1.85rem;
+  --text-s3: clamp(2.1rem, 5.5vw, 3.4rem);
+  --text-s4: clamp(3rem, 9.5vw, 6rem);
+
+  --animate-pulse-dot: pulse-dot 2s infinite;
+  @keyframes pulse-dot {
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  /* cup pour: keyed remount + `from { height: 0 }` with no `to` animates to
+     each layer's inline height — no JS choreography needed */
+  --animate-pour: pour 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  @keyframes pour {
+    from {
+      height: 0;
+    }
+  }
+
+  --animate-swap-in: swap-in 0.35s ease-out;
+  @keyframes swap-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  --animate-ticker: ticker 26s linear infinite;
+  @keyframes ticker {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-paper font-sans text-s0 text-ink antialiased;
+    line-height: 1.6;
+    transition: background-color 0.9s ease;
+  }
+  ::selection {
+    background: var(--amber);
+    color: #161129;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display font-normal uppercase;
+    line-height: 0.92;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+  /* :not([data-slot]) — shadcn primitives bring their own focus ring */
+  :where(a, button, input, [tabindex]):not([data-slot]):focus-visible {
+    outline: 3px solid var(--amber);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .wrap {
+    @apply mx-auto max-w-280 px-[clamp(1.1rem,4vw,2.5rem)];
+  }
+  .eyebrow {
+    @apply m-0 font-mono text-[0.68rem] tracking-[0.16em] text-ink-faint uppercase;
+  }
+  .script {
+    @apply inline-block -rotate-2 font-script tracking-normal text-amber normal-case;
+  }
+  .checker {
+    height: 12px;
+    background: repeating-conic-gradient(
+        var(--amber) 0% 25%,
+        transparent 0% 50%
+      )
+      0 0 / 16px 16px;
+  }
+  section {
+    scroll-margin-top: 5.5rem;
+  }
+
+  /* paper sticker on the wall: sharp corners, ink frame, hard shadow —
+     and the token flip that restyles every semantic utility inside */
+  .sticker {
+    /* every value here is contrast-checked against the cream panel: the
+       muted/status colours that read fine on the blue wall are far too light
+       on paper (BUKA/TUTUP is meaning encoded in colour — it must be legible) */
+    --ink: #161129;
+    --ink-soft: #57506e;
+    --ink-faint: #726b88;
+    --line: #d7d1c1;
+    --sunk: var(--cream-dim);
+    --biru: var(--lima);
+    --buka: #0c703a;
+    --tutup: #6f6982;
+    background: var(--panel);
+    color: var(--ink);
+    border: 2.5px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--night);
+  }
+  /* cards that lift on hover (pit board, menu) */
+  .sticker-pop {
+    transition:
+      rotate 0.2s,
+      translate 0.2s,
+      box-shadow 0.2s,
+      opacity 0.3s;
+  }
+  .sticker-pop:hover {
+    rotate: 0deg;
+    translate: -2px -3px;
+    box-shadow: 9px 10px 0 var(--night);
+  }
+  /* Alternating tilt — straightened by hover above and by reduced-motion.
+     DESCENDANT, not child: in the grouped view each city's cards live inside
+     a `display: contents` wrapper, so `.board > article` matches nothing (the
+     default view silently lost its tilt). Descendant also makes nth-of-type
+     restart per city group, which is what we want. */
+  .board article:nth-of-type(odd),
+  .drink-list > .drink:nth-child(4n + 3) {
+    rotate: -1deg;
+  }
+  .board article:nth-of-type(even),
+  .drink-list > .drink:nth-child(3n + 2) {
+    rotate: 0.9deg;
+  }
+  /* checkered strip across a sticker's top edge */
+  .sticker-checker::before {
+    content: '';
+    display: block;
+    height: 9px;
+    margin: 0 -1rem 0.8rem;
+    background: repeating-conic-gradient(var(--ink) 0% 25%, transparent 0% 50%)
+      0 0 / 12px 12px;
+    opacity: 0.9;
+  }
+
+  /* The menu detail popup is shadcn's Dialog (base-ui). Only its backdrop
+     needs brand treatment — the popup itself wears `.sticker` like every
+     other surface. */
+  [data-slot='dialog-overlay'] {
+    background: rgba(11, 4, 51, 0.82);
+  }
+
+  /* marquee ticker — streetwear-drop energy */
+  .ticker {
+    background: var(--amber);
+    color: #161129;
+    overflow: hidden;
+    border-bottom: 3px solid #161129;
+  }
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    font-family: var(--font-display);
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    padding: 0.4rem 0;
+    animation: var(--animate-ticker);
+  }
+  .ticker-track span {
+    padding-right: 2.5rem;
+    white-space: nowrap;
+  }
+
+  /* native range skin — on-paper (inside .sticker) by usage */
+  input[type='range'] {
+    width: 100%;
+    appearance: none;
+    height: 44px;
+    background: transparent;
+    cursor: pointer;
+  }
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 6px;
+    background: var(--line);
+    border: 1px solid var(--ink);
+  }
+  input[type='range']::-moz-range-track {
+    height: 6px;
+    background: var(--line);
+    border: 1px solid var(--ink);
+  }
+  input[type='range']::-webkit-slider-thumb {
+    appearance: none;
+    width: 26px;
+    height: 26px;
+    margin-top: -11px;
+    border-radius: 50%;
+    background: var(--lima);
+    border: 3.5px solid var(--amber);
+    box-shadow: 2px 2px 0 var(--night);
+  }
+  input[type='range']::-moz-range-thumb {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--lima);
+    border: 3.5px solid var(--amber);
+    box-shadow: 2px 2px 0 var(--night);
+  }
+
+  /* the giant 5 — white outline, blue speed-stripes, amber on hover */
+  .lima5 {
+    @apply relative text-center font-display italic select-none;
+    font-size: clamp(11rem, 30vw, 20rem);
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 4px #fff;
+    transform: skewX(-6deg);
+    filter: drop-shadow(10px 10px 0 rgba(11, 4, 51, 0.55));
+    transition: color 0.3s;
+  }
+  .lima5:hover {
+    color: var(--amber);
+  }
+  .lima5::after {
+    content: '';
+    position: absolute;
+    inset: 30% 8% 42% 8%;
+    background: repeating-linear-gradient(
+      -24deg,
+      transparent 0 26px,
+      var(--paper) 26px 34px
+    );
+    pointer-events: none;
+    transition: background-color 0.9s ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+  .ticker-track {
+    animation: none !important;
+  }
+  /* descendant — see the tilt rules above (display:contents wrappers) */
+  .board article,
+  .drink-list > .drink,
+  .sticker {
+    rotate: 0deg;
+  }
+}
